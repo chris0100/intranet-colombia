@@ -1,0 +1,343 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <head jsf:id="head">
+        <title><ui:insert name="title"></ui:insert></title>
+        <link rel="icon" type="image/png" href="#{request.contextPath}/resources/images/logoSoloLoginWeb.png"/>
+        <link href="#{request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet"/>
+    </head>
+    <body style="margin: 0 !important; padding: 0 !important" >
+        <p:outputPanel rendered="#{loginController.authenticated}">
+            <h:form id="form-filtrosReporte">
+                <div class="container">
+                    <h2>Reporte de programación</h2>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <h:outputLabel class="form-group" value="Fecha inicio del reporte:"  />
+                            <p:calendar id="fechaRevision" 
+                                        autocomplete="off"
+                                        required="true" 
+                                        requiredMessage="Ingresa Fecha 1"
+                                        style="width: 100%"
+                                        value="#{reporteProgramacionController.fechaParametro1}"
+                                        pattern="dd/MM/yyyy" maxdate="#{reporteProgramacionController.fechaParametro2}">
+                                <f:ajax execute="fechaRevision" render="msgFechaRevision"/>
+                                <p:ajax event="dateSelect" process="@this" update="fechaRevision fechaEntrega"/>
+                                <p:ajax event="valueChange" process="@this" update="fechaEntrega fechaRevision"/>
+                            </p:calendar>
+                            <h:message id="msgFechaRevision" for="fechaRevision"  styleClass="error"/>
+                            <h:outputLabel class="form-group" value="Fecha final del reporte:"  />
+                            <p:calendar id="fechaEntrega" 
+                                        required="true" 
+                                        autocomplete="off"
+                                        requiredMessage="Ingresa Fecha 2"
+                                        style="width: 100%"
+                                        value="#{reporteProgramacionController.fechaParametro2}"
+                                        pattern="dd/MM/yyyy" mindate="#{reporteProgramacionController.fechaParametro1}">
+                                <f:ajax execute="fechaEntrega" render="msgFechaEntraga"/>
+                                <p:ajax event="dateSelect" process="@this" update="fechaRevision fechaEntrega"/>
+                                <p:ajax event="valueChange" process="@this" update="fechaEntrega fechaRevision"/>
+                            </p:calendar>
+                            <h:message id="msgFechaEntrega" for="fechaEntrega"  styleClass="error"/>
+                            <p:commandButton  action="#{reporteProgramacionController.recargarConsultarItemsPedidosUnoeeVentas}"
+                                    type="submit" 
+                                    icon="ui-icon-search"
+                                    value="Consultar"
+                                    styleClass="btn btn-primary"
+                                    id="myButton1"
+                                    ajax="false"
+                                    update="@this form-reporte:reporteTable form-reporte:reporteTable2">
+                            </p:commandButton>
+                            <p:button value="Volver" 
+                                      icon="ui-icon-arrowthick-1-w" 
+                                      style="background: red; margin-left: 63px" 
+                                      styleClass="btn btn-primary" 
+                                      outcome="/administrador/modulos"/>
+                        </div>
+                        <div class="col-md-4" style="text-align: left; vertical-align: top">
+                            <h:outputLabel class="form-group" value="Estado:"  />
+                            <p:selectCheckboxMenu id="menu" value="#{reporteProgramacionController.estado}" label="Estado"
+                                                  filter="true" filterMatchMode="contains" panelStyle="width:250px" style="width: 200px">
+                                <f:selectItem itemLabel="En elaboración" itemValue="1" />
+                                <f:selectItem itemLabel="Pendientes" itemValue="6" />
+                                <f:selectItem itemLabel="Retenido" itemValue="7" />
+                                <f:selectItem itemLabel="Aprobados" itemValue="2" />
+                                <f:selectItem itemLabel="Comprometidos" itemValue="8" />
+                                <f:selectItem itemLabel="Cumplidos" itemValue="9" />
+                                <f:selectItem itemLabel="Anulados" itemValue="4" />
+                                <f:selectItem itemLabel="No anulados" itemValue="5" />
+                                <f:selectItem itemLabel="Comp. parciales" itemValue="12" />
+                            </p:selectCheckboxMenu>
+                            <br></br>
+                            <div class="row">
+                                <div class="col-md-7">
+                                   <h4 class="colorLetra" style="font-weight: bold;" >
+                                        Total registros: #{fn:length(reporteProgramacionController.listaReporte)}
+                                    </h4> 
+                                </div>
+                                <div class="col-md-4">
+                                    <h:commandLink id="exportExcel">
+                                        <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                                        <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                                target="form-reporte:reporteTable" fileName="tabla" />
+                                    </h:commandLink>
+                                    <p:tooltip id="descripcion-exportExcel" for="exportExcel" value="Exportar tabla en formato .xls" trackMouse="true"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+            <h:form id="form-reporte">
+                <p:outputPanel id="reporteTablePanel">
+                    <div>
+                        <p:dataTable value="#{reporteProgramacionController.listaReporte}" var="item2"
+                                     rows="50" id="reporteTable2" paginator="true"
+                                     sortBy="#{item2.f_cliente_desp_razon_soc}"
+                                     widgetVar="reporteItemTable"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="50, 100,250"
+                                     expandableRowGroups="true"
+                                     draggableColumns="true"
+                                     stickyHeader="true"
+                                     style="font-size: 0.7em !important"
+                                     selectionMode="single" selection="#{reporteProgramacionController.reporteActual}" rowKey="#{item2.f_rowid_movto}">
+                            <p:ajax event="rowSelect" oncomplete="PF('itemDialog').show()" update=":form-reporte:detalle" listener="#{reporteProgramacionController.cargarDialogo()}"/>
+                            <p:headerRow>
+                                <p:column colspan="11">
+                                    <h:outputText value="#{item2.f_cliente_desp_razon_soc}"/>
+                                </p:column>
+                            </p:headerRow>
+                            <p:column sortBy="#{item2.f_cliente_desp_razon_soc}" filterBy="#{item2.f_cliente_desp_razon_soc}" filterMatchMode="contains">
+                                <f:facet name="header">Cliente</f:facet>
+                                <h:outputText value="#{item2.f_cliente_desp_razon_soc}"/>
+                            </p:column>
+                            <p:column sortBy="#{item2.f_nrodocto}" filterBy="#{item2.f_nrodocto}"  filterMatchMode="contains">
+                                <f:facet name="header">Pedido</f:facet>
+                                <h:outputText value="#{item2.f_nrodocto}"/>
+                            </p:column>
+                            <p:column sortBy="#{item2.f_desc_item}"  filterBy="#{item2.f_desc_item}" filterMatchMode="contains">
+                                <f:facet name="header">Item</f:facet>
+                                <h:outputText value="#{item2.f_desc_item}"/>
+                            </p:column>
+                            <p:column sortBy="#{item2.f_ext_detalle_1}" filterBy="#{item2.f_ext_detalle_1}" filterMatchMode="contains">
+                                <f:facet name="header">Tamaño</f:facet>
+                                <h:outputText value="#{item2.f_ext_detalle_1}"/>
+                            </p:column>
+                            <p:column sortBy="#{item2.f_ext_detalle_2}" filterBy="#{item2.f_ext_detalle_2}" filterMatchMode="contains">
+                                <f:facet name="header">Color</f:facet>
+                                <h:outputText value="#{item2.f_ext_detalle_2}"/>
+                            </p:column>
+                            <p:column sortBy="#{item2.f_desc_ext_detalle_2_normal}" filterBy="#{item2.f_desc_ext_detalle_2_normal}" filterMatchMode="contains">
+                                <f:facet name="header">Desc. color</f:facet>
+                                <h:outputText value="#{item2.f_desc_ext_detalle_2_normal}"/>
+                            </p:column>
+                            <p:column sortBy="#{item2.f_cant_pedida_base}" filterBy="#{item2.f_cant_pedida_base}" filterMatchMode="contains">
+                                <f:facet name="header">Cant. pedido</f:facet>
+                                <h:outputText value="#{item2.f_cant_pedida_base}">
+                                    <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column rendered="#{loginController.admin}" sortBy="#{item2.c1_existencia_real}" filterBy="#{item2.c1_existencia_real}" filterMatchMode="contains">
+                                <f:facet name="header">c1 existencia real</f:facet>
+                                <h:outputText value="#{item2.c1_existencia_real}">
+                                    <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item2.f_notas_docto}" filterBy="#{item2.f_notas_docto}" filterMatchMode="contains">
+                                <f:facet name="header">Notas documento</f:facet>
+                                <h:outputText value="#{item2.f_notas_docto}"/>
+                            </p:column>
+                            <p:column rendered="#{loginController.admin}" sortBy="#{item2.f_ops}" filterBy="#{item2.f_ops}" filterMatchMode="contains">
+                                <f:facet name="header">Nro. op</f:facet>
+                                <h:outputText value="#{item2.f_ops}"/>
+                            </p:column>
+                            <p:column rendered="#{loginController.admin}" sortBy="#{item2.f_cant_oc_op_inv_ins}" filterBy="#{item2.f_cant_oc_op_inv_ins}" filterMatchMode="contains">
+                                <f:facet name="header">Lanzado</f:facet>
+                                <h:outputText value="#{item2.f_cant_oc_op_inv_ins}"/>
+                            </p:column>
+                            <p:column sortBy="#{item2.c4_fecha_final_op_calculada}" filterBy="#{item2.c4_fecha_final_op_calculada}" filterMatchMode="contains">
+                                <f:facet name="header">Fecha terminación OP calculada </f:facet>
+                                <h:outputText value="#{item2.c4_fecha_final_op_calculada}"/>
+                            </p:column>
+                            <p:column sortBy="#{item2.f_estado_movto}" filterBy="#{item2.f_estado_movto}" filterMatchMode="contains">
+                                <f:facet name="header">Estado movimiento</f:facet>
+                                <h:outputText value="#{item2.f_estado_movto}"/>
+                            </p:column>
+                            <p:column sortBy="#{item2.f_20_00000014_M121}" filterBy="#{item2.f_20_00000014_M121}" filterMatchMode="contains">
+                                <f:facet name="header">Estado ítem</f:facet>
+                                <h:outputText value="#{item2.f_20_00000014_M121}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </p:outputPanel>
+                <p:dialog header="Detalle" widgetVar="itemDialog" closeOnEscape="true" resizable="true" width="850" height="60%" modal="true">
+                    <h:panelGroup id="detalle">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-2">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Ref. Item:"/>
+                                        <br></br>
+                                        <h:outputText value="#{reporteProgramacionController.reporteActual.f_referencia}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Desc. tem:"/>
+                                        <br></br>
+                                        <h:outputText value="#{reporteProgramacionController.reporteActual.f_desc_item}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Ext 1:"/>
+                                        <br></br>
+                                        <h:outputText value="#{reporteProgramacionController.reporteActual.f_ext_detalle_1}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Ext 2:"/>
+                                        <br></br>
+                                        <h:outputText value="#{reporteProgramacionController.reporteActual.f_ext_detalle_2}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <h:outputLabel value="Pedido:"/>
+                                        <br></br>
+                                        <h:outputText value="#{reporteProgramacionController.reporteActual.f_nrodocto}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Nro. OP asociada:"/>
+                                        <br></br>
+                                        <h:outputText value="#{reporteProgramacionController.reporteActual.f_ops}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Fecha terminación op:"/>
+                                        <br></br>
+                                        <h:outputText value="#{reporteProgramacionController.reporteActual.c3_fecha_final_op}" >
+                                            <f:convertDateTime pattern="YYYY-MM-dd"/>
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-2">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Requerido:"/>
+                                        <br></br>
+                                        <h:outputText value="#{reporteProgramacionController.reporteActual.f_cant_req_bodega}" >
+                                            <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Pendiente :"/>
+                                        <br></br>
+                                        <h:outputText value="#{reporteProgramacionController.reporteActual.c1_existencia_real}" >
+                                            <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                    <p:dataTable  id="tablaFuncion"
+                                            emptyMessage="No se encontraron registros"
+                                            value="#{reporteProgramacionController.listaReporteDetalle}" 
+                                            var="detalle"
+                                            style="font-size: 1.2em !important">
+                                    <p:column headerText="Numero OP">
+                                         <h:outputText value="#{detalle.nroDocumentoDetalle}" style="font-weight: bold"/>
+                                    </p:column>
+                                    <p:column headerText="Referencia 1">
+                                        <h:outputText value="#{detalle.referencia1Detalle}"/>
+                                    </p:column>
+                                    <p:column headerText="Fecha terminación OP">
+                                        <h:outputText value="#{detalle.fechaTerminacionDetalle}">
+                                             <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Cantidad planeada" >
+                                        <h:outputText value="#{detalle.cantPlaneadaDetalle}">
+                                            <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </p:dialog>
+            </h:form>
+        </p:outputPanel>
+        <p:outputPanel id="loginTablePanel" rendered="#{!loginController.authenticated}">
+            <div class="alert alert-warning">
+                <strong>¡Error de autenticación!</strong> Debes iniciar sesión para generar el reporte
+            </div>
+            <h:form>
+                <div class="card-body col-md-4">
+                    <div>
+                        <figure class="text-center">
+                            <img jsf:library="images" jsf:name="/logoSoloLoginWeb.png" width="70%"/>
+                        </figure>
+                    </div>
+                    <h:panelGroup id="messagePanel" layout="block">
+                        <h:messages class="alert alert-danger"/>
+                    </h:panelGroup>
+                    <div class="form-group">
+                        <label class="label-formulario">Usuario:</label>
+                        <h:inputText id="user" 
+                                     class="form-control"
+                                     value="#{loginController.username}" 
+                                     required="true"
+                                     requiredMessage="Escribe el correo">
+                        </h:inputText>
+                    </div>
+                    <div class="form-group">
+                        <label class="label-formulario">Contraseña:</label>
+                        <h:inputSecret id="password" 
+                                       class="form-control"
+                                       value="#{loginController.password}" 
+                                       required="true"
+                                       requiredMessage="Escribir la contraseña"/>
+                    </div> 
+                    <div class="form-group text-center">
+                        <h:commandButton class="btn btn-primary"
+                                         value="Acceder"
+                                         action="#{loginController.login}">
+                        </h:commandButton>
+                    </div>
+                </div>
+            </h:form>
+        </p:outputPanel>
+    </body>
+</html>
+

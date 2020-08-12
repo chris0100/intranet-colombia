@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{creacionItemController.prepareListRechazadas}">
+                            <i class="fa fa-rocket"></i> 
+                            <span>Gestión de creación de items</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{creacionItemController.prepareListRechazadasNuevo}">
+                            <i class="fa fa-file-o"></i> 
+                            <span>Solicitudes items nuevos</span> <span style="background: red; color: white; font-size: 1.2em; font-weight: bold; padding: .3em;
+                                                                        border-radius: 100%"> (#{fn:length(creacionItemController.listaCreacionItemRechazosItemPatron)}) </span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Solicitudes rechazadas</ui:define> 
+        <ui:define name="title2">Proceso comercial</ui:define>
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+             <h:form id="documentosFormList">
+                <p:outputPanel id="documentosTablePanel">
+                    <p:dataTable value="#{creacionItemController.listaCreacionItemRechazos}" var="item"
+                                 rows="50" id="documentosTable" paginator="true"
+                                 rowStyleClass="#{item.estado eq 2 ? 'color2': null}"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150">
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <p:button icon="ui-icon-arrowthick-1-w"
+                                                value="Volver pagina principal" 
+                                                style="font-size: 1.2em !important; padding: 5px; left: 0"
+                                                outcome="/administrador/modulos.xhtml"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h4 class="colorLetra" style="font-weight: bold" >
+                                            Total de solicitudes rechazadas: #{fn:length(creacionItemController.listaCreacionItemRechazos)}
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p:commandButton icon="ui-icon-script"
+                                                         type="button" value="Items creados"
+                                                         style="font-size: 1.2em !important; padding: 5px; left: 0"
+                                                         onclick="PF('tiempoIndicador').show();"/>
+                                        
+                                    </div>
+                                    <div class="col-md-1">
+                                        <h:commandLink id="exportExcel">
+                                            <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                                            <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                                    target="documentosTable" fileName="inventario" />
+                                        </h:commandLink>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:column filterBy="#{item.codigoItem}" width="80" filterMatchMode="contains">
+                            <f:facet name="header">Cod. item</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.codigoItem}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcion}" filterMatchMode="contains">
+                            <f:facet name="header">Descripcion</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.descripcion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcionExt1}" filterMatchMode="contains">
+                            <f:facet name="header">Ext 1.</f:facet>
+                            <h:outputText value="#{item.descripcionExt1}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcionExt2}" filterMatchMode="contains">
+                            <f:facet name="header">Ext 2.</f:facet>
+                            <h:outputText value="#{item.descripcionExt2}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcionListaPrecio}" filterMatchMode="contains">
+                            <f:facet name="header">Lista precio</f:facet>
+                            <h:outputText value="#{item.descripcionListaPrecio}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.precio}" filterMatchMode="contains">
+                            <f:facet name="header">Precio</f:facet>
+                            <h:outputText value="#{item.precio}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.usuarioSolicitud}" filterMatchMode="contains">
+                            <f:facet name="header">Usuario solicitud</f:facet>
+                            <h:outputText value="#{item.usuarioSolicitud}"/>
+                        </p:column>
+                        <p:column priority="7">
+                             <f:facet name="header">Fecha de solicitud</f:facet>
+                             <h:outputText value="#{item.fechaSolicitud}">
+                                 <f:convertDateTime pattern="MMMM dd, YYYY HH:mm"/>
+                             </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{item.usuarioCreacion}" filterMatchMode="contains">
+                            <f:facet name="header">Usuario creación</f:facet>
+                            <h:outputText value="#{item.usuarioCreacion}"/>
+                        </p:column>
+                        <p:column priority="7">
+                             <f:facet name="header">Fecha del rechazo</f:facet>
+                             <h:outputText value="#{item.fechaCreacion}">
+                                 <f:convertDateTime pattern="dd/MM/YYYY HH:mm"/>
+                             </h:outputText>
+                        </p:column>
+                        <p:column>
+                             <f:facet name="header">Notas comercial</f:facet>
+                             <h:outputText value="#{item.notasComercial}">
+                             </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcionRespuesta}" filterMatchMode="contains">
+                            <f:facet name="header">Descripción rechazo</f:facet>
+                            <h:outputText value="#{item.descripcionRespuesta}" escape="false"/>
+                        </p:column>
+                        <p:column width="100">
+                            <p:commandButton ajax="false" icon="ui-icon-pencil" id="actualizar" action="#{creacionItemController.prepareEditSolicitud}" >
+                                <f:setPropertyActionListener value="#{item}" target="#{creacionItemController.creacionItemActual}"/>
+                                <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{creacionItemController.usuarioActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-botonActualizacion" for="actualizar" value="Editar contenido" trackMouse="true" />
+                            <p:commandButton id="boton-delete"  icon="ui-icon-trash" action="#{creacionItemController.deleteSolicitud}" update="documentosFormList">
+                                <p:confirm header="Confirmación" message="¿Esta seguro que desea eliminar el documento?" icon="ui-icon-alert" />
+                                <f:setPropertyActionListener value="#{item}" target="#{creacionItemController.creacionItemActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-delete" for="boton-delete" value="Eliminar contenido" trackMouse="true"/>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
+    

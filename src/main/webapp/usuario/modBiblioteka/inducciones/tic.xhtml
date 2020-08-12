@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > <h:commandLink style="color: #185291" value=" Inducción Corporativa" action="induccionGeneral"/> > TIC
+                </h:form>
+                <header class="header-paginas">
+                    <h2><span class="titulo-paginas">Tecnologías de la Información y Comunicaciones – TIC</span></h2>
+                </header>
+                <div class="row">
+                    <div class="col-md-8">
+                        <figure class="card">
+                            <video controls="true">
+                                <source src="http://eureka/resources/videos/inducciones/tic/Herramientas_TIC.mp4" type="video/mp4"/>
+                            </video>
+                        </figure> 
+                    </div>
+                    <div class="col-md-4 text-justify">
+                        <h4>Nuestra Razón de Ser</h4>
+                        <p>La misión principal del área de TI es facilitar una relación armónica, 
+                           entre la gente, los procesos y la tecnología garantizando la disponibilidad,
+                           integridad y seguridad en los servicios ofrecidos.
+                        </p>
+                    </div>
+                </div>
+                
+                <h4>Enfoque del Área</h4>
+                <figure class="img-centrado">
+                    <img src="#{request.contextPath}/resources/images/modBiblioteca/inducciones/img1.png"></img> 
+                </figure> 
+                <p class="text-justify" >
+                    <span class="fa fa-check"/><strong> Alineación estratégica:</strong> enfocado en garantizar el vínculo entre el plan de negocio y el plan de TI; en definir, mantener y validar la propuesta de valor, así como alinear las operaciones del área con las de la compañía.
+                    <br></br>
+                    <span class="fa fa-check"/><strong>
+                    Entrega Valor:</strong> se refiere a ejecutar la propuesta de valor a todo lo largo del ciclo de entrega de servicios, asegurando que TI genere los beneficios establecidos en la estrategia, concentrándose en la gestión de la información y mejora de la eficiencia de los procesos.
+                    <br></br>
+                    <span class="fa fa-check"/><strong>
+                    Manejo de Riesgos: </strong> se requiere conciencia de los riesgos por los altos ejecutivos de la empresa y un claro entendimiento del apetito de riesgos de la organización, entender los requerimientos de cumplimiento, transparencia de los riesgos significativos y la inclusión de responsabilidades en la administración de riesgos de la compañía.
+                    <br></br>
+                    <span class="fa fa-check"/><strong>
+                    Manejo de Recursos: </strong> se refiere a la inversión óptima, así como la adecuada administración de las herramientas tecnológicas: aplicaciones, información, infraestructura y gente.
+                    <br></br>
+                    <span class="fa fa-check"/><strong>
+                    Mediciones de Desempeño: </strong> rastrea y monitorea la estrategia de implementación, la terminación de proyectos, el uso de los recursos, el desempeño de los procesos y la entrega del servicio, utilizando por ejemplo, tableros de control que convierten la estrategia en acciones para el logro de las metas.
+                </p>
+                <h4>Composición del área</h4>
+                <p class="text-justify">
+                    Nuestra área presenta una sencilla estructura que permite la interacción directa de cada uno de los roles asumidos en el equipo.
+                    <br></br>
+                    <figure class="img-centrado">
+                        <img src="#{request.contextPath}/resources/images/modBiblioteca/inducciones/organigramaTI.jpg"></img>
+                    </figure>
+                </p> 
+                <h4>Sistemas de Información</h4>
+                <p class="text-justify" >
+                    Se pretende lograr una interrelación lógica en la medida de implementación de los sistemas de información que cubran las necesidades de la compañía.
+                </p>
+                <figure class="img-centrado">
+                    <img width="500px" src="#{request.contextPath}/resources/images/modBiblioteca/inducciones/img2.png"></img>
+                </figure>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>

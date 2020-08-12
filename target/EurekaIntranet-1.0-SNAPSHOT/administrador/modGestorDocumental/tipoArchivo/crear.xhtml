@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{documentoController.prepareList}">
+                            <i class="fa fa-book"></i> 
+                            <span>Gestión de documentos</span>
+                        </h:commandLink>
+                    </li>
+                    <li >
+                        <h:commandLink action="#{procesoController.prepareList}">
+                            <i class="fa fa-cubes"></i> 
+                            <span>Maestros de procesos</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                         <h:commandLink action="#{tipoDocumentoController.prepareList}">
+                            <i class="fa fa-file-text"></i> 
+                            <span>Maestros de tipos archivos</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Crear nuevo tipo de archivo</ui:define> 
+        <ui:define name="title2">Ingresa los datos del tipo de archivo</ui:define>
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="formulario-crearDocu">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h:outputLabel value="Codigo del tipo de archivo:"  />
+                            <h:inputText class="form-control" 
+                                   id="codigoInputText" 
+                                   value="#{tipoDocumentoController.tipoDocumentoActual.idTipoDocumento}" 
+                                   required="true"
+                                   validatorMessage="El codigo no puede tener ningún tipo de símbolo ni acento"
+                                   requiredMessage="Por favor ingrese el codigo">
+                                   <f:ajax execute="@this" render="codigoMessage"/>
+                                   <f:validateRegex pattern="[a-zA-Z]*"/>
+                            </h:inputText>
+                            <p:message id="codigoMessage" for="codigoInputText" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Nombre:"  />
+                            <h:inputText class="form-control" 
+                                   id="nombreInputText" 
+                                   value="#{tipoDocumentoController.tipoDocumentoActual.nombre}" 
+                                   required="true"
+                                   requiredMessage="Por favor ingrese el nombre">
+                                   <f:ajax execute="@this" render="documentoMessage"/>
+                            </h:inputText>
+                            <p:message id="nombreMessage" for="nombreInputText" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <p:commandButton class="boton-prime"
+                                             ajax="false"
+                                             icon="fa fa-save"
+                                             value="Guardar"
+                                             action="#{tipoDocumentoController.add}"
+                                             onclick="onSubmitButton();"/>
+                        </div>
+                        <div class="form-group">    
+                            <p:button class="boton-prime"
+                                      style="background: red !important" 
+                                      icon="fa fa-arrow-left"
+                                      value="Cancelar" outcome="lista"/>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

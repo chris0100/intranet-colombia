@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{capturaParadaGeController.prepareDashboard}">
+                            <i class="fa fa-dashboard" aria-hidden="true"></i> 
+                            <span>Dashboard</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{capturaParadaGeController.prepareList}">
+                            <i class="fa fa-rocket"></i> 
+                            <span>Capturar información</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{operariosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de operarios</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{turnosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de turnos</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                         <h:commandLink action="#{nominalGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de Maquinas/Nominal</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{paradasGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de tipos de Paradas</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="/administrador/modGeTelares/menuMaestros">
+                            <i class="fa fa-cog"></i> 
+                            <span>Más configuraciones</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Corporación</ui:define>   
+        <ui:define name="title2">Corporación</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="Create">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class=" form-group">
+                            <h:outputLabel value="Nombre de la corporación:"  />
+                            <p:inputText id="corporacion"
+                                        required="true"
+                                        maxlength="100"
+                                        requiredMessage="Ingresar corporación"
+                                        value="#{corporacionGeController.corporacionActual.descripcion}">
+                                 <f:ajax execute="@this" render="corporacionMessage"/>
+                            </p:inputText>
+                            <p:message id="corporacionMessage" for="corporacion" styleClass="error"/>
+                        </div>
+
+                        <div class="form-group">
+                            <p:commandButton class="btn btn-primary btn-block"
+                                             ajax="false"
+                                             value="Guardar"
+                                             icon="fa fa-cube"
+                                             styleClass="boton-prime"
+                                             style="width: 100%"
+                                             action="#{corporacionGeController.add}"
+                                             onclick="onSubmitButton();"/>
+                            <p:button styleClass="boton-primeRojo" 
+                                    value="Cancelar" 
+                                    outcome="lista"
+                                    icon="fa fa-arrow-left"
+                                    style="margin-top: 10px; background: red !important; width: 100%"/>
+                        </div> 
+                     </div>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

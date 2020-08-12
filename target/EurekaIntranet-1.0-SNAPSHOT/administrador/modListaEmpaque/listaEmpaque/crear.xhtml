@@ -1,0 +1,354 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                   <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{listaEmpaqueController.prepareListaEmpaque}"
+                                       rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi || loginController.gestorLpVentas}">
+                            <i class="fa fa-cubes" aria-hidden="true"></i> 
+                            <span>Listas de empaque</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{listaEmpaqueController.prepareListaEmpaqueCompleta}"
+                                       rendered="#{loginController.gestorLpAdmin}">
+                            <i class="fa fa-list" aria-hidden="true"></i> 
+                            <span>Listas de empaque completa</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{dimensionCajaController.prepareList}"
+                                       rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi || loginController.gestorLpVentas}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Lista de dimensiones de cajas</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{configImpresoraLabelController.prepareList}"
+                                       rendered="#{loginController.gestorLpAdmin}">
+                            <i class="fa fa-print"></i> 
+                            <span>Lista asignación impresora</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Crear nueva lista de empaque</ui:define> 
+        <ui:define name="title2">Ingresa los datos de la lista de empaque</ui:define>
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="formulario-crearDocu" enctype="multipart/form-data">
+                <div class="row" style="margin-bottom: 1em">
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <h:outputLabel value="Código:"/>
+                                <p:inputText id="codigo"
+                                    style="width: 100%;"
+                                    required="true"
+                                    disabled="true"
+                                    requiredMessage="Por favor ingresar el código de la lista de empaque"
+                                    value="#{listaEmpaqueController.listaEmpaqueActual.codigoLista}"/>
+                                <p:message id="codigoMessage" for="codigo" styleClass="error"/>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <h:outputLabel value="Tipo:"/>
+                                <p:inputText id="tipo"
+                                    style="width: 100%;"
+                                    required="true"
+                                    disabled="true"
+                                    requiredMessage="Por favor ingresar el código de la lista de empaque"
+                                    value="#{listaEmpaqueController.listaEmpaqueActual.tipoListaEmpaque}"/>
+                                <p:message id="tipoMessage" for="tipo" styleClass="error"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="No. de caja:"/>
+                            <p:inputText id="caja" 
+                                style="width: 100%" 
+                                disabled="true"
+                                value="#{listaEmpaqueController.caja}" >
+                            </p:inputText>
+                            <p:message id="cajaMessage" for="caja" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Nit del cliente:"/>
+                            <p:autoComplete id="nit"
+                                style="width: 100%"
+                                required="true"
+                                disabled="#{listaEmpaqueController.estadoListaEmpaque}"
+                                requiredMessage="Por favor ingresar el nit del cliente"
+                                value="#{listaEmpaqueController.nitRazonSocial}" 
+                                forceSelection="true"
+                                maxResults="20"
+                                itemValue="#{listaEmpaqueController.nitRazonSocial}"
+                                completeMethod="#{listaEmpaqueController.completeNit}">
+                                <p:ajax listener="#{listaEmpaqueController.consultarDatosCliente}" event="itemSelect" update="razonSocial telefono direccion ciudad nit"/>  
+                                <f:ajax execute="@this" render="razonSocial telefono direccion ciudad nit"/>
+                            </p:autoComplete>
+                            <p:message id="nitMessage" for="nit" styleClass="error"/>
+                        </div>
+                        <p:commandButton value="Abrir caja"
+                            icon="fa fa-dropbox"
+                            ajax="false"
+                            styleClass="boton-prime"
+                            action="#{listaEmpaqueController.prepareCreateCaja}">
+                            <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{listaEmpaqueController.usuarioActual}"/>
+                        </p:commandButton>                        
+                    </div>
+                    <div style="position: absolute; bottom: 5em;" >
+                            <div class="container row">
+                                <div class="col-sm-4 form-group">    
+                                    <p:button styleClass="boton-primeRojo" 
+                                        value="Cancelar" 
+                                        outcome="lista"
+                                        icon="fa fa-arrow-left"
+                                        style="margin-top: 25px; background: red !important; width: 100%"/>
+                                </div>
+                                <div class="col-sm-3 form-group">    
+
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <button jsf:action="#{listaEmpaqueController.addListaEmpaque}"
+                                           type="submit" 
+                                           style="margin-top: 1.5em; width: 100%; color: white; font-weight: bold; font-size: 1.2em !important; text-transform: none !important"
+                                           class="boton-prime" 
+                                           onclick="onSubmitButton();"
+                                           id="myButton1">
+                                        <i class="fa fa-thumbs-up"></i> Comprometer en UnoEE
+                                        <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{listaEmpaqueController.usuarioActual}"/>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="col-md-8">
+                        <div class="panel panel-primary form-group"  style="border-radius: 0;">
+                            <div class="panel-heading"  style="border-radius: 0"><h4 class="letra-panelDescriEdu"> <i class="fa fa-truck" aria-hidden="true"></i> Datos del cliente</h4></div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group col-md-6">
+                                            <h:outputLabel value="Razón social:"/>
+                                            <p:inputText id="razonSocial"
+                                                         style="width: 100%"
+                                                         value="#{listaEmpaqueController.razonSocialCliente}"
+                                                         maxlength="100" 
+                                                         disabled="true">
+                                            </p:inputText>
+                                            <p:message id="razonSocialMessaje" for="razonSocial" styleClass="error"/>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <h:outputLabel value="Dirección:"/>
+                                            <p:inputText id="direccion"
+                                                         style="width: 100%"
+                                                         value="#{listaEmpaqueController.direccionCliente}" 
+                                                         maxlength="100"
+                                                         disabled="true">
+                                            </p:inputText>
+                                            <p:message id="direccionMessaje" for="direccion" styleClass="error"/>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <h:outputLabel value="Teléfono:"/>
+                                            <p:inputText id="telefono"
+                                                         style="width: 100%"
+                                                         value="#{listaEmpaqueController.telefonoCliente}" 
+                                                         maxlength="100"
+                                                         disabled="true">
+                                            </p:inputText>
+                                            <p:message id="telefonoMessaje" for="telefono" styleClass="error"/>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <h:outputLabel value="País/Ciudad"/>
+                                            <p:inputText id="ciudad"
+                                                         style="width: 100%"
+                                                         value="#{listaEmpaqueController.paisCliente} / #{listaEmpaqueController.ciudadCliente}" 
+                                                         maxlength="100"
+                                                         disabled="true">
+                                            </p:inputText>
+                                            <p:message id="ciudadMessaje" for="ciudad" styleClass="error"/>
+                                        </div>
+                                    </div>
+                                </div>                                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-primary form-group"  style="border-radius: 0; margin-bottom: 5em">
+                    <div class="panel-heading"  style="border-radius: 0"><h4 class="letra-panelDescriEdu"><i class="fa fa-cubes" aria-hidden="true"> </i> Cajas que componen la lista de empaque</h4></div>
+                    <div class="panel-body">
+                        <h:panelGroup id="agregarFuncion">
+                            <div class="row">
+                                <h:form id="formTablaItems">
+                                    <h:panelGroup class="col-md-12" id="itemsGroup">
+                                        <p:dataTable  id="tablaFuncion" 
+                                                      emptyMessage="No se encontraron registros" 
+                                                      value="#{listaEmpaqueController.listaCaja}" 
+                                                      rowKey="#{item.idCaja}"
+                                                      rowStyleClass="#{item.estado eq 0 ? 'color3': item.estado eq 1 ? 'color1': null}"
+                                                      var="item">
+                                            <p:ajax event="rowSelect" update="@form" />
+                                            <p:ajax event="rowToggle" listener="#{listaEmpaqueController.llenarListaCajaItems(item)}" update="tablaFuncion"/>
+                                            <p:column exportable="false" width="40">  
+                                                <p:rowToggler/>  
+                                            </p:column>  
+                                            <p:rowExpansion>
+                                                <p:dataTable value="#{listaEmpaqueController.listaEmpaqueHasCaja}" var="item2">
+                                                    <f:facet name="header">
+                                                        <div class="container-fluid">
+                                                            <div class="row">
+                                                                 <div class="col-md-8">
+                                                                    <h5 class="colorLetra" style="font-weight: bold; text-align: left" >
+                                                                        Total paquetes en esta caja: #{listaEmpaqueController.sumaCantCaja}
+                                                                    </h5>
+                                                                 </div>
+                                                            </div>
+                                                        </div>
+                                                    </f:facet>
+                                                    <p:column>
+                                                        <f:facet name="header">Pedido</f:facet>
+                                                        <h:outputText value="#{item2.idPedido}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <f:facet name="header">O.C</f:facet>
+                                                        <h:outputText value="#{item2.oc}"/>
+                                                    </p:column>
+                                                     <p:column>
+                                                        <f:facet name="header">Código item</f:facet>
+                                                        <h:outputText value="#{item2.codigoItem}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <f:facet name="header">Descripción</f:facet>
+                                                        <h:outputText value="#{item2.descripcion}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                       <f:facet name="header">Extensión 1</f:facet>
+                                                       <h:outputText value="#{item2.idExt1Detalle}"/> - <h:outputText value="#{item2.descripcionExt1}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                       <f:facet name="header">Extensión 2</f:facet>
+                                                       <h:outputText value="#{item2.idExt2Detalle}"/> - <h:outputText value="#{item2.descripcionExt2}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <f:facet name="header">Bodega</f:facet>
+                                                        <h:outputText value="#{item2.idBodega}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <f:facet name="header">Und. medida</f:facet>
+                                                        <h:outputText value="#{item2.unidad}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <f:facet name="header">Cantidad pedida</f:facet>
+                                                        <h:outputText value="#{item2.cantPedida}">
+                                                            <f:convertNumber type="currency"
+                                                                            currencySymbol=""
+                                                                            maxFractionDigits="2"/>
+                                                        </h:outputText>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <f:facet name="header">Cantidad comprometida</f:facet>
+                                                        <h:outputText value="#{item2.cantComprometida}">
+                                                            <f:convertNumber type="currency"
+                                                                            currencySymbol=""
+                                                                            maxFractionDigits="2"/>
+                                                        </h:outputText>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <f:facet name="header">Cantidad</f:facet>
+                                                        <h:outputText style="color: red" value="#{item2.cantCodBarraCaja}"/> - <h:outputText value="#{item2.cantCodBarra}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <f:facet name="header">Cant. Paquetes</f:facet>
+                                                        <h:outputText value="#{item2.cantPaquete}"/>
+                                                    </p:column>
+                                               </p:dataTable>
+                                            </p:rowExpansion>
+                                            <p:column headerText="No. Caja" width="50">
+                                                <h:outputText value="#{item.numeroCaja}" style="font-weight: bold"/>
+                                            </p:column>
+                                            <p:column headerText="Pedido(s) asociados">
+                                                <h:outputText value="#{item.pedidos}"/>
+                                            </p:column>
+                                            <p:column headerText="OC(s) asociadas">
+                                                <h:outputText value="#{item.oc}"/>
+                                            </p:column>
+                                            <p:column headerText="Dimensiones de la caja">
+                                                <h:outputText value="#{item.idDimension.descripciones}"/>
+                                            </p:column>
+                                            <p:column headerText="Peso neto">
+                                                <h:outputText value="#{item.pesoNeto}"/>
+                                            </p:column>
+                                            <p:column headerText="Peso bruto">
+                                                <h:outputText value="#{item.pesoBruto}"/>
+                                            </p:column>
+                                            <p:column headerText="Partida arancelaria">
+                                                <h:outputText value="#{item.partidaArancelaria}"/>
+                                            </p:column>
+                                            <p:column style="text-align: center !important;">
+                                                <f:facet name="header">Fecha creación</f:facet>
+                                                <h:outputText value="#{item.fechaCreacion}">
+                                                    <f:convertDateTime pattern="MMM dd, YYYY HH:mm"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column style="text-align: center !important;">
+                                                <f:facet name="header">Fecha cierre</f:facet>
+                                                <h:outputText value="#{item.fechaCierre}">
+                                                    <f:convertDateTime pattern="MMM dd, YYYY HH:mm"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column>
+                                                <f:facet name="header">Usuario creación</f:facet>
+                                                <h:outputText value="#{item.responsable}"/>
+                                            </p:column>
+                                            <p:column width="50">
+                                                <p:commandButton icon="ui-icon-pencil" 
+                                                                action="#{listaEmpaqueController.prepareEditCaja}"
+                                                                process="@this"
+                                                                ajax="false">
+                                                    <f:setPropertyActionListener value="#{item}" target="#{listaEmpaqueController.cajaActual}"/>
+                                                    <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{listaEmpaqueController.usuarioActual}"/>
+                                                </p:commandButton>
+                                            </p:column>
+                                       </p:dataTable>
+                                    </h:panelGroup>
+                                </h:form>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                </div>
+                <div class="load"></div>
+                <script>
+                    $('#myButton1').click(function(){
+                      $('#myButton1').hide();
+                      $('.load').addClass('loading');
+                        setTimeout(function () { 
+                        $('.load').removeClass('loading');
+                        $('#myButton1').show();
+
+                      }, 200000000);
+                    });
+                </script>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{documentoController.prepareList}">
+                            <i class="fa fa-book"></i> 
+                            <span>Gestión de documentos</span>
+                        </h:commandLink>
+                    </li>
+                    <li >
+                        <h:commandLink action="#{procesoController.prepareList}">
+                            <i class="fa fa-cubes"></i> 
+                            <span>Maestros de procesos</span>
+                        </h:commandLink>
+                    </li>
+                     <li>
+                         <h:commandLink action="#{tipoDocumentoController.prepareList}">
+                            <i class="fa fa-file-text"></i> 
+                            <span>Maestros de tipos archivos</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Gestión documental</ui:define>   
+        <ui:define name="title2">Administración de archivos</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <div id="pdf" style="position: absolute;" >
+                <iframe width="900"
+                        height="1000"
+                        src="#{request.contextPath}/resources/images/file.pdf">
+                </iframe>
+            </div>
+            <div id="iframeBlocker" style="position: relative; margin: 0; width: 880px; height: 1000px; z-index: 5000; opacity: 1; border: 10px solid gray;
+                  border-top: 40px solid gray">
+            </div>
+            <script>
+                document.oncontextmenu = function(){return false} 
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>

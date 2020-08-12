@@ -1,0 +1,726 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <head jsf:id="head">
+        <title><ui:insert name="title"></ui:insert></title>
+        <link rel="icon" type="image/png" href="#{request.contextPath}/resources/images/logoSoloLoginWeb.png"/>
+        <link href="#{request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet"/>
+        <style>
+            .SI{
+                background-color: lightgreen !important;
+                color: black;
+                font-size: 1em;
+                font-weight: bold;
+                padding: 2em;
+                padding-right: 3em;
+                margin: 0 !important;
+                margin-left: -2em !important;
+            }
+
+            .NO{
+                background-color: lightcoral !important;
+                color: black;
+                font-size: 1em;
+                font-weight: bold;
+                padding: 2em;
+                padding-right: 3em;
+                margin: 0 !important;
+                margin-left: -2em !important;
+            }
+            .PARCIAL{
+                background : lightgoldenrodyellow !important;
+                color: black;
+                font-size: 1em;
+                font-weight: bold;
+                padding: 2em;
+                padding-right: 3em;
+                margin: 0 !important;
+                margin-left: -2.5em !important; 
+            }
+            .BLOQUEADO{
+                background : #b4edfe !important;
+                color: black;
+                font-size: 1em;
+                font-weight: bold;
+                padding: 2em;
+                padding-right: 3em;
+                margin: 0 !important;
+                margin-left: -2.5em !important; 
+            }
+            .IMPRESO{
+                background : #c5c5b3;
+                color: black;
+                font-size: 1em;
+                font-weight: bold;
+                padding: 2em;
+                padding-right: 3em;
+                margin: 0 !important;
+                margin-left: -2.5em !important; ;
+                color: black;
+                font-size: 1em;
+                font-weight: bold;
+                padding: 2em;
+                padding-right: 3em;
+                margin: 0 !important;
+                margin-left: -2.5em !important; 
+            }
+            .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight{
+                color: black !important;
+                background: #fafafb !important;
+                border: 1px solid #d5d5d5;
+            }
+            .ui-inputfield{
+                width: 100% !important;
+            }
+        </style>
+    </head>
+    <body style="margin: 0 !important; padding: 0 !important" >
+        <p:outputPanel>
+            <h:form id="form-filtrosReporte">
+                <div class="container">
+                    <h2>Reporte de ordenes despacho</h2>
+                    <div class="row">
+                        <div class="form-group col-md-2">
+                            <h:outputLabel value="Fecha inicio del reporte:"  style="width: 100% !important"/>
+                            <p:calendar id="fechaRevision" 
+                                        autocomplete="off"
+                                        required="true" 
+                                        requiredMessage="Ingresa Fecha 1"
+                                        value="#{ordenesDespachoController.fechaParametro1}"
+                                        pattern="dd/MM/yyyy" maxdate="#{ordenesDespachoController.fechaParametro2}">
+                                <f:ajax execute="fechaRevision" render="msgFechaRevision"/>
+                                <p:ajax event="dateSelect" process="@this" update="fechaRevision fechaEntrega"/>
+                                <p:ajax event="valueChange" process="@this" update="fechaEntrega fechaRevision"/>
+                            </p:calendar>
+                            <h:message id="msgFechaRevision" for="fechaRevision"  styleClass="error"/>
+                            <h:outputLabel value="Fecha final del reporte:"  style="width: 100% !important"/>
+                            <p:calendar id="fechaEntrega" 
+                                        required="true" 
+                                        autocomplete="off"
+                                        requiredMessage="Ingresa Fecha 2"
+                                        style="width: 100% !important"
+                                        value="#{ordenesDespachoController.fechaParametro2}"
+                                        pattern="dd/MM/yyyy" mindate="#{ordenesDespachoController.fechaParametro1}">
+                                <f:ajax execute="fechaEntrega" render="msgFechaEntraga"/>
+                                <p:ajax event="dateSelect" process="@this" update="fechaRevision fechaEntrega"/>
+                                <p:ajax event="valueChange" process="@this" update="fechaEntrega fechaRevision"/>
+                            </p:calendar>
+                            <h:message id="msgFechaEntrega" for="fechaEntrega"  styleClass="error"/>
+                            <p:commandButton style="margin-top: 17px; width: 100%" action="#{ordenesDespachoController.prepareReporteConsultar}"
+                                    type="submit" 
+                                    icon="ui-icon-search"
+                                    value="Consultar"
+                                    styleClass="btn btn-primary"
+                                    id="myButton1"
+                                    ajax="false"
+                                    update="@this form-reporte:reporteTable form-reporte:reporteTable2">
+                            </p:commandButton>
+                            
+                        </div>
+                        <div class="col-md-4" style="text-align: left; vertical-align: top">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h:outputLabel value="Estado:"  />
+                                    <p:selectCheckboxMenu id="menu" value="#{ordenesDespachoController.estado}" label="Estado"
+                                                          filter="true" filterMatchMode="contains" panelStyle="width:250px" style="width: 100%">
+                                        <f:selectItem itemLabel="En elaboración" itemValue="1" />
+                                        <f:selectItem itemLabel="Pendientes" itemValue="6" />
+                                        <f:selectItem itemLabel="Retenido" itemValue="7" />
+                                        <f:selectItem itemLabel="Aprobados" itemValue="2" />
+                                        <f:selectItem itemLabel="Comprometidos" itemValue="8" />
+                                        <f:selectItem itemLabel="Cumplidos" itemValue="9" />
+                                        <f:selectItem itemLabel="Anulados" itemValue="4" />
+                                        <f:selectItem itemLabel="No anulados" itemValue="5" />
+                                        <f:selectItem itemLabel="Comp. parciales" itemValue="12" />
+                                    </p:selectCheckboxMenu> 
+                                </div>
+                                <div class="col-md-6">
+                                    <h:outputLabel value="Opción de consulta:"  />
+                                    <p:selectOneMenu id="opcionFiltro" value="#{ordenesDespachoController.opcionFechaReporte}" 
+                                                     panelStyle="width:250px" style="width: 100%">
+                                        <f:selectItem itemLabel="Consultar solo rango de fecha " itemValue="1" />
+                                        <f:selectItem itemLabel="Consultar solo 31 de diciembre" itemValue="2" />
+                                        <f:selectItem itemLabel="Consultar todo" itemValue="0" />
+                                    </p:selectOneMenu> 
+                                </div>
+                            </div>
+                            <h:outputLabel value="Tope máximo valor neto pendiente:"  />
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <p:inputText class="form-control" disabled="true" value="#{ordenesDespachoController.configActual.numerico}"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <p:button value="Editar"
+                                              icon="ui-icon-pencil"
+                                              rendered="#{loginController.adminOrdenDespacho}"
+                                              outcome="listaConfiguracion"
+                                              style="background: darkslateblue !important; width: 100%; height: 33px">
+                                    </p:button>
+                                </div>
+                            </div>
+                            <p:button value="Volver" 
+                                      icon="ui-icon-arrowthick-1-w" 
+                                      style="background: red; margin-top: 10px" 
+                                      styleClass="btn btn-primary" 
+                                      outcome="/administrador/modulos"/>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p:commandButton styleClass="boton-prime" 
+                                        value="Imprimir completo" 
+                                        icon="ui-icon-print"
+                                        rendered="#{loginController.adminOrdenDespacho}"
+                                        onclick="PF('dlgImpCompleto').show();"
+                                        style="margin-top: 10px; background: red !important; width: 100%"/>
+                                </div>
+                                <div class="col-md-12">
+                                    <p:commandButton value="Imprimir cliente"
+                                                    onclick="PF('dlgImpCliente').show();"
+                                                    icon="ui-icon-print"
+                                                    rendered="#{loginController.adminOrdenDespacho}"
+                                                    actionListener="#{ordenesDespachoController.generarListaClienteImprimir}"
+                                                    update="formImpCliente:listaImprimir"
+                                                    style="margin-top: 10px; width: 100%">
+                                        <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{ordenesDespachoController.usuarioActual}"/>
+                                    </p:commandButton>
+                                </div>
+                                <div class="col-md-12">
+                                    <p:commandButton style="margin-top: 10px; width: 100%" 
+                                        rendered="#{loginController.admin}"
+                                        action="#{ordenesDespachoController.enviarXlsOrdenesDespacho}"
+                                        type="submit" 
+                                        icon="ui-icon-mail-closed"
+                                        value="Enviar foto"
+                                        id="myButton2"
+                                        ajax="false"
+                                        update="@this form-reporte:reporteTable form-reporte:reporteTable2">
+                                    </p:commandButton>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 card">
+                            <div class="form-group card-body" style="background: whitesmoke; padding: 10px; border: 1px solid grey; border-radius: 5px">
+                                <strong>Total registros:</strong> #{fn:length(ordenesDespachoController.listaReporte)}<br></br>
+                                <strong>Total clientes/Punto envio:</strong> #{fn:length(ordenesDespachoController.quitarDuplicadosPuntoEnvio())}<br></br>
+                                <strong>Total clientes habilitados impresión:</strong> #{fn:length(ordenesDespachoController.quitarDuplicadosPuntoEnvioHabilitado())} <br></br>
+                                <strong>Total pedidos habilitados impresion:</strong> #{fn:length(ordenesDespachoController.quitarDuplicadosPedidoHabilitado())} <br></br>
+                                <strong>Total ítems comprometidos:</strong> #{ordenesDespachoController.contItemComp} <br></br>
+                                <strong>Total ítems comprometidos parcial:</strong> #{ordenesDespachoController.contItemCompParcial} <br></br>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </h:form>
+            <h:form id="form-reporte">
+                <p:outputPanel id="reporteTablePanel">
+                    <div>
+                        <p:commandButton type="button" id="expandir" onclick="jQuery('.ui-rowgroup-toggler').click()" style="margin-right: 10px" value="Expandir/Contraer todo" />
+                        <h:commandLink id="exportExcel">
+                            <p:graphicImage library="images" name="/icons/logoExcel.png" width="35"/>
+                            <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                    target=":form-reporte:reporteTable" fileName="tabla" />
+                        </h:commandLink>
+                        <p:tooltip id="descripcion-exportExcel" for="exportExcel" value="Exportar tabla en formato .xls" trackMouse="true"/>
+                         <p:dataTable value="#{ordenesDespachoController.listaReporte}" var="item"
+                                     rows="150" id="reporteTable" paginator="true" 
+                                     sortBy="#{item.f_punto_envio}" widgetVar="reporteItemTable"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="150, 300, 450"
+                                     scrollable="true"
+                                     scrollWidth="3800"
+                                     expandableRowGroups="true"
+                                     draggableColumns="true"
+                                     style="font-size: 0.8em !important;"
+                                     selectionMode="single" selection="#{ordenesDespachoController.reporteActual}" rowKey="#{item.f_rowid_movto_431}">
+                             <p:ajax event="rowSelect" oncomplete="PF('itemDialog').show()" process="@this"  update="formDetalleItem:detalle" listener="#{ordenesDespachoController.llenarHistorialImpresion}"/>
+                            <p:headerRow>
+                                <p:column styleClass="my-class" colspan="42">
+                                    <h:outputText value="#{item.f_punto_envio}"/>
+                                    - CLIENTE CUMPLE CONDICIÓN:
+                                    <h:outputText value="#{item.estadoImpresion}"/>
+                                </p:column>
+                            </p:headerRow>
+                            <p:column filterBy="#{item.estadoImpresion}" headerText="Cliente cumple condición" width="50" filterMatchMode="in">
+                                  <f:facet name="filter">
+                                    <p:selectCheckboxMenu id="filtroCumpleCondicion" filter="true"  filterMatchMode="contains" label="Seleccionar..." onchange="PF('reporteItemTable').filter()" scrollHeight="90" style="width: 100px" styleClass="custom-filter">
+                                        <f:selectItem itemValue="SI" itemLabel="SI"/> 
+                                        <f:selectItem itemValue="NO" itemLabel="NO"/>
+                                        <f:selectItem itemValue="BLOQUEADO" itemLabel="BLOQUEADO"/> 
+                                    </p:selectCheckboxMenu>
+                                </f:facet>
+                                <h:outputText value="#{item.estadoImpresion}" styleClass="#{item.estadoImpresion}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.evaluacionItem}" headerText="Lanzable" width="50" filterMatchMode="in">
+                                <f:facet name="filter">
+                                    <p:selectCheckboxMenu filter="true"  filterMatchMode="contains" label="Seleccionar..." onchange="PF('reporteItemTable').filter()" scrollHeight="90" style="width: 100px" styleClass="custom-filter">
+                                        <f:selectItem itemValue="SI" itemLabel="SI"/> 
+                                        <f:selectItem itemValue="NO" itemLabel="NO"/>
+                                        <f:selectItem itemValue="PARCIAL" itemLabel="PARCIAL"/>
+                                    </p:selectCheckboxMenu>
+                                </f:facet>
+                                <h:outputText value="#{item.evaluacionItem}" styleClass="#{item.evaluacionItem}"/>
+                            </p:column>
+                             <p:column filterBy="#{item.generarImpresion}" headerText="Genera impresión" width="50" filterMatchMode="in">
+                                <f:facet name="filter">
+                                    <p:selectCheckboxMenu filter="true" filterMatchMode="contains" label="Seleccionar..." onchange="PF('reporteItemTable').filter()" scrollHeight="90" style="width: 100px" styleClass="custom-filter">
+                                        <f:selectItem itemValue="SI" itemLabel="SI"/> 
+                                        <f:selectItem itemValue="PARCIAL" itemLabel="PARCIAL"/>
+                                        <f:selectItem itemValue="IMPRESO" itemLabel="IMPRESO"/>
+                                        <f:selectItem itemValue="NO" itemLabel="NO"/>
+                                    </p:selectCheckboxMenu>
+                                </f:facet>
+                                <h:outputText value="#{item.generarImpresion}" styleClass="#{item.generarImpresion}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_cliente_desp_razon_soc}" width="200" filterStyle="width: 100px" filterBy="#{item.f_cliente_desp_razon_soc}" filterMatchMode="contains">
+                                <f:facet name="header">Cliente</f:facet>
+                                <h:outputText value="#{item.f_cliente_desp_razon_soc}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_item}" width="60" filterStyle="width: 70px" filterBy="#{item.f_estado_docto}" filterMatchMode="contains">
+                                <f:facet name="header">Item</f:facet>
+                                <h:outputText value="#{item.f_item}"/>
+                            </p:column>
+                             <p:column sortBy="#{item.f_desc_item}" width="110" filterStyle="width: 110px" filterBy="#{item.f_desc_item}" filterMatchMode="contains">
+                                <f:facet name="header">Desc. ítem</f:facet>
+                                <h:outputText value="#{item.f_desc_item}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_desc_ext_detalle_1}" width="70" filterStyle="width: 70px" filterBy="#{item.f_desc_ext_detalle_1}" filterMatchMode="contains">
+                                <f:facet name="header">Desc. tamaño</f:facet>
+                                <h:outputText value="#{item.f_desc_ext_detalle_1}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_desc_ext_detalle_2}" width="70" filterStyle="width: 70px" filterBy="#{item.f_desc_ext_detalle_2}" filterMatchMode="contains">
+                                <f:facet name="header">Desc. color</f:facet>
+                                <h:outputText value="#{item.f_desc_ext_detalle_2}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_fecha_entrega}" width="90" filterStyle="width: 90px" filterBy="#{item.f_fecha_entrega}" filterMatchMode="contains">
+                                <f:facet name="header">Fecha entrega</f:facet>
+                                <h:outputText value="#{item.f_fecha_entrega}">
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item.f_nrodocto}" width="70" filterStyle="width: 70px" filterBy="#{item.f_nrodocto}"  filterMatchMode="contains">
+                                <f:facet name="header">Pedido</f:facet>
+                                <h:outputText value="#{item.f_nrodocto}"/>
+                            </p:column>
+                            
+                            <p:column sortBy="#{item.f_estado_movto}" width="100" filterStyle="width: 100px" filterBy="#{item.f_estado_movto}" filterMatchMode="contains">
+                                <f:facet name="header">Estado movimiento</f:facet>
+                                <h:outputText value="#{item.f_estado_movto}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_estado_docto}" width="100" filterStyle="width: 100px" filterBy="#{item.f_estado_docto}" filterMatchMode="contains">
+                                <f:facet name="header">Estado documento</f:facet>
+                                <h:outputText value="#{item.f_estado_docto}"/>
+                            </p:column>
+                             <p:column sortBy="#{item.f_cant_pedida_base}" width="70" style="background-color: lightgoldenrodyellow !important;" filterStyle="width: 70px" filterBy="#{item.f_cant_pedida_base}" filterMatchMode="contains">
+                                <f:facet name="header">Cant. pedido</f:facet>
+                                <h:outputText value="#{item.f_cant_pedida_base}">
+                                    <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item.f_cant_comprom_base}" width="70" style="background-color: lightgoldenrodyellow !important;" filterStyle="width: 70px" filterBy="#{item.f_cant_comprom_base}" filterMatchMode="contains">
+                                <f:facet name="header">Cant. comprometida</f:facet>
+                                <h:outputText value="#{item.f_cant_comprom_base}">
+                                    <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item.f_cant_comp_parc_base}" width="70" style="background-color: lightgoldenrodyellow !important;" filterStyle="width: 70px" filterBy="#{item.f_cant_comp_parc_base}" filterMatchMode="contains">
+                                <f:facet name="header">Cant. comprometida parcial</f:facet>
+                                <h:outputText value="#{item.f_cant_comp_parc_base}">
+                                    <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item.f_valor_neto_pendiente}" width="70" style="background-color: lightgoldenrodyellow !important;" filterStyle="width: 70px" filterBy="#{item.f_valor_neto_pendiente}" filterMatchMode="contains">
+                                <f:facet name="header">Valor neto pendiente</f:facet>
+                                <h:outputText value="#{item.f_valor_neto_pendiente}">
+                                    <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                </h:outputText>
+                            </p:column>
+                             <p:column sortBy="#{item.f_valor_neto_docto}" width="70" style="background-color: lightgoldenrodyellow !important;" filterStyle="width: 70px" filterBy="#{item.f_valor_neto_docto}" filterMatchMode="contains">
+                                <f:facet name="header">Valor neto docto.</f:facet>
+                                <h:outputText value="#{item.f_valor_neto_docto}">
+                                    <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item.f_20_00000014_M121}" width="90" filterStyle="width: 80px" filterBy="#{item.f_backorder}" filterMatchMode="contains">
+                                <f:facet name="header">Estado item</f:facet>
+                                <h:outputText value="#{item.f_20_00000014_M121}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_bodega}" width="70" filterStyle="width: 70px" filterBy="#{item.f_bodega}" filterMatchMode="contains">
+                                <f:facet name="header">Bodega</f:facet>
+                                <h:outputText value="#{item.f_bodega}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_01_010}" width="70" filterStyle="width: 70px" filterBy="#{item.f_bodega}" filterMatchMode="contains">
+                                <f:facet name="header">Familia</f:facet>
+                                <h:outputText value="#{item.f_01_010}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_fecha_creacion_docto}" width="90" filterStyle="width: 90px" filterBy="#{item.f_fecha_creacion_docto}" filterMatchMode="contains">
+                                <f:facet name="header">Fecha creación</f:facet>
+                                <h:outputText value="#{item.f_fecha_creacion_docto}">
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item.f_um_base}" width="70" filterStyle="width: 70px" filterBy="#{item.f_um_base}" filterMatchMode="contains">
+                                <f:facet name="header">U.M.</f:facet>
+                                <h:outputText value="#{item.f_um_base}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_cant_pendiente_base}" width="70" filterStyle="width: 70px" filterBy="#{item.f_cant_pendiente_base}" filterMatchMode="contains">
+                                <f:facet name="header">Cant. pendiente</f:facet>
+                                <h:outputText value="#{item.f_cant_pendiente_base}">
+                                    <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item.f_cant_existencia}" width="70" filterStyle="width: 70px" filterBy="#{item.f_cant_existencia}" filterMatchMode="contains">
+                                <f:facet name="header">Cant. existencia</f:facet>
+                                <h:outputText value="#{item.f_cant_existencia}">
+                                    <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item.f_cant_oc_op_ins}" width="70" filterStyle="width: 70px" filterBy="#{item.f_cant_oc_op_ins}" filterMatchMode="contains">
+                                <f:facet name="header">Cant. OC/OP (ins)</f:facet>
+                                <h:outputText value="#{item.f_cant_oc_op_ins}">
+                                    <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item.f_ops}" width="60" filterStyle="width: 70px" filterBy="#{item.f_ops}" >
+                                <f:facet name="header">Nro. op</f:facet>
+                                <h:outputText value="#{item.f_ops}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_punto_envio}" width="90" filterStyle="width: 90px" filterBy="#{item.f_direccion1}" filterMatchMode="contains">
+                                <f:facet name="header">Punto envio</f:facet>
+                                <h:outputText value="#{item.f_punto_envio}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_desc_punto_envio}" width="90" filterStyle="width: 90px" filterBy="#{item.f_direccion1}" filterMatchMode="contains">
+                                <f:facet name="header">Desc. punto de envio</f:facet>
+                                <h:outputText value="#{item.f_desc_punto_envio}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_desc_ciudad}" width="90" filterStyle="width: 90px" filterBy="#{item.f_desc_ciudad}" filterMatchMode="contains">
+                                <f:facet name="header">Ciudad</f:facet>
+                                <h:outputText value="#{item.f_desc_ciudad}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_direccion1}" width="90" filterStyle="width: 90px" filterBy="#{item.f_direccion1}" filterMatchMode="contains">
+                                <f:facet name="header">Dirección</f:facet>
+                                <h:outputText value="#{item.f_direccion1}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_notas_docto}" width="200" filterStyle="width: 200px" filterBy="#{item.f_notas_docto}" filterMatchMode="contains">
+                                <f:facet name="header">Notas documento</f:facet>
+                                <h:outputText value="#{item.f_notas_docto}"/>
+                            </p:column>
+                             <p:column sortBy="#{item.f_02_002}" width="110" filterStyle="width: 110px" filterBy="#{item.f_02_002}" filterMatchMode="contains">
+                                <f:facet name="header">Segmento</f:facet>
+                                <h:outputText value="#{item.f_02_002}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_orden_compra}" width="200" filterStyle="width: 200px" filterBy="#{item.f_orden_compra}" >
+                                <f:facet name="header">OC</f:facet>
+                                <h:outputText value="#{item.f_orden_compra}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_fecha_factura}" width="70" filterStyle="width: 70px" filterBy="#{item.f_fecha_factura}" filterMatchMode="contains">
+                                <f:facet name="header">Fecha factura</f:facet>
+                                <h:outputText value="#{item.f_fecha_factura}">
+                                    <f:convertDateTime pattern="dd-MM-YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item.f_02_003}" width="90" filterStyle="width: 90px" filterBy="#{item.f_02_003}" filterMatchMode="contains">
+                                <f:facet name="header">Subgrupo</f:facet>
+                                <h:outputText value="#{item.f_02_003}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_02_005}" width="70" filterStyle="width: 70px" filterBy="#{item.f_02_003}" filterMatchMode="contains">
+                                <f:facet name="header">Servicio al cliente</f:facet>
+                                <h:outputText value="#{item.f_02_005}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_codigo_barras_principal}" width="90" filterStyle="width: 90px" filterBy="#{item.f_codigo_barras_principal}" >
+                                <f:facet name="header">Código barra</f:facet>
+                                <h:outputText value="#{item.f_codigo_barras_principal}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_dia_maximo_factura}" width="70" filterStyle="width: 70px" filterBy="#{item.f_dia_maximo_factura}" filterMatchMode="contains">
+                                <f:facet name="header">Día max. facturación</f:facet>
+                                <h:outputText value="#{item.f_dia_maximo_factura}"/>
+                            </p:column>
+                            
+                            <p:column sortBy="#{item.f_backorder}" width="110" filterStyle="width: 110px" filterBy="#{item.f_backorder}" filterMatchMode="contains">
+                                <f:facet name="header">Backorder</f:facet>
+                                <h:outputText value="#{item.f_backorder}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_01_050}" width="100" filterStyle="width: 100px" filterBy="#{item.f_01_050}" filterMatchMode="contains">
+                                <f:facet name="header">Grupo</f:facet>
+                                <h:outputText value="#{item.f_01_050}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_ext_detalle_1}" width="40" filterStyle="width: 50px" filterBy="#{item.f_ext_detalle_1}" filterMatchMode="contains">
+                                <f:facet name="header">Tamaño</f:facet>
+                                <h:outputText value="#{item.f_ext_detalle_1}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_ext_detalle_2}" width="70" filterStyle="width: 70px" filterBy="#{item.f_ext_detalle_2}" filterMatchMode="contains">
+                                <f:facet name="header">Color</f:facet>
+                                <h:outputText value="#{item.f_ext_detalle_2}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_referencia}" width="100" filterStyle="width: 100px" filterBy="#{item.f_referencia}" filterMatchMode="contains">
+                                <f:facet name="header">Referencia</f:facet>
+                                <h:outputText value="#{item.f_referencia}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.f_fecha_modificacion_movto}" width="80" filterStyle="width:80px" filterBy="#{item.f_fecha_modificacion_movto}" filterMatchMode="contains">
+                                <f:facet name="header">Fecha modificación movto.</f:facet>
+                                <h:outputText value="#{item.f_fecha_modificacion_movto}">
+                                    <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                </h:outputText>
+                            </p:column> 
+                              <p:column sortBy="#{item.f_20_00000014_M121}" width="100" filterStyle="width: 100px" filterBy="#{item.f_20_00000014_M121}" filterMatchMode="contains">
+                                <f:facet name="header">ESTADO</f:facet>
+                                <h:outputText value="#{item.f_20_00000014_M121}"/>
+                            </p:column>
+                             <p:column sortBy="#{item.f_rowid_movto_431}" width="70" filterStyle="width: 70px" filterBy="#{item.f_rowid_movto_431}" filterMatchMode="contains">
+                                <f:facet name="header">orden interno</f:facet>
+                                <h:outputText value="#{item.f_rowid_movto_431}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </p:outputPanel>
+            </h:form>
+            
+            <p:dialog header="Detalle ítem" widgetVar="itemDialog" closeOnEscape="true" resizable="true" width="850" height="60%" modal="true">
+                <h:form id="formDetalleItem">      
+                    <h:panelGroup id="detalle">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-2">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Ref. Item:"/>
+                                        <br></br>
+                                        <h:outputText value="#{ordenesDespachoController.reporteActual.f_referencia}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Desc. tem:"/>
+                                        <br></br>
+                                        <h:outputText value="#{ordenesDespachoController.reporteActual.f_desc_item}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Ext 1:"/>
+                                        <br></br>
+                                        <h:outputText value="#{ordenesDespachoController.reporteActual.f_ext_detalle_1}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Ext 2:"/>
+                                        <br></br>
+                                        <h:outputText value="#{ordenesDespachoController.reporteActual.f_ext_detalle_2}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <h:outputLabel value="Fecha entrega:"/>
+                                        <br></br>
+                                        <h:outputText value="#{ordenesDespachoController.reporteActual.f_fecha_entrega}">
+                                            <f:convertDateTime pattern="dd/MM/YYYY"/>
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <h:outputLabel value="Pedido:"/>
+                                        <br></br>
+                                        <h:outputText value="#{ordenesDespachoController.reporteActual.f_nrodocto}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Nro. OP:"/>
+                                        <br></br>
+                                        <h:outputText value="#{ordenesDespachoController.reporteActual.f_ops}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Estado imp.:"/>
+                                        <br></br>
+                                        <h:outputText value="#{ordenesDespachoController.reporteActual.generarImpresion}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Cant. pedida:"/>
+                                        <br></br>
+                                        <h:outputText value="#{ordenesDespachoController.reporteActual.f_cant_pendiente_base}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Cant. comp.:"/>
+                                        <br></br>
+                                        <h:outputText value="#{ordenesDespachoController.reporteActual.f_cant_comprom_base}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                     <div class="form-group">
+                                        <h:outputLabel value="Cant. comp. par.:"/>
+                                        <br></br>
+                                        <h:outputText value="#{ordenesDespachoController.reporteActual.f_cant_comp_parc_base}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <span style="font-size: 1.2em; font-weight: bold">Historial de impresión</span>
+                             <div class="row">
+                                <p:dataTable id="tablaFuncion"
+                                            emptyMessage="No se encontraron registros"
+                                            value="#{ordenesDespachoController.listaImpresion}" 
+                                            var="detalle"
+                                            style="font-size: 1em !important">
+                                    <p:column headerText="Estado impresión">
+                                        <h:outputText value="#{detalle.estado}" style="font-weight: bold"/>
+                                    </p:column>
+                                    <p:column headerText="Fecha impresión">
+                                        <h:outputText value="#{detalle.fechaImpresion}">
+                                            <f:convertDateTime pattern="dd/MM/YYYY HH:mm:ss"/>
+                                        </h:outputText> 
+                                    </p:column>
+                                    <p:column headerText="Cant. comprometida">
+                                        <h:outputText value="#{detalle.cantComp}">
+                                            <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Usuario impresión" >
+                                        <h:outputText value="#{detalle.usuario}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                            <p:separator></p:separator>
+                            <div style="row">
+                                <div class="form-group">
+                                    <h:outputText style="font-weight: bold" value="#{ordenesDespachoController.reporteActual.f_punto_envio}" />
+                                </div>
+                                <div class="form-group">
+                                    <h:outputLabel  value="Estado de impresión:"/>
+                                    <br></br>
+                                    <h:selectOneMenu value="#{ordenesDespachoController.estadoImpresionHabilitar}"
+                                                     class="form-control"
+                                                     style="width: 50%">
+                                        <f:selectItem itemLabel="SI IMPRIMIR" itemValue="SI"/> 
+                                        <f:selectItem itemLabel="IMPRESO PARCIAL" itemValue="PARCIAL"/>
+                                        <f:selectItem itemLabel="IMPRESO" itemValue="IMPRESO"/>
+                                        <f:selectItem itemLabel="NO IMPRIMIR" itemValue="NO"/>
+                                    </h:selectOneMenu>
+                                </div>
+                                <div class="form-group">
+                                    <h:outputLabel value="Aplicar a:" />
+                                    <br></br>
+                                    <p:selectOneButton value="#{ordenesDespachoController.opcionImprimirCliente}">
+                                        <f:selectItem itemLabel="Solo este ítem" itemValue="i" />
+                                        <f:selectItem itemLabel="Todo el cliente - punto de envio" itemValue="c" />
+                                        <f:selectItem itemLabel="Todos los registros" itemValue="t" />
+                                    </p:selectOneButton>
+                                </div>
+                                <div class="form-group">
+                                    <h:outputLabel value="Cuando cumple condición:" />
+                                    <br></br>
+                                    <p:selectOneButton value="#{ordenesDespachoController.opcionImprimirCondicion}">
+                                        <f:selectItem itemLabel="No tener en cuenta" itemValue="t" />
+                                        <f:selectItem itemLabel="Si cumple" itemValue="SI" />
+                                        <f:selectItem itemLabel="No cumple" itemValue="NO" />
+                                    </p:selectOneButton>
+                                </div>
+                                <div class="form-group">
+                                    <p:commandButton  onclick="PF('itemDialog').hide()();"
+                                                  value="Aplicar"
+                                                  style="margin-top: 10px; background: red !important;"
+                                                  actionListener="#{ordenesDespachoController.cambiarEstadoImpresion}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </h:form>
+            </p:dialog>
+            <p:dialog widgetVar="dlgImpCliente" modal="true"  resizable="false" width="400">
+                <h:form id="formImpCliente">    
+                    <div class="form-group">
+                        <h3>¿Que cliente quieres imprimir?</h3>
+                        <p:selectOneMenu id="listaImprimir" 
+                                        autoWidth="false"
+                                        style="width: 100% !important"
+                                        filter="true" filterMatchMode="contains"
+                                        value="#{ordenesDespachoController.clienteImprimir}" 
+                                        requiredMessage="Por favor indique el tipo de contenido" 
+                                        required="true">
+                               <f:selectItem itemLabel="Seleccionar uno.." /> 
+                               <f:selectItems value="#{ordenesDespachoController.listaImpresionCliente}"/>
+                               <f:ajax execute="@this" render="listaImprimirMessage"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="form-group">
+                        <p:commandButton  ajax="false" 
+                                          value="Imprimir"
+                                          update="form-reporte:reporteTable"
+                                          process="@form"
+                                          onclick="PF('reporteItemTable').clearFilters()"
+                                          action="#{ordenesDespachoController.prepareImpresionCliente}">
+                            <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{ordenesDespachoController.usuarioActual}"/>
+                            <f:ajax onevent="dlgImpCliente.hide()" execute="@this" render="form-reporte:reporteTable"/>
+                        </p:commandButton>
+                    </div>
+                 </h:form>
+            </p:dialog>
+            
+            <p:dialog header="Imprimir completo" widgetVar="dlgImpCompleto" minHeight="40" modal="true" width="300">
+                <h:form id="formImpCompleto">
+                    <div class="col-md-12">
+                        ¿Estas seguro que quieres imprimir todas las ordenes de despachos?
+                    </div>
+                    <div class="col-md-6 form-group">    
+                        <p:commandButton value="Si"
+                                         icon="ui-icon-check"
+                                         ajax="false"
+                                        action="#{ordenesDespachoController.prepareImpresionCompleta}"
+                                        style="margin-top: 25px; width: 100%"
+                                        update="form-reporte:reporteTable"
+                                        process="@form"
+                                        onclick="PF('reporteItemTable').clearFilters()">
+                            <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{ordenesDespachoController.usuarioActual}"/>
+                            <f:ajax onevent="dlgImpCompleto.hide()" execute="@this" render="form-reporte:reporteTable"/>
+                        </p:commandButton>
+                    </div>
+                    <div class="col-md-6 form-group">    
+                        <p:button styleClass="boton-prime" 
+                            value="No"
+                            icon="ui-icon-closethick"
+                            onclick="PF('dlgImpCompleto').hide();"
+                            style="margin-top: 25px; width: 100%;background: red !important;"/>
+                    </div>
+                </h:form>
+            </p:dialog>
+        </p:outputPanel>
+    </body>
+</html>
+

@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{capturaParadaGeController.prepareDashboard}">
+                            <i class="fa fa-dashboard" aria-hidden="true"></i> 
+                            <span>Dashboard</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{capturaParadaGeController.prepareList}">
+                            <i class="fa fa-rocket"></i> 
+                            <span>Capturar información</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{operariosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de operarios</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{turnosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de turnos</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active" jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                         <h:commandLink action="#{nominalGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de Maquinas/Nominal</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{paradasGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de tipos de Paradas</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="/administrador/modGeTelares/menuMaestros">
+                            <i class="fa fa-cog"></i> 
+                            <span>Más configuraciones</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Nominal</ui:define>   
+        <ui:define name="title2">Nominal</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="List">
+                <p:outputPanel id="TablePanel">
+                    <p:dataTable value="#{nominalGeController.listaNominalGe}" var="item"
+                                 rows="50" id="Table" paginator="true"
+                                 rowStyleClass="#{item.estado eq false ? 'color2': null}"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150">
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4 class="colorLetra" style="font-weight: bold" >
+                                            Total nominales: #{fn:length(nominalGeController.listaNominalGe)}
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p:commandButton icon="ui-icon-folder-open"
+                                                         ajax="false"
+                                                        value="Crear nuevo"
+                                                        style="font-size: 1.2em !important;padding: 5px; right: 0"
+                                                        action="#{nominalGeController.prepareCreate}"
+                                                        rendered="#{loginController.adminGe}">
+                                            <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{nominalGeController.usuarioActual}"/>
+                                        </p:commandButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:column filterBy="#{item.codigoMaquina}" filterMatchMode="contains" width="110" >
+                            <f:facet name="header">Código maquina</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.codigoMaquina}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.nombreHomologado}" filterMatchMode="contains">
+                            <f:facet name="header">Nombre maquina homologado</f:facet>
+                            <h:outputText value="#{item.nombreHomologado}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.nombreMaquina}" filterMatchMode="contains">
+                            <f:facet name="header">Nombre maquina UnoEE</f:facet>
+                            <h:outputText value="#{item.nombreMaquina}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.idProceso.descripcion}" filterMatchMode="contains">
+                            <f:facet name="header">Proceso</f:facet>
+                            <h:outputText value="#{item.idProceso.descripcion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.rpm}" filterMatchMode="contains">
+                            <f:facet name="header">RPM</f:facet>
+                            <h:outputText value="#{item.rpm}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.puntas}" filterMatchMode="contains">
+                            <f:facet name="header">Puntas</f:facet>
+                            <h:outputText value="#{item.puntas}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.fcCalculo}" filterMatchMode="contains">
+                            <f:facet name="header">FC calculo</f:facet>
+                            <h:outputText value="#{item.fcCalculo}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.factorConversion}" filterMatchMode="contains">
+                            <f:facet name="header">Factor de conversión (m/in)</f:facet>
+                            <h:outputText value="#{item.factorConversion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.fechaCreacion}" filterMatchMode="contains">
+                            <f:facet name="header">Fecha creación</f:facet>
+                            <h:outputText value="#{item.fechaCreacion}">
+                                <f:convertDateTime pattern="YYYY/mm/dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{item.usuarioCreacion}" filterMatchMode="contains">
+                            <f:facet name="header">Usuario creacion</f:facet>
+                            <h:outputText value="#{item.usuarioCreacion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.fechaActualizacion}" filterMatchMode="contains">
+                            <f:facet name="header">Fecha actualización</f:facet>
+                            <h:outputText value="#{item.fechaActualizacion}">
+                                <f:convertDateTime pattern="YYYY/mm/dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{item.usuarioActualizacion}" filterMatchMode="contains">
+                            <f:facet name="header">Usuario actualizacion</f:facet>
+                            <h:outputText value="#{item.usuarioActualizacion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.estadoString}" filterMatchMode="contains">
+                            <f:facet name="header">Activo</f:facet>
+                            <h:outputText value="#{item.estadoString}"/>
+                        </p:column>
+                        <p:column width="50" rendered="#{loginController.adminGe}">
+                            <p:commandButton ajax="false" icon="ui-icon-pencil" id="actualizar" action="#{nominalGeController.prepareEdit}">
+                                <f:setPropertyActionListener value="#{item}" target="#{nominalGeController.nominalGeActual}"/>
+                                <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{nominalGeController.usuarioActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-botonActualizacion" for="actualizar" value="Actualizar" trackMouse="true" />
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

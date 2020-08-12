@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Contenido
+                </h:form>
+                <header class="header-paginas">
+                    <h2> <span class="titulo-paginas">Publicaciones de #{contenidoController.nombreTipo}</span></h2>
+                </header>
+            </section>
+            <section id="services" class="section-bg">
+                <div class="container">
+                    <h:form id="valoracionForm">
+                        <p:dataGrid value="#{contenidoController.listaContenidoUser}" var="id_contenido"  columns="2" layout="grid">
+                            <div class="wow bounceInUp" data-wow-duration="1.4s" style="display: inline-block; width: 100%">
+                                <div class="row box">
+                                    <div class="col-md-3" style="border-right: 1px solid #eee; ">
+                                        <p:graphicImage class="img-responsive" width="100%" value="#{contenidoController.imageLista}">
+                                            <f:param name="item" value="#{id_contenido.idContenido}"/>                        
+                                        </p:graphicImage>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <h4 class="title">
+                                            <h:commandLink action="#{contenidoController.prepareViewUser}">
+                                                #{id_contenido.titulo}
+                                                <f:setPropertyActionListener value="#{id_contenido}" target="#{contenidoController.contenidoActual}"/>
+                                            </h:commandLink>
+                                        </h4>
+                                        <p class="description">#{id_contenido.descripcion5}</p>   
+                                    </div>
+                                    <div>
+                                        <h:commandButton class="btn-leer" value="Leer" id="actualizar" action="#{contenidoController.prepareViewUser}" >
+                                            <f:setPropertyActionListener value="#{id_contenido}" target="#{contenidoController.contenidoActual}"/>
+                                        </h:commandButton>
+                                        <p:tooltip id="descripcion-botonActualizacion" for="actualizar" value="Leer noticia" trackMouse="true" />
+                                    </div>
+                                </div>
+                            </div>
+                        </p:dataGrid> 
+                    </h:form> 
+                </div>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>
+
+
+
+
+

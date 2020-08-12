@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{contenidoController.prepareList}">
+                            <i class="fa fa-bullhorn"></i> 
+                            <span>Gestión de contenidos</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Crear nuevo contenido</ui:define> 
+        <ui:define name="title2">Ingresa los datos del nuevo contenido</ui:define>
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="formulario-crearDocu" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h:outputLabel value="Tipo de contenido:"  />
+                            <p:selectOneMenu id="tipo" 
+                                             style="width: 100% !important"
+                                             filter="true" filterMatchMode="contains"
+                                             value="#{contenidoController.contenidoActual.tipo}" 
+                                             requiredMessage="Por favor indique el tipo de contenido" 
+                                             required="true">
+                                    <f:selectItem itemLabel="Seleccionar uno.." /> 
+                                    <f:selectItem itemLabel="Seleccionar uno.." />
+                                    <f:selectItems value="#{tipoContenidoController.listaTipoContenido}" var="tipoContenido" itemValue="#{tipoContenido}"/>
+                                    <f:ajax execute="@this" render="tipoMessage"/>
+                            </p:selectOneMenu>
+                            <p:message id="tipoMessage" for="tipo" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Titulo del contenido:"  />
+                            <h:inputText class="form-control" 
+                                   id="tituloInputText" 
+                                   maxlength="30"
+                                   value="#{contenidoController.contenidoActual.titulo}" 
+                                   required="true"
+                                   requiredMessage="Por favor ingrese el titulo del contenido">
+                                   <f:ajax execute="@this" render="documentoMessage"/>
+                            </h:inputText>
+                            <p:message id="tituloMessage" for="tituloInputText" styleClass="error"/>
+                        </div> 
+                        <div class="form-group">
+                            <h:outputLabel value="Descripción previa:"  />
+                            <h:inputText class="form-control"
+                                         maxlength="120"
+                                   id="descripcionInputText"
+                                   value="#{contenidoController.contenidoActual.descripcion5}" >
+                                   <f:ajax execute="@this" render="descripcionMessage"/>
+                            </h:inputText>
+                            <p:message id="descripcionMessage" for="descripcionInputText" styleClass="error"/>
+                        </div> 
+                        <div class="row">
+                           <div class="col-md-12 form-group">
+                                <h:outputLabel value="Cargar imagen principal:"/>
+                                <p:fileUpload cancelLabel="Cancelar" 
+                                              uploadLabel="Cargar imagen"
+                                              auto="true"
+                                              label="Examinar"
+                                              mode="advanced" 
+                                              allowTypes="/(\.|\/)(jpg|JPG|JPEG|jpeg|jpe)$/" 
+                                              sizeLimit="5000000"
+                                              fileUploadListener="#{contenidoController.cargarImg1}" id="imagen1"
+                                              process="@this"
+                                              update="img1"
+                                              invalidSizeMessage="La imagen que deseas cargar sobrepasa los 500KB"
+                                              converterMessage="proceso terminado"
+                                              invalidFileMessage="Solo se aceptan imagenes jpg" />
+                                <p:message id="imagen1Message" for="imagen1"/>
+                            </div>
+                            <div class="col-md-12" style="text-align: center">
+                                <p:panel>
+                                    <p:graphicImage  id="img1" cache="false" style="width: 100%" value="#{contenidoController.imgPrevia}">
+                                    </p:graphicImage>
+                                    <p:commandButton class="btn btn-danger"
+                                         icon="fa fa-close"
+                                         ajax="false"
+                                         action="#{contenidoController.borrarImgPrevia()}"
+                                         update="img1"
+                                         process="@this"
+                                         style="position: absolute; top: 0; right: 1em; padding: 0"/>
+                                </p:panel>
+                            </div> 
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Contenido:"  />
+                            <textarea id="summernote"
+                                      style="height: 1000px;"
+                                      jsf:value="#{contenidoController.contenidoActual.descripcion}"></textarea>
+                            
+                        </div>         
+                        <div class="col-sm-6 form-group">
+                            <p:commandButton class="btn btn-primary btn-block"
+                                             ajax="false"
+                                             value="Guardar contenido"
+                                             action="#{contenidoController.add}"
+                                             onclick="onSubmitButton();"/>
+                        </div>
+                        <div class="col-sm-6 form-group">    
+                            <h:button class="btn btn-warning btn-block" value="Cancelar" outcome="lista"/>
+                        </div>
+                    </div>    
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

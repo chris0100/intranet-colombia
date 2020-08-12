@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{usuarioController.prepareList}" rendered="#{loginController.admin}">
+                          <i class="fa fa-users"></i> 
+                          <span>Administrar usuarios</span>
+                       </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Gestión de usuarios</ui:define>   
+        <ui:define name="title2">Formulario de edición de usuarios</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form>
+                <div class="form-group">        
+                    <h:outputLabel value="Contraseña:"  />   
+                    <p:password class="form-control" id="contra1InputText" required="true"
+                                          requiredMessage="Por favor ingrese una contraseña"
+                                          value="#{usuarioController.usuarioActual.contrasena}" maxlength="10"
+                                          match="contra2InputText"
+                                          validatorMessage="Las contraseñas no coinciden">
+                    </p:password>
+                    <p:message id="contra1Message" for="contra1InputText" />
+                </div>                
+                 <div class="form-group">        
+                    <h:outputLabel value="Repetir contraseña:"  />   
+                    <p:password class="form-control" id="contra2InputText" required="true"
+                                          requiredMessage="Por favor ingrese una contraseña"
+                                          value="#{usuarioController.usuarioActual.contrasena}" maxlength="10">
+                    </p:password>
+                    <p:message id="contra2Message" for="contra2InputText" />
+                </div>        
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <p:commandButton class="btn btn-primary btn-block"
+                                ajax="false"
+                                value="Guardar usuario"
+                                action="#{usuarioController.prepareEdit}"
+                                onclick="onSubmitButton();"/>
+                    </div>
+                    <div class="col-sm-6 form-group">    
+                        <h:button class="btn btn-cancelar btn-block" value="Cancelar" outcome="editar"/>
+                    </div>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

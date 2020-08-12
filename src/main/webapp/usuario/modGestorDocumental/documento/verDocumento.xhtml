@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <div class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > <h:commandLink class="navegacion-paginas" value="Ver procesos" action="principal"/> > <h:commandLink style="color: #185291" value="Documentos y formatos" action="listaCompletaDocumentos"/> > Vista del documeto
+                </h:form>
+                <header class="header-paginas">
+                    <h2><span class="titulo-paginas">Vista previa del documento</span></h2>
+                </header>
+            </div>
+            <div class="container-fluid margin-paginas">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card card-body card-personal">
+                            <div class="form-group">
+                                <h:outputLabel value="Codigo del archivo: " class="label-formulario"/>
+                                <h:outputLabel value=" #{documentoController.documentosActual.codigo}"/>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Nombre del archivo: " class="label-formulario"/>
+                                <h:outputLabel value="#{documentoController.documentosActual.nombre.toUpperCase()}"/>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Proceso al que pertenece: " class="label-formulario"/>
+                                <h:outputLabel value="#{documentoController.documentosActual.idProceso.toString().toUpperCase()}"/>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Tipo de documento: " class="label-formulario"/>
+                                <h:outputLabel value="#{documentoController.documentosActual.idTipoDocumento.toString().toUpperCase()}"/>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Versión: " class="label-formulario"/>
+                                <h:outputLabel value="#{documentoController.documentosActual.version}"/>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Descripción del archivo: " class="label-formulario"/>
+                                <h:outputLabel value="#{documentoController.documentosActual.descripcion.toUpperCase()}"/>
+                            </div>
+                        </div>
+                    </div>  
+                    <div class="col-md-8">
+                        <h:form>
+                            <div jsf:rendered="#{loginController.descargaDoc and documentoController.fichaTecnica}">
+                                <h:commandButton value="Descargar archivo"
+                                                 class="btn-ver"
+                                                onclick="target='_blank';PF('descarga').hide();" >
+                                    <p:fileDownload value="#{documentoController.descargaPDF}" />
+                                </h:commandButton> 
+                            </div>
+                        </h:form>
+                        <div id="pdf">
+                            <iframe width="900"
+                                    height="1000"
+                                    src="#{request.contextPath}/resources/images/file.pdf">
+                            </iframe>
+                        </div>
+                        <div id="iframeBlocker">
+                        </div>
+                        <script>
+                            document.oncontextmenu = function(){return false} 
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>    
+</html>

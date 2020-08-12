@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Contenido
+                </h:form>
+                <header class="header-paginas">
+                    <h2> <span class="titulo-paginas">#{contenidoController.contenidoActual.titulo}</span></h2>
+                </header>
+                <div class="col-md-8">
+                    <div class="card">
+                        <p:outputPanel id="divPanel">
+                            <figure style="text-align: center">
+                                <p:graphicImage  rendered="#{contenidoController.vacioImg1}" id="img1" cache="false" width="100%" value="#{contenidoController.img1}"/>        
+                            </figure>
+                            <h:outputLabel class="texto-pagina" rendered="#{contenidoController.vacioDes1}" value="#{contenidoController.contenidoActual.descripcion}" escape="false" /> 
+                        </p:outputPanel>
+                        <div class="texto-pagina">
+                            <div class="contenido-footer">
+                                <span class="fa fa-calendar"> </span>
+                                <h:outputText value="#{contenidoController.contenidoActual.fecha}">
+                                    <f:convertDateTime pattern="MMMM dd, YYYY"/>
+                                </h:outputText>  
+                            </div>
+                            <div class="contenido-footer">
+                                <span class="fa fa-user"> </span>
+                                <h:outputText value=" #{contenidoController.contenidoActual.idUsuario.nombre}"/>
+                            </div>
+                            <div class="contenido-footer">
+                                <span class="fa fa-bullhorn"> </span>
+                                <h:outputText value=" #{contenidoController.contenidoActual.tipo.nombre}"/> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>
+
+
+
+
+
+
+

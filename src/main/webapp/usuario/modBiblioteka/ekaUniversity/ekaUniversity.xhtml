@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > EKA University
+                </h:form>
+                <header class="header-paginas">
+                    <img jsf:library="images" width="60%" jsf:name="/modBiblioteca/ekaUniversity/banner.jpg" alt="Banner"/>
+                </header>
+                <div class="row">
+                    <div class="col-md-8">
+                        <figure class="video-pagina">
+                            <video controls="true">
+                                <source src="http://eureka/resources/videos/ekaUniversity/EkaUniversity.mp4" type="video/mp4"/>
+                            </video>
+                        </figure> 
+                    </div>
+                    <div class="col-md-4 text-justify">
+                        <h4>Plataforma virtual</h4>
+                        <a href="http://ekauniversity.com/" target="_blanck">
+                            <img class="imagenes-link" style="border: 3px solid #185291; width: 100%" jsf:library="images" jsf:name="/modBiblioteca/ekaUniversity/plataforma.jpg" alt="img"/>
+                        </a>
+                    </div>
+                </div>
+                <h4>Espacio exclusivo para líderes de área</h4>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">                         
+                            <p class="text-justify">
+                                Bienvenidos a Eka University, este es un espacio dirigido para 
+                                nuestros líderes de área, aquí cada líder podrá conocer nuestro 
+                                plan de formación corporativo y encontrar el catálogo de cursos 
+                                a los que podrá matricular sus colaboradores.
+                            </p>
+                            <h:form>
+                                <a class="btn-ver" style="display:block;text-decoration: none !important" href="http://eureka/resources/documentos/ekaUniversity/cursos2018.pdf" target="_blanck">
+                                    <span class="fa fa-book "></span> Abrir Catálogo
+                                </a>
+                            </h:form>
+                        </div>
+                        <div class="col-md-6">
+                            <img jsf:library="images" width="100%" jsf:name="/modBiblioteca/ekaUniversity/img1.jpg" class="img-responsive imagenes-link" alt="img1"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">     
+                            <br></br><br></br>
+                            <p class="text-justify">
+                                Recuerda que si eres líder de área y deseas que varios colaboradores 
+                                a tu cargo se capaciten en alguno de nuestros cursos, o simplemente 
+                                deseas empezar uno, aquí  puedes descargar el procedimiento y la plantilla
+                                para acceder a nuestro plan de formación, estas son las herramientas para
+                                consolidar el plan de formación 2018 de sus equipos.
+                            </p>
+                            <a class="btn-ver" style="display:block; text-decoration: none !important" href="http://eureka/resources/documentos/ekaUniversity/procedimientoPlanFormacion2018.pdf" target="_blanck">
+                                <span class="fa fa-book "></span> Abrir procedimiento plan de formación
+                            </a>
+                            <a class="btn-ver" style="display:block;text-decoration: none !important" href="http://eureka/resources/documentos/ekaUniversity/plantilla_plan_formacion_2018.xlsx">
+                                <span class="fa fa-file-excel-o"></span> Descargar plantilla plan de formación
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <img jsf:library="images" width="100%"  jsf:name="/modBiblioteca/ekaUniversity/img2.jpg" class="img-responsive imagenes-link" alt="img1"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>

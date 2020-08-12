@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Manuales
+                </h:form>
+                <header class="header-paginas">
+                    <h2><span class="titulo-paginas">Manuales</span></h2>
+                </header>
+                <section id="clients">
+                    <h:form>
+                        <div class="row no-gutters clearfix">
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <a href="http://entrenamiento.siesa.com:8999/moodle/login/authcustomers.php" target="_blanck">
+                                        <img class="img-responsive" width="100%" src="#{request.contextPath}/resources/images/modBiblioteca/manuales/manualSiesa.png"/>
+                                    </a> 
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <a href="http://eureka/resources/documentos/manuales/nomiplus.pdf" target="_blanck">
+                                        <img class="img-responsive" width="100%" src="#{request.contextPath}/resources/images/modBiblioteca/manuales/manualNomiplus.png"/>
+                                    </a>   
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <a href="http://eureka/resources/documentos/manuales/e-invoicing.pdf" target="_blanck">
+                                        <img class="img-responsive" width="100%" src="#{request.contextPath}/resources/images/modBiblioteca/manuales/manualFacturas.png"/>
+                                    </a>   
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <p:commandLink onclick="PF('dlg3').show();">
+                                        <img class="img-responsive" width="100%" src="#{request.contextPath}/resources/images/modBiblioteca/manuales/manualDespacho.png"/>
+                                    </p:commandLink> 
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <a href="http://eureka/resources/documentos/manuales/Toc_estado1.pdf" target="_blanck">
+                                        <img class="img-responsive" width="100%" src="#{request.contextPath}/resources/images/modBiblioteca/manuales/manualToc.png"/>
+                                    </a>   
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <p:commandLink onclick="PF('dlg2').show();">
+                                        <img class="img-responsive" width="100%" src="#{request.contextPath}/resources/images/modBiblioteca/manuales/manualCrm.png"/>  
+                                    </p:commandLink> 
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <a href="http://eureka/resources/documentos/manuales/Kos_entregas_semiautomaticas.pdf" target="_blanck">
+                                        <img class="img-responsive" width="100%" src="#{request.contextPath}/resources/images/modBiblioteca/manuales/manualKos.png"/>
+                                    </a>   
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <a href="http://eureka/resources/documentos/manuales/manualCreacionItems.pdf" target="_blanck">
+                                        <img class="img-responsive" width="100%" src="#{request.contextPath}/resources/images/modBiblioteca/manuales/manualCreacionItems.png"/>
+                                    </a>    
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <a href="http://eureka/resources/documentos/manuales/manualBuzonSugerencias.pdf" target="_blanck">
+                                        <img class="img-responsive" width="100%" src="#{request.contextPath}/resources/images/modBiblioteca/manuales/manualBuzonSugerencias.png"/>
+                                    </a>    
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <a href="http://eureka/resources/documentos/manuales/manualComprobantePago.pdf" target="_blanck">
+                                        <img class="img-responsive" width="100%" src="#{request.contextPath}/resources/images/modBiblioteca/manuales/manualComprobantePago.png"/>
+                                    </a>   
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <a href="http://eureka/resources/documentos/manuales/manualGanttKos.pdf" target="_blanck">
+                                        <img class="img-responsive" width="100%" src="#{request.contextPath}/resources/images/modBiblioteca/manuales/manualGanttKos.png"/>
+                                    </a>   
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <a href="http://eureka/resources/documentos/manuales/manualOrdenesDespacho.pdf" target="_blanck">
+                                        <img class="img-responsive" width="100%" src="#{request.contextPath}/resources/images/modBiblioteca/manuales/manualOrdenesDespacho.png"/>
+                                    </a>   
+                                </div>
+                            </div>
+                        </div>
+                    </h:form>
+                    <h:form>
+                        <p:dialog widgetVar="dlg2" modal="true" width="500" styleClass="dialogo-prime">
+                            <div class="col-md-12">
+                                <a class="btn-ver" target="_blanck"  href="http://eureka/resources/documentos/manuales/CRM_Manual_usuario_v_1.2.1.pdf">
+                                   <span class="fa fa-book "></span> CRM_Manual_usuario_v_1.2.1.pdf
+                                </a>
+                            </div>
+                            <div class="col-md-12">
+                                <a class="btn-ver" target="_blanck" href="http://eureka/resources/documentos/manuales/CRM_clientes_potenciales.pdf">
+                                   <span class="fa fa-book "></span> CRM_clientes_potenciales.pdf
+                                </a>
+                            </div>
+                            <div class="col-md-12">
+                                <a class="btn-ver" target="_blanck" href="http://eureka/resources/documentos/manuales/CRM_Manual_Portal_tickets.pdf">
+                                   <span class="fa fa-book "></span> CRM_Manual_Portal_tickets.pdf
+                                </a>
+                            </div>
+                        </p:dialog>
+                    </h:form>
+                    <h:form>
+                        <p:dialog widgetVar="dlg3" modal="true" width="500" styleClass="dialogo-prime">
+                            <div class="col-md-12">
+                                <a target="_blanck" class="btn-ver" href="http://eureka/resources/documentos/manuales/manual_envio_despacho.pdf">
+                                   <span class="fa fa-book "></span> manual_envio_despacho.pdf
+                                </a>
+                            </div>
+                            <div class="col-md-12">
+                                <a target="_blanck" class="btn-ver" href="http://eureka/resources/documentos/manuales/estructura_plano_envio_despacho.pdf">
+                                   <span class="fa fa-book "></span> estructura_plano_envio_despacho.pdf
+                                </a>
+                            </div>
+                        </p:dialog>
+                    </h:form>
+                </section>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>
+
+
+
+
+

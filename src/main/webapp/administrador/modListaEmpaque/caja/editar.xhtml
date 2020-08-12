@@ -1,0 +1,449 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{listaEmpaqueController.prepareListaEmpaque}"
+                                       rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi || loginController.gestorLpVentas}">
+                            <i class="fa fa-cubes" aria-hidden="true"></i> 
+                            <span>Listas de empaque</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{listaEmpaqueController.prepareListaEmpaqueCompleta}"
+                                       rendered="#{loginController.gestorLpAdmin}">
+                            <i class="fa fa-list" aria-hidden="true"></i> 
+                            <span>Listas de empaque completa</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{dimensionCajaController.prepareList}"
+                                       rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi || loginController.gestorLpVentas}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Lista de dimensiones de cajas</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{configImpresoraLabelController.prepareList}"
+                                       rendered="#{loginController.gestorLpAdmin}">
+                            <i class="fa fa-print"></i> 
+                            <span>Lista asignación impresora</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Caja No. #{listaEmpaqueController.cajaActual.numeroCaja}</ui:define> 
+        <ui:define name="title2">Captura detalle de caja</ui:define>
+        <ui:define name="body">
+            <h:form id="formulario-crearDocu">
+                <p:growl id="growl" showDetail="true" life="2000"/>
+                <h:panelGroup id="tituloEstadoCaja">
+                    <h:outputLabel value="Caja cerrada" rendered="#{listaEmpaqueController.estadoCaja}" style="color: #000077; font-weight: bold; font-size: 2em"/>
+                </h:panelGroup>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h:outputLabel value="Dimensión caja:"  />
+                    </div>
+                    <div class="col-sm-2">
+                        <h:outputLabel value="Pedido:"  />
+                    </div>
+                    <div class="col-sm-6">
+                        <h:outputLabel value="Código de barras:"  />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 form-group">
+                        <p:selectOneMenu id="dimension" 
+                                        style="width: 100% !important"
+                                        required="true"
+                                        requiredMessage="Ingresar dimensiones de la caja"
+                                        filter="true"
+                                        autoWidth="false"
+                                        disabled="#{listaEmpaqueController.estadoDimensionCaja}"
+                                        filterMatchMode="contains"
+                                        value="#{listaEmpaqueController.cajaActual.idDimension}">
+                            <f:selectItem itemLabel="Seleccionar..." itemValue="#{null}" /> 
+                            <f:selectItems value="#{dimensionCajaController.listaDimensionCaja}"/> 
+                            <f:ajax execute="@this" render="dimensionMessage"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="col-sm-2 form-group">
+                        <p:selectOneMenu id="pedido" 
+                                        style="width: 100% !important"
+                                        filter="true"
+                                        autoWidth="false"
+                                        disabled="#{listaEmpaqueController.estadoCaja}"
+                                        filterMatchMode="contains"
+                                        value="#{listaEmpaqueController.pedido}">
+                            <f:selectItem itemLabel="Seleccionar..." itemValue="seleccionar" /> 
+                            <f:selectItems value="#{listaEmpaqueController.listaPedido}"/> 
+                            <f:ajax execute="@this" render="pedidoMessage"/>
+                            <p:ajax  event="itemSelect" process="@this" listener="#{listaEmpaqueController.cambiarEstadoInputCodBarra}" update="codBarra documentosFormList:documentosTablePanel"/> 
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="col-sm-3 form-group" >
+                        <p:inputText id="codBarra"
+                               onfocus="true"
+                               style="width: 100%"
+                               maxlength="45"
+                               a:autofocus="true"
+                               value="#{listaEmpaqueController.codigoBarraItem}" 
+                               required="true"
+                               disabled="#{listaEmpaqueController.estadoCaja}"
+                               requiredMessage="Por favor ingrese el codigo de barras">
+                               <f:ajax execute="@this" render="documentoMessage"/>
+                        </p:inputText>
+                        <p:message id="codBarraMessage" for="codBarra" styleClass="error"/>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <div class="form-group">
+                            <p:commandButton 
+                                id="agregarCodBarra"
+                                styleClass="boton-prime" 
+                                action="#{listaEmpaqueController.addCodBarraCaja}"
+                                disabled="#{listaEmpaqueController.estadoCaja}"
+                                ajax="false"
+                                style="width: 100%"
+                                value="Guardar codigo de barras"
+                                update="documentosFormList:documentosTablePanel dimension"
+                                icon="fa fa-level-down">
+                           </p:commandButton>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+            <h:form id="documentosFormList">
+                <p:outputPanel id="documentosTablePanel">
+                    <p:dataTable value="#{listaEmpaqueController.listaEmpaqueHasCaja}"  var="item"
+                                rows="50" id="documentosTable" paginator="true"
+                                rowStyleClass="#{item.estado eq 0 ? 'color3': item.estado eq 1 ? 'color1': null}"
+                                paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                rowsPerPageTemplate="50, 100,150">
+                       <f:facet name="header">
+                           <div class="container-fluid">
+                               <div class="row">
+                                    <div class="col-md-11">
+                                       <h4 class="colorLetra" style="font-weight: bold; text-align: left" >
+                                           Ítem para trabajar: #{fn:length(listaEmpaqueController.listaEmpaqueHasCaja)}
+                                       </h4>
+                                        <div style="text-align: left">
+                                            <strong>NOTA: </strong> Solo puedes agregar ítems que correspondan a la misma partida arancelaria <strong>#{listaEmpaqueController.codPartidaArancelaria} - #{listaEmpaqueController.descPartidaArancelaria} </strong>
+                                            <br></br>
+                                            <strong>Peso neto: </strong> #{listaEmpaqueController.pesoNetoSuma}
+                                            <br></br>
+                                            <strong>Total paquetes: </strong> #{listaEmpaqueController.sumaCantCaja}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p:commandButton class="btn btn-primary"  
+                                                        id="imp-label"
+                                                        style="font-size: 1.2em !important; margin-top: 1.5em"
+                                                        icon="fa fa-print"
+                                                        onclick="PF('dlg4').show();"
+                                                        process="@this"
+                                                        update="formImprimir2:pesoNetoLabel
+                                                                formImprimir2:pesoBrutoLabel 
+                                                                formImprimir2:imprimirLabel 
+                                                                formImprimir2:ocLabel
+                                                                formImprimir2:pdsLabel">
+                                        </p:commandButton>
+                                        <p:tooltip id="imp-labelMsg" for="imp-label" value="Imprimir label" trackMouse="true" />  
+                                    </div>
+                               </div>
+                           </div>
+                        </f:facet>
+                         <p:column filterBy="#{item.idPedido}" filterMatchMode="contains">
+                            <f:facet name="header">Pedido</f:facet>
+                            <h:outputText value="#{item.idPedido}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.oc}" filterMatchMode="contains">
+                            <f:facet name="header">O.C</f:facet>
+                            <h:outputText value="#{item.oc}"/>
+                        </p:column>
+                         <p:column filterBy="#{item.codigoItem}" filterMatchMode="contains">
+                            <f:facet name="header">Código item</f:facet>
+                            <h:outputText value="#{item.codigoItem}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcion}" filterMatchMode="contains">
+                            <f:facet name="header">Descripción</f:facet>
+                            <h:outputText value="#{item.descripcion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcionExt1}" filterMatchMode="contains">
+                           <f:facet name="header">Extensión 1</f:facet>
+                           <h:outputText value="#{item.idExt1Detalle}"/> - <h:outputText value="#{item.descripcionExt1}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcionExt2}" filterMatchMode="contains">
+                           <f:facet name="header">Extensión 2</f:facet>
+                           <h:outputText value="#{item.idExt2Detalle}"/> - <h:outputText value="#{item.descripcionExt2}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.partidaArancelaria}" filterMatchMode="contains">
+                           <f:facet name="header">Partida arancelaria</f:facet>
+                           <h:outputText value="#{item.partidaArancelaria}"/> - <h:outputText value="#{item.descPartidaArancelaria}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.unidad}" filterMatchMode="contains">
+                            <f:facet name="header">Und. medida</f:facet>
+                            <h:outputText value="#{item.unidad}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.cantPedida}" filterMatchMode="contains">
+                            <f:facet name="header">Cantidad pedida</f:facet>
+                            <h:outputText value="#{item.cantPedida}">
+                                <f:convertNumber type="currency"
+                                                currencySymbol=""
+                                                maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column  filterBy="#{item.cantPendiente}" filterMatchMode="contains">
+                            <f:facet name="header">Cantidad pendiente</f:facet>
+                            <h:outputText value="#{item.cantPendiente}">
+                                <f:convertNumber type="currency"
+                                                currencySymbol=""
+                                                maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{item.cantComprometida}" filterMatchMode="contains">
+                            <f:facet name="header">Cantidad comprometida</f:facet>
+                            <h:outputText value="#{item.cantComprometida}">
+                                <f:convertNumber type="currency"
+                                                currencySymbol=""
+                                                maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{item.cantCodBarra}" filterMatchMode="contains">
+                            <f:facet name="header">Cantidad</f:facet>
+                            <h:outputText style="color: red" value="#{item.cantCodBarraCaja}"/> de <h:outputText value="#{item.cantCodBarra}"/>
+                        </p:column>
+                        <p:column width="60" filterBy="#{item.cantPaquete}" filterMatchMode="contains">
+                            <f:facet name="header">Cant. Paquetes</f:facet>
+                            <h:outputText value="#{item.cantPaquete}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.codBarras}" filterMatchMode="contains">
+                            <f:facet name="header">Cod. barras</f:facet>
+                            <h:outputText value="#{item.codBarras}"/>
+                        </p:column>
+                   </p:dataTable>
+                </p:outputPanel>
+                <div class="row">
+                    <div class="col-sm-4 form-group">    
+                        <p:button styleClass="boton-prime" 
+                            value="volver" 
+                            outcome="/administrador/modListaEmpaque/listaEmpaque/crear"
+                            icon="fa fa-arrow-left"
+                            style="margin-top: 25px; background: red !important;"/>
+                    </div>
+                    <div class="col-sm-4 form-group">    
+                        <p:commandButton styleClass="boton-prime"
+                            id="botonEstadoCaja"
+                            value="Guardar sin cerrar caja"
+                            process="@this"
+                            ajax="false"
+                            icon="fa fa-sticky-note"
+                            onclick="onSubmitButton();"
+                            action="#{listaEmpaqueController.editarBorradorCaja}"
+                            disabled="#{listaEmpaqueController.estadoCaja}"
+                            style="margin-top: 25px;">
+                        </p:commandButton>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <p:commandButton styleClass="boton-prime" 
+                                         id="botonCerrarCaja"
+                                         icon="fa fa-cube"
+                                         style="margin-top: 25px;"
+                                         onclick="PF('dlg1').show();"
+                                         value="Cerrar caja" 
+                                         disabled="#{listaEmpaqueController.estadoCaja}"
+                                         actionListener="#{listaEmpaqueController.prepareLabelCaja}"
+                                         update=":formEditar:pesoNeto :formImprimir:pesoNetoLabel :formImprimir:ocLabel">
+                        </p:commandButton>
+                    </div>
+                </div>
+            </h:form>
+            <p:dialog header="Cerrar caja" widgetVar="dlg1" minHeight="40" modal="true" width="30%">
+                <h:form id="formEditar">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <h:outputLabel class="letra-form" value="Peso máximo de la caja:"/>
+                            <p:inputNumber  id="pesoCaja"
+                                            styleClass="disable-input"
+                                            disabled="true"
+                                            style="font-size: 1.2em !important; opacity: 0.9 !important"
+                                            requiredMessage="peso neto"
+                                            value="#{listaEmpaqueController.cajaActual.idDimension.peso}"
+                                            decimalPlaces="2">
+                            </p:inputNumber>
+                            <p:message id="pesoCajaMessage" for="pesoCaja" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel class="letra-form" value="Peso bruto:"/>
+                            <p:inputNumber id="pesoBruto"
+                                        style="font-size: 1.2em !important"
+                                        required="true"
+                                        requiredMessage="peso bruto"
+                                        value="#{listaEmpaqueController.cajaActual.pesoBruto}"
+                                        decimalPlaces="2">
+                                <f:ajax execute="@this" render="pesoNetoLabel"/>
+                                <p:ajax process="@this" listener="#{listaEmpaqueController.calcularPesoNeto}" update="pesoNeto pesoBruto"/>
+                                </p:inputNumber>
+                            <p:message id="pesoBrutoMessage" for="pesoBruto" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel class="letra-form" value="Peso neto:"/>
+                            <p:inputNumber  id="pesoNeto"
+                                            styleClass="disable-input"
+                                            disabled="#{!loginController.gestorLpAdmin}"
+                                            style="font-size: 1.2em !important; opacity: 0.9 !important"
+                                            requiredMessage="peso neto"
+                                            value="#{listaEmpaqueController.cajaActual.pesoNeto}"
+                                            decimalPlaces="2">
+                                <f:ajax execute="@this" render="output"/>
+                            </p:inputNumber>
+                            <p:message id="pesoNetoMessage" for="pesoNeto" styleClass="error"/>
+                        </div>
+                        
+                        <p:commandButton styleClass="boton-prime"  
+                                        id="botonCerrarCaja"
+                                        icon="fa fa-cube"
+                                        onclick="PF('dlg2').show(); PF('dlg1').hide();"
+                                        value="Cerrar caja" 
+                                        process="@this"
+                                        actionListener="#{listaEmpaqueController.cerrarCaja}"
+                                        update="formImprimir:pesoNetoLabel
+                                                formImprimir:pesoBrutoLabel 
+                                                formImprimir:imprimirLabel 
+                                                formImprimir:ocLabel
+                                                formImprimir:pdsLabel
+                                                formulario-crearDocu:growl 
+                                                documentosFormList:botonCerrarCaja
+                                                documentosFormList:botonEstadoCaja
+                                                formulario-crearDocu:tituloEstadoCaja 
+                                                formulario-crearDocu:pedido 
+                                                formulario-crearDocu:codBarra
+                                                formulario-crearDocu:agregarCodBarra">
+                        </p:commandButton>
+                    </div>
+                </h:form>
+            </p:dialog>
+            <p:dialog header="Imprimir Label" widgetVar="dlg2" minHeight="40" modal="true" width="300">
+                <h:form id="formImprimir">
+                    <div style="border: 1px solid grey; border-radius: 5px; width: 220px ; height: 100px; margin-top: 1em">
+                        <h:panelGroup style="font-size: .8em; width: 210px ; height: 100px;" class="col-md-6" id="output">
+                            <div style="padding: .5em; padding-top:.1em; width: 210px ; height: 100px">
+                                <div style="display: inline-block; width: 108px">
+                                    <strong>Cod. PL: </strong><h:outputText value="#{listaEmpaqueController.listaEmpaqueActual.codigoLista}  "/> 
+                                </div>
+                                <div style="display: inline-block;">
+                                    <strong>Caja: </strong><h:outputText style="font-size: 1.5em !important; font-weight: bold" value="#{listaEmpaqueController.caja} "/>
+                                </div>
+                                <br></br>
+                                <div jsf:rendered="#{!listaEmpaqueController.tipoListaEmpaqueNacional}">
+                                    <strong>OC(s): </strong> <h:outputText id="ocLabel" value="#{listaEmpaqueController.cajaActual.oc}"/>
+                                </div>
+                                <div jsf:rendered="#{listaEmpaqueController.tipoListaEmpaqueNacional}">
+                                    <strong>Pdo(s): </strong> <h:outputText id="pdsLabel" value="#{listaEmpaqueController.cajaActual.pedidos}"/>
+                                </div>
+                                <strong>Peso neto: </strong> 
+                                <h:outputText id="pesoNetoLabel" value="#{listaEmpaqueController.cajaActual.pesoNeto}">
+                                    <f:convertNumber type="currency"
+                                                currencySymbol=""
+                                                maxFractionDigits="2"/>
+                                </h:outputText>
+                                kg
+                                <br></br>
+                                <strong>Peso bruto: </strong> 
+                                <h:outputText id="pesoBrutoLabel" value="#{listaEmpaqueController.cajaActual.pesoBruto}">
+                                    <f:convertNumber type="currency"
+                                                currencySymbol=""
+                                                maxFractionDigits="2"/>
+                                </h:outputText>kg
+                                <br></br>
+                            </div>
+                        </h:panelGroup> 
+                    </div>
+                    <p:commandButton styleClass="boton-prime"
+                        value="Imprimir label"
+                        id="imprimirLabel"
+                        process="@this"
+                        ajax="false"
+                        disabled="#{!listaEmpaqueController.estadoCaja}"
+                        icon="fa fa-print"
+                        onclick="PF('dlg2').hide();"
+                        style="margin-top: 25px; background: red !important; ">
+                        <p:printer target=":formImprimir:output"/>
+                    </p:commandButton>
+                </h:form>
+            </p:dialog>
+            <p:dialog header="Imprimir Label" widgetVar="dlg4" minHeight="40" modal="true" width="300">
+                <h:form id="formImprimir2">
+                    <div style="border: 1px solid grey; border-radius: 5px; width: 220px ; height: 100px; margin-top: 1em">
+                        <h:panelGroup style="font-size: .8em; width: 210px ; height: 100px;" class="col-md-6" id="output2">
+                            <div style="padding: .5em; padding-top:.1em; width: 210px ; height: 100px">
+                                <div style="display: inline-block; width: 108px">
+                                    <strong>Cod. PL: </strong><h:outputText value="#{listaEmpaqueController.listaEmpaqueActual.codigoLista}  "/> 
+                                </div>
+                                <div style="display: inline-block;">
+                                    <strong>Caja: </strong><h:outputText style="font-size: 1.5em !important; font-weight: bold" value="#{listaEmpaqueController.caja} "/>
+                                </div>
+                                <br></br>
+                                <div jsf:rendered="#{!listaEmpaqueController.tipoListaEmpaqueNacional}">
+                                    <strong>OC(s): </strong> <h:outputText id="ocLabel" value="#{listaEmpaqueController.cajaActual.oc}"/>
+                                </div>
+                                <div jsf:rendered="#{listaEmpaqueController.tipoListaEmpaqueNacional}">
+                                    <strong>Pdo(s): </strong> <h:outputText id="pdsLabel" value="#{listaEmpaqueController.cajaActual.pedidos}"/>
+                                </div>
+                                <strong>Peso neto: </strong> 
+                                <h:outputText id="pesoNetoLabel" value="#{listaEmpaqueController.cajaActual.pesoNeto}">
+                                    <f:convertNumber type="currency"
+                                                currencySymbol=""
+                                                maxFractionDigits="2"/>
+                                </h:outputText>
+                                kg
+                                <br></br>
+                                <strong>Peso bruto: </strong> 
+                                <h:outputText id="pesoBrutoLabel" value="#{listaEmpaqueController.cajaActual.pesoBruto}">
+                                    <f:convertNumber type="currency"
+                                                currencySymbol=""
+                                                maxFractionDigits="2"/>
+                                </h:outputText>kg
+                                <br></br>
+                            </div>
+                        </h:panelGroup> 
+                    </div>
+                    <p:commandButton styleClass="boton-prime"
+                        value="Imprimir label"
+                        id="imprimirLabel"
+                        process="@this"
+                        ajax="false"
+                        action="#{listaEmpaqueController.prepareImprimirLabel}"
+                        disabled="#{!listaEmpaqueController.estadoCaja}"
+                        icon="fa fa-print"
+                        onclick="PF('dlg4').hide();"
+                        style="margin-top: 25px; background: red !important; ">
+                    </p:commandButton>
+                </h:form>
+            </p:dialog>
+        </ui:define>
+    </ui:composition>
+</html>

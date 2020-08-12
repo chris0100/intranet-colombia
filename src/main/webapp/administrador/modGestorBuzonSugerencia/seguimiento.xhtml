@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{buzonSugerenciaController.prepareDashboard}">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Dashboard</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Sugerencia de tipo: #{buzonSugerenciaController.descripcionTipo}</ui:define>   
+        <ui:define name="title2">Administración de sugerencias</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="formulario-crearBuzon">
+                <div class="row">
+                    <div class="col-md-6">
+                         <div class="form-group">
+                            <h:outputLabel value="Código:"  />
+                            <h:inputText disabled="true" value="#{buzonSugerenciaController.buzonSugerenciaActual.idBuzonSugerencia}#{buzonSugerenciaController.buzonSugerenciaActual.idTipoSugerencia.idTipoSugerencia}"
+                                    id="codigo"
+                                    style="background: white"
+                                    class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Tipo de sugerencia:"  />
+                            <h:inputText disabled="true" value="#{buzonSugerenciaController.buzonSugerenciaActual.idTipoSugerencia.nombre}"
+                                    id="tipo" 
+                                    style="background: white"
+                                    class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Nombre:"  />
+                            <h:inputText disabled="true" value="#{buzonSugerenciaController.buzonSugerenciaActual.nombreUsuario}"
+                                    id="usuario"
+                                    style="background: white"
+                                    class="form-control"/>
+                        </div> 
+                        <div class="form-group">
+                            <h:outputLabel value="Área:"  />
+                            <h:inputText disabled="true" value="#{buzonSugerenciaController.buzonSugerenciaActual.nombreUsuario}"
+                                    class="form-control"
+                                    style="background: white"
+                                    id="area"/>
+                        </div> 
+                        <div class="form-group">
+                            <h:outputLabel value="Calificación:"  />
+                            <h:inputText  disabled="true" value="#{buzonSugerenciaController.buzonSugerenciaActual.calificacion} estrellas"
+                                    class="form-control"
+                                    style="background: white"
+                                    id="calificacion"/>
+                        </div> 
+                        <div class="form-group">
+                            <h:outputLabel value="Descripción:"/>
+                            <h:inputTextarea disabled="true" id="descripcion"
+                                        class="form-control"
+                                        style="background: white"
+                                        value="#{buzonSugerenciaController.buzonSugerenciaActual.descripcion}"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Fecha:"  />
+                            <h:inputText  disabled="true" value="#{buzonSugerenciaController.buzonSugerenciaActual.fechaCreacion}"
+                                    class="form-control"
+                                    id="fecha"
+                                    style="background: white">
+                                <f:convertDateTime pattern="MMMM dd, YYYY HH:mm"/>
+                            </h:inputText>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Seguimiento:"/>
+                            <h:inputTextarea id="segumiento"
+                                        class="form-control"
+                                        style="background: white"
+                                        value="#{buzonSugerenciaController.buzonSugerenciaActual.seguimiento}"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel class="letra-form" value="Estado: " />
+                            <br></br>
+                            <p:inputSwitch value="#{buzonSugerenciaController.buzonSugerenciaActual.estado}" onLabel="TERMINADO" offLabel="ABIERTO">
+                            </p:inputSwitch>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <p:commandButton class="btn btn-primary btn-block"
+                                                 ajax="false"
+                                                 style="margin-bottom: 30px"
+                                                 value="Volver"
+                                                 action="#{buzonSugerenciaController.update}"
+                                                 onclick="onSubmitButton();"/>
+                            </div>
+
+                        </div>
+                    </div>    
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

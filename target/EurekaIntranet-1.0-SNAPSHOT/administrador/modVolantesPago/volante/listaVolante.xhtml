@@ -1,0 +1,246 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{volantesNominaController.prepareListVolante}">
+                            <i class="fa fa-file"></i> 
+                            <span>Gestión de comprobantes</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{volantesNominaController.prepareListUsuario}">
+                            <i class="fa fa-user"></i> 
+                            <span>Gestión de usuarios</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{volantePeriodoController.prepareListPeriodo}">
+                            <i class="fa fa-calendar"></i> 
+                            <span>Gestión de períodos</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{volantesNominaController.prepareListErrores}">
+                            <i class="fa fa-times"></i>
+                            <span>Lista de errores</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li> 
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Gestión de comprobantes de nómina</ui:define>   
+        <ui:define name="title2">Administración de comprobantes</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="periodoForm">
+                <div class="form-group">
+                    <h:outputLabel value="Período:"  />
+                    <br></br>
+                    <p:selectOneMenu id="periodo" 
+                                     style="width: 50% !important"
+                                     filter="true" filterMatchMode="contains"
+                                     value="#{volantesNominaController.periodoVolante}" 
+                                     requiredMessage="Por favor indique el periodo" 
+                                     required="true">
+                            <f:selectItem itemLabel="Ninguno" itemValue="#{null}"/>
+                            <f:selectItems value="#{volantePeriodoController.listaPeriodoVolante}" var="periodo" itemValue="#{periodo}"/>
+                            <p:ajax listener="#{volantesNominaController.consultar}" update="documentosFormList:documentosTable"/> 
+                    </p:selectOneMenu>
+                </div>
+            </h:form>
+            <p:separator></p:separator>
+            <h:form id="documentosFormList">
+                <p:dataTable value="#{volantesNominaController.listaVolanteNominaPeriodo}" var="item"
+                             rowStyleClass="#{item.volanteEnviado eq true ? 'color1': item.volanteEnviado eq false ? 'color2': null}"
+                             rows="50" id="documentosTable" paginator="true"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="50, 100,150">
+                    <f:facet name="header">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p:button icon="ui-icon-arrowthick-1-w"
+                                            value="Volver pagina principal" 
+                                            style="font-size: 1.2em !important; padding: 5px; left: 0"
+                                            outcome="/administrador/modulos.xhtml"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4 class="colorLetra" style="font-weight: bold" >
+                                        Total comprobantes para este período: #{fn:length(volantesNominaController.listaVolanteNominaPeriodo)}
+                                    </h4>
+                                </div>
+                                <div class="col-md-3">
+                                    <p:commandButton icon="ui-icon-folder-open"
+                                                     ajax="false"
+                                                    value="Crear comprobantes"
+                                                    style="font-size: 1.2em !important;padding: 5px; right: 0"
+                                                    action="#{volantesNominaController.prepareCreateVolante}">
+                                        <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{volantesNominaController.usuarioActual}"/>
+                                    </p:commandButton>
+                                </div>
+                                <div class="col-md-1">
+                                    <h:commandLink id="exportExcel">
+                                        <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                                        <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                                target="documentosTable" fileName="tabla" />
+                                    </h:commandLink>
+                                    <p:tooltip id="descripcion-exportExcel" for="exportExcel" value="Exportar tabla en formato .xls" trackMouse="true"/>
+                                </div>
+                            </div>
+                        </div>
+                    </f:facet>
+                    <p:column filterBy="#{item.codigo}" width="80" filterMatchMode="contains">
+                        <f:facet name="header">Código</f:facet>
+                        <h:outputText style="font-weight: bold" value="#{item.codigo.codigo.toUpperCase()}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.codigo.nombre}" filterMatchMode="contains">
+                        <f:facet name="header">Nombre usuario</f:facet>
+                        <h:outputText style="font-weight: bold" value="#{item.codigo.nombre.toUpperCase()}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.codigo.cedula}" width="110" filterMatchMode="contains">
+                        <f:facet name="header">Cedula</f:facet>
+                        <h:outputText value="#{item.codigo.cedula}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.codigo.correo}" filterMatchMode="contains">
+                        <f:facet name="header">Correo</f:facet>
+                        <h:outputText value="#{item.codigo.correo}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.idPeriodo.toString()}" filterMatchMode="contains">
+                        <f:facet name="header">Período</f:facet>
+                        <h:outputText value="#{item.idPeriodo.toString()}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.tipoNomina}" filterMatchMode="contains">
+                        <f:facet name="header">Tipo de nómina</f:facet>
+                        <h:outputText value="#{item.tipoNomina}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.usuarioCreacion}" filterMatchMode="contains">
+                        <f:facet name="header">Usuario de creación</f:facet>
+                        <h:outputText value="#{item.usuarioCreacion}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.colorEnviado}" width="70" filterMatchMode="contains">
+                        <f:facet name="header">Correo enviado</f:facet>
+                        <h:outputText value="#{item.colorEnviado}" styleClass="#{item.colorEnviado}"/>
+                    </p:column>
+                    <p:column priority="7">
+                         <f:facet name="header">Fecha de creación</f:facet>
+                         <h:outputText value="#{item.fechaCreacion}">
+                             <f:convertDateTime pattern="MMMM dd, YYYY HH:mm"/>
+                         </h:outputText>
+                    </p:column>
+                    <p:column width="110">
+                        <p:commandButton id="enviar" update=":formEditar" onclick="PF('dlgEnviar').show();"  icon="fa fa-send">
+                            <f:setPropertyActionListener value="#{item}" target="#{volantesNominaController.volanteNominaActual}"/>
+                        </p:commandButton>
+                        <p:tooltip for="enviar" value="Enviar comprobantes" trackMouse="true" />
+
+                        <p:commandButton icon="fa fa-download" 
+                                         ajax="false"
+                                         id="descargarVolante">
+                             <f:setPropertyActionListener value="#{item}" target="#{volantesNominaController.volanteNominaActual}"/>
+                             <p:fileDownload value="#{volantesNominaController.descargaVolantePDF}" />
+                        </p:commandButton>
+                        <p:tooltip for="descargarVolante" value="Descargar comprobante" trackMouse="true"/>
+                        <p:commandButton id="ver" update=":formVer" onclick="PF('dlgVer').show();"  icon="fa fa-desktop">
+                                <f:setPropertyActionListener value="#{item}" target="#{volantesNominaController.volanteNominaActual}"/>
+                            </p:commandButton>
+                            <p:tooltip for="ver" value="Ver comprobante" trackMouse="true" />
+                    </p:column>
+                </p:dataTable>
+                <div class="row" style="margin-top: 1em">
+                    <div class="col-md-8">
+                    </div>
+                    <div class="col-md-4">
+                        <input jsf:action="#{volantesNominaController.sendMailVolanteMasivo}"
+                               type="submit" style="font-weight: bold; font-size: 1.2em; width: 100%"
+                               class="submit-form btn btn-facebook"
+                               value="Enviar comprobantes masivos"
+                               id="myButton1">
+                        </input>
+                    </div>
+                </div>
+            </h:form>
+        
+            <div class="load"></div>
+            <script>
+                $('#myButton1').click(function(){
+                  $('#myButton1').hide();
+                  $('.load').addClass('loading');
+                    setTimeout(function () { 
+                    $('.load').removeClass('loading');
+                    $('#myButton1').show();
+
+                  }, 200000000);
+                });
+            </script>
+            <script>
+                function confirmar() {
+                    var txt;
+                    var r = confirm("¿Desea enviar los volantes de forma masiva?");
+                    if (r == true) {
+                    } else {
+                        return false;
+                    }
+                    document.getElementById("demo").innerHTML = txt;
+                }
+            </script>
+            <p:dialog header="Ver comprobante" widgetVar="dlgVer" modal="true" width="900" height="400">
+                <h:form id="formVer">
+                    <div class="form-group">
+                        <h:inputTextarea disabled="true" id="cadenaCaracter" style="width: 100%; height: 350px; font-family: monospace !important; font-size: .9em !important" value="#{volantesNominaController.volanteNominaActual.volante}"/> 
+                    </div>
+                </h:form>
+            </p:dialog>
+            <p:dialog header="Envio de comprobantes" widgetVar="dlgEnviar" minHeight="40" modal="true" width="30%">
+                <h:form id="formEditar">
+                    <span style="font-weight: bold; font-size: 1.5em">Información</span>
+                    <br></br>
+                    - Los correos deben estar separados por comas(,)
+                    <br></br>
+                    - No debe haber espacios entre caracteres de cada correo
+                    <br></br>
+                    - No digitar caracteres especiales como */-$%#!ªñÑá
+                    <br></br>
+                    - Si los correos están bien escritos no los cambie, quizás en esta ocasión hubo un error en el envío por parte del servidor
+                    <br></br>
+                    <br></br>
+                    <div class="form-group">
+                            <h:outputLabel value="Correo:"  />
+                            <div class="form-group">
+                                <h:inputText class="form-control" id="correoInputText" 
+                                       value="#{volantesNominaController.volanteNominaActual.codigo.correo}" 
+                                       validatorMessage="Dirección de correo electronico no valido">
+                                    <f:ajax execute="@this" render="correoMessage"/>
+                                </h:inputText>
+                                <p:message id="correoMessage" for="correoInputText"/>
+                            </div>
+                        </div>
+                    <p:commandButton style="font-size: 1.2em !important;padding: 5px; right: 0; width: 100%; background: #125acd" ajax="false" value="Enviar comprobante" action="#{volantesNominaController.sendMailVolante}"/>
+                </h:form>
+            </p:dialog>
+             
+        </ui:define>
+    </ui:composition>
+</html>

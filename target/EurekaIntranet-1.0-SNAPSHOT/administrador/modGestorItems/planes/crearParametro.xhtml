@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                 <ul class="sidebar-menu">
+                    <li style="margin-top: 20px" >
+                        <h:commandLink action="#{grupoItemController.prepareList}">
+                            <i class="fa fa-folder"></i> 
+                            <span>Plan 50 - Grupo</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                        <h:commandLink action="#{tocParetoVentasController.prepareList}">
+                            <i class="fa fa-tasks"></i> 
+                            <span>Maestro de parámetros</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="listaItemsEnviados">
+                            <i class="fa fa-share-square"></i>
+                            <span>Log de items enviados</span>
+                        </h:commandLink>
+                    </li>
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Gestión de Items - Grupos y parámetros</ui:define>   
+        <ui:define name="title2">Creación de parámetros </ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="formulario-crearDocu" style="margin-top: 1em">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h:outputLabel value="Nombre del parámetro:"  />
+                            <h:inputText class="form-control" 
+                                   id="tituloInputText" 
+                                   maxlength="30"
+                                   value="#{tocParetoVentasController.tocParametrosActual.nombreParametro}" 
+                                   required="true"
+                                   requiredMessage="Por favor ingrese el titulo del contenido">
+                                   <f:ajax execute="@this" render="tituloMessage"/>
+                            </h:inputText>
+                            <p:message id="tituloMessage" for="tituloInputText" styleClass="error"/>
+                        </div> 
+                        <div class="form-group">
+                            <h:outputLabel value="Fecha incial:" style="width: 100%" />
+                            <p:calendar id="fechaInicial" 
+                                        required="true"
+                                        style="display: block !important;width: 100%"
+                                        requiredMessage="Ingresa fecha inicial del análisis" 
+                                        value="#{tocParetoVentasController.tocParametrosActual.fechaInicial}"
+                                        pattern="MM/dd/yyyy" maxdate="#{tocParetoVentasController.tocParametrosActual.fechaFinal}">
+                                <f:ajax execute="fechaInicial" render="msgFechaInicial"/>
+                                <p:ajax event="dateSelect" process="@this" update="fechaInicial fechaFinal"/>
+                                <p:ajax event="valueChange" process="@this" update="fechaFinal fechaInicial"/>
+                            </p:calendar>
+                            <h:message id="msgFechaInicial" for="fechaInicial"  styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Fecha final:" style="width: 100%"/>
+                            <p:calendar id="fechaFinal" 
+                                        required="true"
+                                        style="display: block !important;width: 100%"
+                                        requiredMessage="Ingresa fecha final del análisis" 
+                                        value="#{tocParetoVentasController.tocParametrosActual.fechaFinal}"
+                                        pattern="MM/dd/yyyy" mindate="#{tocParetoVentasController.tocParametrosActual.fechaInicial}">
+                                <f:ajax execute="fechaFinal" render="msgFechaFinal"/>
+                                <p:ajax event="dateSelect" process="@this" update="fechaInicial fechaFinal"/>
+                                <p:ajax event="valueChange" process="@this" update="fechaFinal fechaInicial"/>
+                            </p:calendar>
+                             <h:message id="msgFechaFinal" for="fechaFinal"  styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Cantidad de clientes:"  />
+                            <p:inputNumber id="clientes" 
+                                           style="display: block !important;width: 100%"
+                                           value="#{tocParetoVentasController.tocParametrosActual.cantidadClientes}"
+                                           required="true"
+                                           decimalPlaces="0"
+                                           requiredMessage="Por favor ingrese la cantidad de clientes">
+                                <f:ajax execute="@this" render="clientesMessage"/>
+                            </p:inputNumber>
+                            <p:message id="clientesMessage" for="clientes" styleClass="error"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h:outputLabel value="Pareto x tamaño(%):" style="width: 100%"/>
+                            <p:inputNumber id="pareto" 
+                                           style="display: block !important;width: 100%"
+                                           value="#{tocParetoVentasController.partSumada}"
+                                           required="true"
+                                           maxValue="100"
+                                           decimalPlaces="0"
+                                           requiredMessage="Por favor ingrese el Pareto x tamaño(%)">
+                                <f:ajax execute="@this" render="paretoMessage"/>
+                            </p:inputNumber>
+                            <p:message id="paretoMessage" for="pareto" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Rotación:" style="width: 100%"/>
+                            <p:inputNumber id="rotacion"
+                                           style="display: block !important;width: 100%"
+                                           value="#{tocParetoVentasController.tocParametrosActual.rotacion}"
+                                           required="true"
+                                           decimalPlaces="0"
+                                           requiredMessage="Por favor ingrese la rotación">
+                                <f:ajax execute="@this" render="rotacionMessage"/>
+                            </p:inputNumber>
+                            <p:message id="rotacionMessage" for="rotacion" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Días hábiles:" style="width: 100%"/>
+                            <p:inputNumber id="dias"
+                                           style="display: block !important;width: 100%"
+                                           value="#{tocParetoVentasController.tocParametrosActual.diasHabiles}"
+                                           required="true"
+                                           decimalPlaces="0"
+                                           requiredMessage="Por favor ingrese los diás hábiles">
+                                <f:ajax execute="@this" render="diasMessage"/>
+                            </p:inputNumber>
+                            <p:message id="diasMessage" for="dias" styleClass="error"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <p:commandButton class="btn btn-primary btn-block"
+                                             ajax="false"
+                                             value="Guardar"
+                                             action="#{tocParetoVentasController.add}"
+                                             onclick="onSubmitButton();"/>
+                    </div>
+                    <div class="col-sm-6 form-group">    
+                        <h:button class="btn btn-warning btn-block" value="Cancelar" outcome="listaParametro"/>
+                    </div>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

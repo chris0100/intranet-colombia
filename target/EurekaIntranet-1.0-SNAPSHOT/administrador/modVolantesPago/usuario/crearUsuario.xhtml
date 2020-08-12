@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{volantesNominaController.prepareListVolante}">
+                            <i class="fa fa-file"></i> 
+                            <span>Gestión de comprobantes</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                        <h:commandLink action="#{volantesNominaController.prepareListUsuario}">
+                            <i class="fa fa-user"></i> 
+                            <span>Gestión de usuarios</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{volantePeriodoController.prepareListPeriodo}">
+                            <i class="fa fa-calendar"></i> 
+                            <span>Gestión de períodos</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{volantesNominaController.prepareListErrores}">
+                            <i class="fa fa-times"></i>
+                            <span>Lista de errores</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Gestión de usuarios</ui:define>   
+        <ui:define name="title2">Formulario de creación de usuarios</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form>
+                <div class="form-group">
+                    <h:outputLabel value="Cargar archivo de contactos .P01:" />
+                    <p:fileUpload cancelLabel="Cancelar"
+                                  auto="true"
+                                  uploadLabel="Cargar archivo"
+                                  allowTypes="/(\.|\/)(P01)$/"
+                                  label="Examinar"
+                                  mode="advanced" 
+                                  update="cadenaCaracter"
+                                  required="true"
+                                  sizeLimit="2000000"
+                                  fileUploadListener="#{volantesNominaController.cargarPlanoUsuario}" 
+                                  id="archivoDoc"
+                                  process="@this"
+                                  invalidSizeMessage="El archivo que deseas cargar sobrepasa 1MB"
+                                  converterMessage="proceso terminado"
+                                  invalidFileMessage="Solo se aceptan archivos .P01">
+                     </p:fileUpload>
+                    <p:messages id="messageDoc" showDetail="true" closable="false"/>
+                </div> 
+                <div class="form-group">
+                    <h:inputTextarea disabled="true" id="cadenaCaracter" style="width: 100%; height: 500px; font-family: monospace !important" value="#{volantesNominaController.cadenaCaracteresText1}"/> 
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 form-group">
+                        <input jsf:action="#{volantesNominaController.addUsuario}"
+                               type="submit" style="font-weight: bold; font-size: 1.3em; width: 100%"
+                               class="submit-form btn btn-pinterest"
+                               value="Procesar archivo"
+                               id="myButton1">
+                            <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{volantesNominaController.usuarioActual}"/>
+                        </input>
+                    </div>
+                    <div class="col-sm-4 form-group">    
+                        <h:button class="btn btn-warning btn-block" style="font-weight: bold; font-size: 1.2em; width: 100%" value="Cancelar" outcome="listaUsuario"/>
+                    </div>
+                </div>
+            </h:form>
+            <div class="load"></div>
+            <script>
+                $('#myButton1').click(function(){
+                  $('#myButton1').hide();
+                  $('.load').addClass('sincronizar');
+                    setTimeout(function () { 
+                    $('.load').removeClass('sincronizar');
+                    $('#myButton1').show();
+
+                  }, 200000000);
+                });
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>

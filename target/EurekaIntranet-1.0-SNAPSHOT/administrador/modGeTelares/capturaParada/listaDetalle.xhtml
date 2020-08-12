@@ -1,0 +1,260 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <head jsf:id="head">
+        <title><ui:insert name="title"></ui:insert></title>
+        <link rel="icon" type="image/png" href="#{request.contextPath}/resources/images/logoSoloLoginWeb.png"/>
+        <link href="#{request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet"/>
+    </head>
+    <body style="margin: 0 !important; padding: 0 !important" >
+         <h:form id="form-filtrosReporte">
+           <div class="container-fluid">
+                <div class="row">
+                    <div class="form-group col-md-6" style="margin-top: 2em !important">
+                        <div class="col-md-12">
+                            <h:outputLabel class="form-group" value="Fecha inicio del reporte:"  />
+                            <p:calendar id="fechaRevision" 
+                                        autocomplete="off"
+                                        required="true" 
+                                        requiredMessage="Ingresa Fecha 1"
+                                        style="width: 100%"
+                                        value="#{reporteCapturaGeController.fecha1}"
+                                        pattern="dd/MM/yyyy" maxdate="#{reporteCapturaGeController.fecha2}">
+                                <f:ajax execute="fechaRevision" render="msgFechaRevision"/>
+                                <p:ajax event="dateSelect" process="@this" update="fechaRevision fechaEntrega"/>
+                                <p:ajax event="valueChange" process="@this" update="fechaEntrega fechaRevision"/>
+                            </p:calendar>
+                            <h:message id="msgFechaRevision" for="fechaRevision"  styleClass="error"/>
+                        </div>
+                        <div class="col-md-12">
+                        <h:outputLabel class="form-group" value="Fecha final del reporte:"  />
+                            <p:calendar id="fechaEntrega" 
+                                        required="true" 
+                                        autocomplete="off"
+                                        requiredMessage="Ingresa Fecha 2"
+                                        style="width: 100%"
+                                        value="#{reporteCapturaGeController.fecha2}"
+                                        pattern="dd/MM/yyyy" mindate="#{reporteCapturaGeController.fecha1}">
+                                <f:ajax execute="fechaEntrega" render="msgFechaEntraga"/>
+                                <p:ajax event="dateSelect" process="@this" update="fechaRevision fechaEntrega"/>
+                                <p:ajax event="valueChange" process="@this" update="fechaEntrega fechaRevision"/>
+                            </p:calendar>
+                            <h:message id="msgFechaEntrega" for="fechaEntrega"  styleClass="error"/>
+                        </div>
+                        <div class="col-md-12">
+                            <p:button value="Volver" 
+                                icon="ui-icon-arrowthick-1-w" 
+                                style="background: red; margin-left: 40px" 
+                                styleClass="btn btn-danger" 
+                                outcome="lista"/>
+                            <p:commandButton  action="#{reporteCapturaGeController.consultarReporteGe}"
+                                    type="submit" 
+                                    icon="ui-icon-search"
+                                    value="Consultar"
+                                    styleClass="btn btn-primary"
+                                    id="myButton1"
+                                    ajax="false"
+                                    update="@this :List:Table">
+                            </p:commandButton>
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-4">
+                        <h4 class="colorLetra" style="font-weight: bold" >
+                            Total captura: #{fn:length(reporteCapturaGeController.listaReporte)}
+                        </h4>
+                        <h:commandLink id="exportExcel">
+                            <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                            <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                    target="List:Table" fileName="tabla" />
+                        </h:commandLink>
+                        <p:tooltip id="descripcion-exportExcel" for="exportExcel" value="Exportar tabla en formato .xls" trackMouse="true"/>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+        <h:form id="List">
+            <p:outputPanel id="TablePanel">
+                <p:dataTable value="#{reporteCapturaGeController.listaReporte}" var="item"
+                             rows="50" id="Table" paginator="true"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="50, 100,150"
+                             scrollable="true"
+                             scrollWidth="5000">
+                    <f:facet name="header">
+                        
+                    </f:facet>
+                    <p:column filterBy="#{item.idCaptura}" filterMatchMode="contains" >
+                        <f:facet name="header"># captura</f:facet>
+                        <h:outputText style="font-weight: bold" value="#{item.idCaptura}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.fechaCaptura}" filterMatchMode="contains" >
+                        <f:facet name="header">Fecha captura</f:facet>
+                        <h:outputText style="font-weight: bold" value="#{item.fechaCaptura}">
+                            <f:convertDateTime pattern="YYYY/dd/MM"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{item.idTurno}" filterMatchMode="contains">
+                        <f:facet name="header">Turno</f:facet>
+                        <h:outputText value="#{item.idTurno}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.operario}" filterMatchMode="contains">
+                        <f:facet name="header">Operario</f:facet>
+                        <h:outputText value="#{item.operario}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.nombreHomologado}" filterMatchMode="contains">
+                        <f:facet name="header">Maquina</f:facet>
+                        <h:outputText value="#{item.nombreHomologado}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.descEquipo}" filterMatchMode="contains">
+                        <f:facet name="header">Equipo</f:facet>
+                        <h:outputText value="#{item.descEquipo}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.descProceso}" filterMatchMode="contains" >
+                        <f:facet name="header">Proceso</f:facet>
+                        <h:outputText value="#{item.descProceso}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.horaInicio}" filterMatchMode="contains">
+                        <f:facet name="header">Hora de inicio</f:facet>
+                        <h:outputText value="#{item.horaInicio}">
+                            <f:convertDateTime pattern="dd/MM/YYYY HH:mm:ss"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{item.horaFinal}" filterMatchMode="contains">
+                        <f:facet name="header">Hora final</f:facet>
+                        <h:outputText value="#{item.horaFinal}">
+                            <f:convertDateTime pattern="dd/MM/YYYY HH:mm:ss"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{item.op}" filterMatchMode="contains">
+                        <f:facet name="header">Op</f:facet>
+                        <h:outputText value="#{item.op}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.idItem}" filterMatchMode="contains">
+                        <f:facet name="header">Cod. item</f:facet>
+                        <h:outputText value="#{item.idItem}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.descripcionItem}" filterMatchMode="contains">
+                        <f:facet name="header">Descripción item</f:facet>
+                        <h:outputText value="#{item.descripcionItem}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.ext1Detalle}" filterMatchMode="contains">
+                        <f:facet name="header">Ext 1</f:facet>
+                        <h:outputText value="#{item.ext1Detalle}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.ext2Detalle}" filterMatchMode="contains">
+                        <f:facet name="header">Ext 2</f:facet>
+                        <h:outputText value="#{item.ext2Detalle}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.ruta}" filterMatchMode="contains">
+                        <f:facet name="header">Ruta operación</f:facet>
+                        <h:outputText value="#{item.ruta}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.centroTrabajo}" filterMatchMode="contains">
+                        <f:facet name="header">Centro de trabajo</f:facet>
+                        <h:outputText value="#{item.centroTrabajo}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.puntasNominal}" filterMatchMode="contains">
+                        <f:facet name="header">Puntas nominal</f:facet>
+                        <h:outputText value="#{item.puntasNominal}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.puntasUnoee}" filterMatchMode="contains">
+                        <f:facet name="header">Puntas UnoEE</f:facet>
+                        <h:outputText value="#{item.puntasUnoee}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.puntasProduccion}" filterMatchMode="contains">
+                        <f:facet name="header">Puntas producción</f:facet>
+                        <h:outputText value="#{item.puntasProduccion}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.pp}" filterMatchMode="contains">
+                        <f:facet name="header">P/P</f:facet>
+                        <h:outputText value="#{item.pp}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.mtrsProducidos}" filterMatchMode="contains">
+                        <f:facet name="header">Mtros producidos buenos</f:facet>
+                        <h:outputText value="#{item.mtrsProducidos}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.peso}" filterMatchMode="contains">
+                        <f:facet name="header">Kilos producidos buenos</f:facet>
+                        <h:outputText value="#{item.peso}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.factorConversion}" filterMatchMode="contains">
+                        <f:facet name="header">Factor conversión</f:facet>
+                        <h:outputText value="#{item.factorConversion}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.claseb}" filterMatchMode="contains">
+                        <f:facet name="header">Clase b </f:facet>
+                        <h:outputText value="#{item.claseb}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.productoRechazado}" filterMatchMode="contains">
+                        <f:facet name="header">Mtros rechazados</f:facet>
+                        <h:outputText value="#{item.productoRechazado}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.horaInicioParada}" filterMatchMode="contains">
+                        <f:facet name="header">Hora de inicio parada</f:facet>
+                        <h:outputText value="#{item.horaInicioParada}">
+                            <f:convertDateTime pattern="dd/MM/YYYY HH:mm:ss"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{item.horaFinParada}" filterMatchMode="contains">
+                        <f:facet name="header">Hora final parada</f:facet>
+                        <h:outputText value="#{item.horaFinParada}">
+                            <f:convertDateTime pattern="dd/MM/YYYY HH:mm:ss"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{item.tiempoDiferencia}" filterMatchMode="contains">
+                        <f:facet name="header">Diferencia hora parada</f:facet>
+                        <h:outputText value="#{item.tiempoDiferencia}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.codigoParada}" filterMatchMode="contains">
+                        <f:facet name="header">Código</f:facet>
+                        <h:outputText value="#{item.codigoParada}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.descParada}" filterMatchMode="contains">
+                        <f:facet name="header">Desc. parada</f:facet>
+                        <h:outputText value="#{item.descParada}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.letra}" filterMatchMode="contains">
+                        <f:facet name="header">Esquema</f:facet>
+                        <h:outputText value="#{item.letra}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.descEsquema}" filterMatchMode="contains">
+                        <f:facet name="header">Desc. Esquema</f:facet>
+                        <h:outputText value="#{item.descEsquema}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.descUnidadNegocio}" filterMatchMode="contains" >
+                        <f:facet name="header">Unidad negocio</f:facet>
+                        <h:outputText value="#{item.descUnidadNegocio}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.descPlanta}" filterMatchMode="contains" >
+                        <f:facet name="header">Planta</f:facet>
+                        <h:outputText value="#{item.descPlanta}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.descLineaProduccion}" filterMatchMode="contains" >
+                        <f:facet name="header">Linea de producción</f:facet>
+                        <h:outputText value="#{item.descLineaProduccion}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.cantProgramada}" filterMatchMode="contains">
+                        <f:facet name="header">Cant. programada MTS</f:facet>
+                        <h:outputText value="#{item.cantProgramada}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.cantEntregada}" filterMatchMode="contains">
+                        <f:facet name="header">Cant. entregada MTS</f:facet>
+                        <h:outputText value="#{item.cantEntregada}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:outputPanel>
+        </h:form>
+    </body>
+</html>

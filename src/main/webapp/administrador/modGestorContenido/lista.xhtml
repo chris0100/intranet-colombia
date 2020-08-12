@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{contenidoController.prepareList}">
+                            <i class="fa fa-bullhorn"></i> 
+                            <span>Gestión de contenidos</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Gestión de contenidos</ui:define>   
+        <ui:define name="title2">Administración de contenidos</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="documentosFormList">
+                <p:outputPanel id="documentosTablePanel">
+                    <p:dataTable value="#{contenidoController.listaContenido}" var="item"
+                                 rows="50" id="documentosTable" paginator="true"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150">
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p:button icon="ui-icon-arrowthick-1-w"
+                                                value="Volver pagina principal" 
+                                                style="font-size: 1.2em !important; padding: 5px; left: 0"
+                                                outcome="/administrador/modulos.xhtml"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4 class="colorLetra" style="font-weight: bold" >
+                                            Contenidos creados: #{fn:length(contenidoController.listaContenido)}
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p:commandButton icon="ui-icon-folder-open"
+                                                         ajax="false"
+                                                        value="Crear nuevo contenido"
+                                                        style="font-size: 1.2em !important;padding: 5px; right: 0"
+                                                        action="#{contenidoController.prepareCreate}">
+                                            <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{contenidoController.usuarioActual}"/>
+                                        </p:commandButton>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <h:commandLink id="exportExcel">
+                                            <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                                            <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                                    target="documentosTable" fileName="inventario" />
+                                        </h:commandLink>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:column filterBy="#{item.titulo}" filterMatchMode="contains">
+                            <f:facet name="header">Titulo</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.titulo.toUpperCase()}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.idUsuario.nombre}" filterMatchMode="contains">
+                            <f:facet name="header">Usuario</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.idUsuario.nombre.toUpperCase()}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.tipo}" filterMatchMode="contains">
+                            <f:facet name="header">Tipo de contenido</f:facet>
+                            <h:outputText value="#{item.tipo}"/>
+                        </p:column>
+                        <p:column priority="7">
+                             <f:facet name="header">Fecha de actualización</f:facet>
+                             <h:outputText value="#{item.fecha}">
+                                 <f:convertDateTime pattern="MMMM dd, YYYY"/>
+                             </h:outputText>
+                        </p:column>
+                        <p:column width="140">
+                            <p:commandButton ajax="false" icon="ui-icon-document" id="ver" action="#{contenidoController.prepareView}" >
+                                <f:setPropertyActionListener value="#{item}" target="#{contenidoController.contenidoActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-print" for="ver" value="Vista previa del contenido" trackMouse="true"/>
+                            <p:commandButton ajax="false" icon="ui-icon-pencil" id="actualizar" action="#{contenidoController.prepareEdit}" >
+                                <f:setPropertyActionListener value="#{item}" target="#{contenidoController.contenidoActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-botonActualizacion" for="actualizar" value="Editar contenido" trackMouse="true" />
+                            <p:commandButton id="boton-delete"  icon="ui-icon-trash" action="#{contenidoController.delete}" update="documentosFormList">
+                                <p:confirm header="Confirmación" message="¿Esta seguro que desea eliminar el documento?" icon="ui-icon-alert" />
+                                <f:setPropertyActionListener value="#{item}" target="#{contenidoController.contenidoActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-delete" for="boton-delete" value="Eliminar contenido" trackMouse="true"/>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

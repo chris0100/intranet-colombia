@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Innóvate
+                </h:form>
+                <header class="header-paginas">
+                    <img class="wow bounceInUp" jsf:library="images" jsf:name="/innovate/bannerInnovate.png" width="60%" alt="Banner"/>
+                </header>
+            </section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="wow bounceInLeft col-md-12">
+                            <div style="border: 2px solid #0b0146; padding: 2em; border-radius: 5em; border-bottom-right-radius: 0px">
+                                <h3 style="color: #0b0146; font-weight: bold">¿Qué es innóvate?</h3>
+                                Es la oportunidad que tenemos todos los colaboradores 
+                                de EKA corporación de ser reconocidos por generar ideas 
+                                innovadoras que faciliten o mejoren nuestros procesos o productos, 
+                                siendo sostenibles, seguros y con la calidad esperada por nuestros clientes.  
+                            </div>
+                        </div>
+                        <div class="wow bounceInLeft col-md-12" style="margin-top: 1em">
+                            <div style="border: 2px solid #0b0146; padding: 2em; border-radius: 5em; border-bottom-right-radius: 0px">
+                                <h3 style="color: #0b0146; font-weight: bold">¿Qué aspectos se evalúan y quienes evalúan?</h3>
+                                Hay un comité interdisciplinario que evalúan las ideas y estas son evaluadas de acuerdo a estos criterios:
+                                <br></br>
+                                <li class="fa fa-check"></li> Creatividad e innovación 
+                                <br></br>
+                                <li class="fa fa-check"></li> Impacto (Económico, social y ambiental)
+                                <br></br>
+                                <li class="fa fa-check"></li> Viabilidad
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <figure style="width: 100% !important">
+                            <img class="wow bounceInUp" jsf:library="images" jsf:name="/innovate/cebrekaInnovate.png" width="100%" alt="cebreka"/>
+                         </figure> 
+                    </div>
+                    <div class="col-md-12" style="margin-top: 5em">
+                        <h3 style="color: #0b0146; font-weight: bold">¿Cómo participo?</h3>
+                        <img class="wow bounceInUp" jsf:library="images" jsf:name="/innovate/rutaInnovate.jpg" width="100%" alt="cebreka"/>
+                    </div>
+                </div>
+            </div>
+            
+            <section class="container" style="padding: 3em; padding-bottom: 0">
+                <div class="col-md-12" style="margin-top: 3em">
+                    <h3 style="color: #0b0146; font-weight: bold">¿Quiénes pueden participar?</h3>
+                    Todos los colaboradores de EKA máximo 2 personas por propuesta.
+                    <br></br><br></br>
+                    <strong>NOTA:</strong> Para el caso de ideas presentadas por colaboradores 
+                    que pertenecen a los equipos de mejoramiento operacional, 
+                    esta idea genera puntuación sobre sobre el área donde se
+                    ejecute inicialmente la idea.
+                </div>
+                <div class="col-md-12" style="margin-top: 3em">
+                    <h3 style="color: #0b0146; font-weight: bold">¿Cómo es la premiación?</h3>
+                    Las ideas serán clasificadas en los siguientes rangos (Calculo anual):
+                    <br></br><br></br>
+                </div>
+                <div class="container">
+                    <div class="row about-container">
+                        <div class="col-lg-6 content order-lg-1 order-2" style="border-right: 2px solid #0b0146">
+                            <span style="font-weight: bold; color: #0b0146; font-size: 1.2em">Ideas de tema operacional:</span>
+                            <br></br><br></br>
+                            <li class="fa fa-check"></li> Ideas inferiores a 2MM de ahorro, reciben boletas de cine.
+                            <br></br><br></br>
+                            <li class="fa fa-check"></li> Ideas entre 2MM y 5MM de ahorro, reciben bono por $100.000.
+                            <br></br><br></br>
+                            <li class="fa fa-check"></li> Ideas entre 5,1MM y 15MM de ahorro, reciben bono por $200.000.
+                            <br></br><br></br>
+                            <li class="fa fa-check"></li> Ideas entre 15,1MM de ahorro en adelante, reciben Bono por $300.000.
+                        </div>   
+                        <div class="col-md-6 content order-lg-1 order-2">
+                            <span style="font-weight: bold; color: #0b0146; font-size: 1.2em">Ideas de salud y seguridad en el trabajo:</span>
+                            <br></br><br></br>
+                            <li class="fa fa-check"></li> Riesgo ALTO a ELIMINADO: reciben bono por $300.000.
+                            <br></br><br></br>
+                            <li class="fa fa-check"></li> Riesgo MEDIO a ELIMINADO: reciben bono por $200.000.
+                            <br></br><br></br>
+                            <li class="fa fa-check"></li> Riesgo ALTO a BAJO: Reciben Bono por $100.000.
+                            <br></br><br></br>
+                            <li class="fa fa-check"></li> Riesgo BAJO a ELIMINADO: reciben bono por $100.000.
+                            <br></br><br></br>
+                            * Las demás mejoras que bajen 1 grado ( Alto a Medio o Medio a Bajo), Reciben Boletas de cine.
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5" style="margin-top: 5em">
+                        <span style="font-weight: bold; color: #0b0146; font-size: 1.2em">Ideas de aspecto ambiental:</span>
+                        <br></br><br></br>
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Criterio</th>
+                                <th scope="col">Porcentaje</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Reducción de impacto o riesgo</td>
+                                <td>35%</td>
+                              </tr>
+                              <tr>
+                                <td>Creatividad e innovación (uso de recursos propios o reuso)</td>
+                                <td>25%</td>
+                              </tr>
+                              <tr>
+                                <td>Ahorro</td>
+                                <td>40%</td>
+                              </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-7">
+                        <div style="border: 2px solid #0b0146; padding: 2em; border-radius: 5em; border-bottom-left-radius: 0px; margin-top: 5em;">
+                            <span style="font-weight: bold; color: #0b0146; font-size: 1.2em">Equivalencia en pesos</span>
+                            <br></br>
+                            80% al 100% = $300.000
+                            <br></br>
+                            60% al 79% = $200.000
+                            <br></br>
+                            De 40% a 59% = $100.000
+                            <br></br>
+                            Por debajo de 40% Boletas de cine 
+                            <br></br>
+                            <span style="font-weight: bold; color: #0b0146; font-size: 1.2em">¿Cuales ideas no aplican?</span>
+                            <br></br>
+                            <li class="fa fa-check"></li> Que vayan en contra de las políticas de la organización.
+                            <br></br>
+                            <li class="fa fa-check"></li> Se refieran a salarios o prestaciones.
+                            <br></br>
+                            <li class="fa fa-check"></li> Ideas presentadas con anterioridad o que ya han sido implementadas.
+                            <br></br>
+                            <li class="fa fa-check"></li> Que se refieran a necesidad de reparación o mantenimiento.
+                        </div>
+                    </div>
+                </div>
+                <h:form>
+                    <div class="form-group">
+                        <a class="btn-verInnovate" target="_blank" href="http://eureka/resources/documentos/innovate/formatoInnovate.pdf">
+                            <li class="fa fa-download"></li> Descarga formato innóvate
+                        </a>
+                    </div>
+                     <div class="form-group">
+                         <a class="btn-verInnovate" target="_blank" href="http://eureka/resources/documentos/innovate/plegableInnovate.pdf">
+                            <li class="fa fa-download"></li> Descarga plegable innóvate
+                         </a>
+                    </div>
+                </h:form>
+            </section>   
+        </ui:define>
+    </ui:composition>    
+</html>

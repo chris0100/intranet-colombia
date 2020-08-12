@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Directorio
+                </h:form>
+                <header class="header-paginas">
+                    <h2><span class="titulo-paginas">Directorio</span></h2>
+                </header>
+                <div class="container-directorio">
+                    <iframe width="730"
+                        height="1250"
+                        src="http://192.168.160.153:8080/Reports_EKACORP/Pages/Report.aspx?ItemPath=%2fEka_Reportes%2flistaUsuariosDirectorioActivo">
+                    </iframe>
+                    <!--
+                    <p:dataTable value="#{directorioController.listaDirectorio}" var="item"
+                                rows="50" paginator="true"  id="documentosTable" class="table-font table table-striped table-bordered dt-responsive nowrap"
+                                paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                rowsPerPageTemplate="50,100,150" emptyMessage="No se encontraron documentos con el criterio dado"
+                                sortBy="#{item.area}">
+                      <p:column width="160" filterBy="#{item.area}" filterMatchMode="contains" class="codigo-tabla"  groupRow="true">
+                           <f:facet name="header"><span class="titulos-tablas"> Área </span></f:facet>
+                           <h:outputText value="#{item.area}"/>
+                      </p:column>
+                      <p:column filterBy="#{item.nombreColaborador}" filterMatchMode="contains" class="item-tabla">
+                           <f:facet name="header"><span class="titulos-tablas">Nombre del colaborador</span></f:facet>
+                           <h:outputText value="#{item.nombreColaborador}"/>
+                      </p:column>
+                      <p:column filterBy="#{item.telefono}" filterMatchMode="contains" class="item-tabla">
+                           <f:facet class="titulos-tablas" name="header"><span class="titulos-tablas">Telefono</span></f:facet>
+                           <h:outputText value="#{item.telefono}"/>
+                      </p:column>
+                   </p:dataTable>
+                    -->
+                </div>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>
+
+
+
+
+

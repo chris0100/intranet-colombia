@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Tex Cintas
+                </h:form>
+                <div class="row">
+                    <div class="col-md-7">
+                        <img width="100%" jsf:library="images" jsf:name="/productos/img2.jpg" alt="Banner"/>
+                    </div>
+                    <div class="col-md-5">
+                        <header>
+                            <h2><span>Tex Cintas</span></h2>
+                        </header>
+                        <p>
+                        </p> 
+                    </div>                     
+                </div>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>

@@ -1,0 +1,256 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Lista de empaque - EKA Corporación S.A.</title>
+        <style>
+            @page {
+                border-top: 1px solid #d9d9d9;
+                border-bottom: 1px solid #d9d9d9;   
+                size: 8.5in 11in;
+                tr{page-break-inside:avoid;}
+                @bottom-left { content: "Eka corporación S.A | Lista de empaque "  }
+                @bottom-right { content: "Página " counter(page) " de " counter(pages); } } 
+                #header { width: 700px;top: 0; left: 0; right: 0; } 
+                #footer { position: fixed; width: 650px; bottom: 0; left: 0; right: 0; page-break-after: always; } /* Fix overflow of headers and content */ 
+                body { padding-top: 0px; } .custom-page-start { margin-top: 0px; }
+                .custom-footer-page-number:after { 
+                    content: counter(page); 
+                }
+            @page :first {
+                border-top: none;
+            }
+            body{
+                font-size: 0.8em;
+            }
+            th{
+                border-bottom: 1px solid black;
+            }
+            .tamanoDes{
+                width: 330px !important;
+            }
+            .direccion{
+               margin-left: 5px;
+            }
+            .direccion2{
+                float:right !important;
+            }
+            .tamano{
+                width: 100px !important
+            }
+            .yourTableClass { 
+                border-collapse: separate; 
+                border-spacing: 2px !important;  
+                *border-collapse: expression('separate', cellSpacing = '2px') !important;
+            }
+            .ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td, .ui-datatable tfoot th{
+                padding: 0px !important;
+                padding-left: 3px !important;
+                padding-right: 2px !important;
+                min-height: 30px !important;
+            }
+            .borderSubTable{
+                border: 0 !important;
+                padding: 0 !important;
+                margin: 3px !important;
+            }
+            .ui-datatable thead th, .ui-datatable tfoot td{
+                text-align: left !important;
+            }
+            .titulo-tabla{
+                text-align: left !important;  
+            }
+            .borderSubTableCodigo{
+                border-left: 0 !important
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h:form>
+            <div id="header" style="margin-bottom: 2em; display: block">
+                <div style="width: 540px; display:inline-block; vertical-align: top; text-align: center;">
+                    <div style="width: 400px; display: inline-block;padding: 0px; vertical-align: top; text-align: center;margin-top: 2px; margin-left: 12em">
+                        <span style="font-weight: bold">EKA Corporación S.A.</span>
+                    </div>
+                    <div style="width: 400px; display: inline-block;padding: 0px; vertical-align: top; text-align: center;margin-top: 2px; margin-left: 12em">
+                        Dirección: Calle 46A No. 1-61 
+                    </div>
+                    <div style="width: 400px; display: inline-block;padding: 0px; vertical-align: top; text-align: center;margin-top: 2px; margin-left: 12em">
+                        Teléfono: (2) 486 22 22  Fax: (2) 486 22 27
+                    </div>
+                    <div style="width: 400px; display: inline-block;padding: 0px; vertical-align: top; text-align: center;margin-top: 2px; margin-left: 12em">
+                        Cali - Colombia
+                    </div>
+                    <div style="width: 400px; display: inline-block;padding: 0px; vertical-align: top; text-align: center;margin-top: 2px; margin-left: 12em">
+                        N.I.T. 805025631-6 
+                    </div>
+                    <div style="width: 400px; display: inline-block;padding: 0px; vertical-align: top; text-align: center;margin-top: 2px; margin-left: 12em">
+                        e-mail: exportaciones@ekazipper.com
+                    </div>
+                </div>
+                <div style="width: 130px; display: inline-block">
+                    <img src="#{request.contextPath}/resources/images/logoEka.png" style="width: 130px; margin-top: 10px;"/>
+                </div>
+            </div>
+            <div style="width: 460px; display:inline-block">
+                <div style="width: 460px">
+                    <div style="width: 460px; display: block;padding: 0px;text-align: left;margin-top: 2px;vertical-align: top">
+                        <span style="font-weight: bold">SEÑOR (ES): </span>#{listaEmpaqueController.razonSocialCliente}
+                    </div>
+                </div>
+                <div style="width: 460px">
+                    <div style="width: 460px; display: inline-block;padding: 0px;text-align: left;margin-top: 2px;vertical-align: top">
+                        <span style="font-weight: bold">NIT: </span> #{listaEmpaqueController.listaEmpaqueActual.nit}
+                    </div>
+                </div>
+                <div style="width: 460px">
+                    <div style="width: 460px; display: inline-block;padding: 0px;text-align: left;margin-top: 2px;">
+                        <span style="font-weight: bold">DIRECCIÓN: </span>#{listaEmpaqueController.direccionCliente}
+                    </div>
+                </div>
+                <div style="width: 460px">
+                    <div style="width: 460px; display: inline-block;padding: 0px;text-align: left;margin-top: 2px;">
+                        <span style="font-weight: bold">TEL: </span>#{listaEmpaqueController.telefonoCliente}
+                    </div>
+                </div>
+                <div style="width: 460px">
+                    <div style="width: 460px; display: inline-block;padding: 0px;text-align: left;margin-top: 2px;">
+                        ATN. #{listaEmpaqueController.nombreResponsable}
+                    </div>
+                </div>
+                <div style="width: 460px">
+                    <div style="width: 460px; display: inline-block;padding: 0px;text-align: left;margin-top: 2px;">
+                        #{listaEmpaqueController.correoResponsable}
+                    </div>
+                </div>
+                <div style="width: 460px">
+                    <div style="width: 460px; display: inline-block;padding: 0px;text-align: left;margin-top: 2px;">
+                        #{listaEmpaqueController.ciudadCliente} - #{listaEmpaqueController.paisCliente}
+                    </div>
+                </div>
+                <div style="width: 460px">
+                    <div style="width: 460px; display: inline-block;padding: 0px;text-align: left;margin-top: 2px;">
+                        No. remisión: #{listaEmpaqueController.listaEmpaqueActual.codFactura}
+                    </div>
+                </div>
+            </div>
+            <div style="width: 225px;display: inline-block; vertical-align: top; border: 1px solid #d9d9d9; margin-top: 10px">
+                <div style="width: 225px; text-align: center; background: #d9d9d9; color: #555; padding: .5em 0; font-weight: bold; font-size: 1.1em">
+                     LISTA DE EMPAQUE
+                </div>
+                <div style="width: 225px; text-align: left; color: black; padding: .2em">
+                    <div style="width: 100px; display: inline-block; text-align: right">
+                        <span style="font-weight: bold; width: 50px">Código: </span>
+                    </div>
+                    <div style="width: 100px; display: inline-block">
+                        <h:outputText value="#{listaEmpaqueController.listaEmpaqueActual.codigoLista}"/>
+                    </div>
+                </div>
+                <div style="width: 225px; text-align: left; color: black; padding: .2em">
+                    <div style="width: 100px; display: inline-block; text-align: right">
+                        <span style="font-weight: bold; width: 100px">Fecha: </span>
+                    </div>
+                    <div style="width: 100px; display: inline-block">
+                        <h:outputText value="#{listaEmpaqueController.listaEmpaqueActual.fechaCierre}">
+                            <f:convertDateTime pattern="MMMM dd, YYYY"/>
+                        </h:outputText>
+                    </div>
+                </div>
+            </div>
+            <div style="width: 690px;">
+                <p:dataTable style="margin-top: 3px;text-align: left; border-collapse: collapse !important;font-size: 0.8em; border: 1px solid #d9d9d9;"
+                            value="#{listaEmpaqueController.listaCaja}"
+                            var="item"
+                            stickyHeader="true" 
+                            cellSeparator="1"
+                            styleClass="yourTableClass" >
+                    <p:column width="30" style="text-align: center !important">
+                        <f:facet name="header"><span style="text-align: center;">Caja N°</span></f:facet>
+                        <h:outputText style="font-weight: bold" value="#{item.numeroCaja}"/>
+                    </p:column>
+                    <p:column width="80" >
+                        <f:facet name="header">Pedido</f:facet>
+                        <h:outputText value="#{item.pedidos}"/>
+                    </p:column>
+                    <p:column class="borderSubTable">
+                        <f:facet name="header" class="titulo-tabla">
+                            <div style="width: 160px !important;display: inline-block !important;text-align: left !important; border-right: 1px solid #d9d9d9">Ítem</div>
+                            <div style="width: 42px !important;display: inline-block !important;text-align: left !important; border-right: 1px solid #d9d9d9">Tamaño</div>
+                            <div style="width: 82px !important;display: inline-block !important;text-align: left !important; border-right: 1px solid #d9d9d9">Color</div>
+                            <div style="width: 64px !important;display: inline-block !important;text-align: left !important; border-right: 1px solid #d9d9d9">Cant. caja</div>
+                            <div style="width: 37px !important;display: inline-block !important;text-align: left !important;">Cant. Paquete</div>
+                        </f:facet>
+                        <p:subTable var="item2" value="#{item.t022ListaEmpaqueHasCajaList}"
+                                    class="borderSubTable" >
+                            <p:column class="borderSubTableCodigo" style="min-height: 40px !important">
+                                <div style="width: 155px;">
+                                    <h:outputText value="#{item2.codigoItem}"/> - <h:outputText value="#{item2.descPais}"/>
+                                </div>
+                            </p:column>
+                            <p:column>
+                                <div style="width: 40px">
+                                    <h:outputText value="#{item2.descripcionExt1}"/>
+                                </div>
+                            </p:column>
+                            <p:column>
+                                <div style="width: 80px">
+                                    <h:outputText value="#{item2.idExt2Detalle}"/> - <h:outputText value="#{item2.descripcionExt2}"/>
+                                </div>
+                            </p:column>
+                            <p:column>
+                                <div style="width: 62px; text-align: right">
+                                    <h:outputText value="#{item2.cantCodBarraCaja} "/><h:outputText value=" #{item2.unidad}"/> 
+                                </div>
+                            </p:column>
+                            <p:column>
+                                <div style="width: 43px; text-align: right">
+                                    <h:outputText value="#{item2.cantPaquete}"/>
+                                </div>
+                            </p:column>
+                        </p:subTable>
+                    </p:column>
+                    <p:column width="70" style="text-align: right">
+                        <f:facet name="header"><span style="text-align: center;">Peso neto</span></f:facet>
+                        <h:outputText value="#{item.pesoNeto}">
+                            <f:convertNumber pattern="#0.00" locale="pt_BR"/>
+                        </h:outputText>  Kg
+                    </p:column>
+                    <p:column width="70" style="text-align: right">
+                        <f:facet name="header"><span>Peso bruto</span></f:facet>
+                        <h:outputText value="#{item.pesoBruto}">
+                            <f:convertNumber pattern="#0.00" locale="pt_BR"/>
+                        </h:outputText>  Kg
+                    </p:column>
+                </p:dataTable>
+                <div style="margin-top: 5px;">
+                    <div style="width: 435px; display: inline-block; font-weight: bold">
+                        TOTAL
+                    </div>
+                    <div style="width: 50px; display: inline-block;text-align: right; font-size: .9em">
+                        <h:outputText value="#{listaEmpaqueController.sumaTotalItem}"/>
+                    </div>
+                    <div style="width: 45px; display: inline-block;text-align: right; font-size: .9em">
+                        <h:outputText value="#{listaEmpaqueController.sumaTotalCantCaja}"/>
+                    </div>
+                    <div style="width: 72px; display: inline-block;text-align: right;font-size: .9em">
+                        <h:outputText value="#{listaEmpaqueController.sumaTotalPesoNeto}">
+                            <f:convertNumber pattern="#0.00" locale="pt_BR"/>
+                        </h:outputText> Kg
+                    </div>
+                    <div style="width: 72px; display: inline-block;text-align: right; font-size: .9em">
+                        <h:outputText value="#{listaEmpaqueController.sumaTotalPesoBruto}">
+                            <f:convertNumber pattern="#0.00" locale="pt_BR"/>
+                        </h:outputText> Kg
+                    </div>
+                       
+                </div>
+            </div>
+        </h:form>
+    </h:body>
+</html>
+
+
+

@@ -1,0 +1,255 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{lecturasController.prepareCreate}">
+                            <i class="fa fa-barcode"></i> 
+                            <span>Crear código</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="log">
+                            <i class="fa fa-check"></i> 
+                            <span>Log cargados</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{lecturasController.prepareLogOp}">
+                            <i class="fa fa-codepen"></i> 
+                            <span>Log cargados por OP</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator></p:separator>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Ingresar códigos de barras</ui:define> 
+        <ui:define name="title2">Semiautomático</ui:define>
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="formulario-crearDocu">
+                <div class="row">
+                    <div class="col-md-3 col-sm-12">
+                        <img jsf:library="images" class="form-group" jsf:name="icons/barcode.gif" width="270" style="margin-top: 5px; border: 3px solid #3c8dbc" alt="Logo Compañia"/>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="form-group" >
+                            <h:outputLabel value="Codigo de barras:"  />
+                            <p:inputText class="form-control" 
+                                   id="tituloInputText"
+                                   onfocus="true"
+                                   maxlength="45"
+                                   a:autofocus="true"
+                                   value="#{lecturasController.lecturasActual.f001IdLectura}" 
+                                   required="true"
+                                   requiredMessage="Por favor ingrese el titulo del contenido">
+                                   <f:ajax execute="@this" render="documentoMessage"/>
+                            </p:inputText>
+                            <p:message id="tituloMessage" for="tituloInputText" styleClass="error"/>
+                        </div>
+                    </div> 
+                    <div class="col-sm-3 form-group">
+                        <p:commandButton class="btn btn-primary btn-block"
+                                         style="margin-top: 20px; font-size: 1em !important;"
+                                         update="@form lista"
+                                         process="@this"
+                                         ajax="false"
+                                         value="Guardar codigo de barras"
+                                         action="#{lecturasController.add}"
+                                         onclick="onSubmitButton();">
+                            <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{lecturasController.usuarioActual}"/>
+                        </p:commandButton>
+                    </div>
+                </div>
+            </h:form>
+            <h:form id="lista">
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <p:commandButton class="submit-form btn btn-pinterest btn-block" 
+                                         style="font-size: 1em !important; width: 100%;  background: red"
+                                         onclick="PF('dlg2').show();"
+                                         value="Enviar al UnoEE" 
+                                         actionListener="#{lecturasController.prepareOp}">
+                        </p:commandButton>
+                    </div>
+                </div>
+            </h:form>
+            <h:form id="documentosFormList">
+                <p:outputPanel id="documentosTablePanel">
+                    <p:dataTable value="#{lecturasController.listaLecturasSinEnviar}"  var="item"
+                                rows="50" id="documentosTable" paginator="true"
+                                rowStyleClass="#{item.f001RegistroConector eq 0 ? 'color3': item.f001RegistroConector eq 2 ? 'color2': null}"
+                                paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                rowsPerPageTemplate="50, 100,150">
+                       <f:facet name="header">
+                           <div class="container-fluid">
+                               <div class="row">
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-4">
+                                       <h4 class="colorLetra" style="font-weight: bold" >
+                                           Codigos creados: #{fn:length(lecturasController.listaLecturasSinEnviar)}
+                                       </h4>
+                                    </div>
+                                    <div class="col-md-3">
+
+                                    </div>
+                                    <div class="col-md-1">
+
+                                    </div>
+                               </div>
+                           </div>
+                        </f:facet>
+                        <p:column width="45" priority="9">
+                            <p:commandButton style="margin-bottom: 0.2em"  id="boton-ver" ajax="false" icon="ui-icon-search"  action="#{lecturasController.prepareView}">
+                                <f:setPropertyActionListener value="#{item}" target="#{lecturasController.lecturasActual}"/>
+                            </p:commandButton>
+                            <p:tooltip for="boton-ver" value="ver observaciones" trackMouse="true"/>    
+                                                        
+                            <p:commandButton style="margin-bottom: 0.2em" id="actualizar" update=":formEditar" onclick="PF('dlg1').show();"  icon="fa fa-refresh">
+                                <f:setPropertyActionListener value="#{item}" target="#{lecturasController.lecturasActual}"/>
+                                <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{creacionItemController.usuarioActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-botonActualizacion" for="actualizar" value="Editar contenido" trackMouse="true" />
+                       
+                            <p:commandButton style="margin-bottom: 0.2em" id="boton-delete" icon="ui-icon-trash" action="#{lecturasController.delete}"
+                                             update="documentosFormList">
+                                <f:setPropertyActionListener value="#{item}" target="#{lecturasController.lecturasActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-delete" for="boton-delete" value="Borrar código" trackMouse="true" />
+                        </p:column>
+                        <p:column width="350"  filterBy="#{item.f001IdLectura}" filterMatchMode="contains">
+                            <f:facet name="header">Codigo completo</f:facet>
+                            <h:outputText value="#{item.f001IdLectura}"/>
+                        </p:column>
+                        <p:column width="300" priority="2" filterBy="#{item.f001CodBarraItem}" filterMatchMode="contains">
+                           <f:facet name="header">Cod. barras del item</f:facet>
+                           <h:outputText value="#{item.f001CodBarraItem}"/>
+                       </p:column>
+                        <p:column width="60" priority="3" filterBy="#{item.f001IdOp}" filterMatchMode="contains">
+                           <f:facet name="header">Cod. OP</f:facet>
+                           <h:outputText value="#{item.f001IdOp}"/>
+                       </p:column>
+                        <p:column width="150" priority="4" filterBy="#{item.f001Lote}" filterMatchMode="contains">
+                           <f:facet name="header">Lote</f:facet>
+                           <h:outputText value="#{item.f001Lote}"/>
+                       </p:column>
+                        <p:column width="70" priority="5" filterBy="#{item.f001Unidad}" filterMatchMode="contains">
+                            <f:facet name="header">Unidades</f:facet>
+                            <h:outputText value="#{item.f001Unidad}"/>
+                       </p:column>
+                        <p:column width="50" priority="6" filterBy="#{item.f001Consecutivo}" filterMatchMode="contains">
+                            <f:facet name="header">Consecutivo</f:facet>
+                            <h:outputText value="#{item.f001Consecutivo}"/>
+                       </p:column>
+                        <p:column width="100"  priority="7" filterBy="#{item.f001Usuario.toString()}" filterMatchMode="contains">
+                            <f:facet name="header">Usuario</f:facet>
+                            <h:outputText value="#{item.f001Usuario.toString()}"/>
+                       </p:column>
+                        <p:column width="100" priority="8">
+                            <f:facet name="header">Fecha del cargue</f:facet>
+                            <h:outputText value="#{item.f001Fecha}">
+                                <f:convertDateTime pattern="MMM dd, YYYY HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                   </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+            <p:dialog header="Volver a cargar" widgetVar="dlg1" minHeight="40" modal="true" width="30%">
+                <h:form id="formEditar">
+                    <div class="row">
+                       <div class="col-md-5">
+                            <h:outputLabel class="letra-form" value="Codigo:"/>
+                            <h:outputLabel class="form-control" value="#{lecturasController.lecturasActual.f001CodBarraItem}"/>
+                       </div>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel class="letra-form" value="Estado:"/>
+                        <h:selectOneMenu value="#{lecturasController.estado}"
+                                         required="true"
+                                         id="estadoRespuesta"
+                                         class="form-control"
+                                         requiredMessage="Por favor selecciona la marca">
+                            <f:selectItem itemLabel="Ninguno"/>
+                             <f:selectItem itemValue="r" itemLabel="Volver a cargar"/>
+                        </h:selectOneMenu>
+                        <p:message id="estadoRespuestaMessage" for="estadoRespuesta" styleClass="error"/>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel class="letra-form" value="Aplicar a todos: " />
+                        <br></br>
+                        <p:inputSwitch value="#{lecturasController.aplicarTodo}" onLabel="SI" offLabel="NO">
+                        </p:inputSwitch>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p:commandButton styleClass="btn btn-primary btn-block" 
+                                             value="Guardar" update=":documentosFormList:documentosTablePanel"
+                                             action="#{lecturasController.addVolverCarga}">
+                                <f:ajax onevent="dlg1.hide()" execute="@this" render=":documentosFormList:documentosTablePanel"/>
+                            </p:commandButton>
+                        </div>
+                        <div class="col-sm-6">
+                            <p:commandButton styleClass="btn btn-danger btn-block" 
+                                      value="Cancelar" 
+                                      oncomplete="PF('dlg1').hide();"
+                                      process="@this"/>
+                        </div>
+                    </div>
+                </h:form>
+            </p:dialog>
+            <p:dialog header="Cargar op" widgetVar="dlg2" minHeight="40" modal="true" width="250">
+                <h:form id="formOP">
+                    <div class="form-group">
+                        <h:outputLabel class="letra-form" value="Op:"/>
+                        <p:selectOneMenu value="#{lecturasController.op}"
+                                         required="true"
+                                         id="op"
+                                         filter="true"
+                                         filterMatchMode="contains"
+                                         style="width: 100% !important"
+                                         requiredMessage="Por favor selecciona la OP">
+                            <f:selectItem itemLabel="Ninguno"/>
+                            <f:selectItems value="#{lecturasController.listaOPCargar}" var="op" itemValue="#{op}"/>
+                        </p:selectOneMenu>
+                        <p:message id="opMessage" for="op" styleClass="error"/>
+                    </div>
+                    <div class="form-group">
+                        <p:commandButton class="submit-form btn btn-pinterest btn-block" 
+                                         style="font-size: 1em !important; width: 100%;  background: red"
+                                         onclick="onSubmitButton();"
+                                         ajax="false"
+                                         value="Cargar datos al UnoEE"
+                                         action="#{lecturasController.enviarCodigoBarrasKos}">
+                        </p:commandButton>
+                    </div>
+                </h:form>
+            </p:dialog>
+        </ui:define>
+    </ui:composition>
+</html>

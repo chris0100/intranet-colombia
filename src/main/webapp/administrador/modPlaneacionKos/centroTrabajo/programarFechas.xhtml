@@ -1,0 +1,279 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{programadorGanttController.prepareList}">
+                                <i class="fa fa-cubes" aria-hidden="true"></i> 
+                            <span>Reporte Gantt</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                        <h:commandLink action="#{centroTrabajoController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Centros de trabajo</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{periodoController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Periodos</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{configuracionGanttController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Configuraciones</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Crear configuración</ui:define>   
+        <ui:define name="title2">Crear configuración</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <div class="row">
+                <h:form id="form">
+                    <div class="col-md-4">
+                        <div class="form-group col-md-12">
+                            <h:outputLabel value="Cod. centro de trabajo:"/>
+                            <h:inputText class="form-control"
+                                         value="#{programadorGanttController.centroTrabajoActual.idCentroTrabajo}"
+                                         disabled="true"/>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <h:outputLabel value="Nombre centro de trabajo:"/>
+                            <h:inputText class="form-control"
+                                         value="#{programadorGanttController.centroTrabajoActual.nombre}"
+                                         disabled="true"/>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <h:outputLabel value="Período:"/>
+                            <p:selectOneMenu id="periodo" 
+                                            style="width: 100% !important"
+                                            required="true"
+                                            requiredMessage="Ingresar período"
+                                            filter="true"
+                                            autoWidth="false"
+                                            filterMatchMode="contains"
+                                            value="#{programadorGanttController.periodoActual}">
+                                <f:selectItem itemLabel="Seleccionar..." itemValue="#{null}" /> 
+                                <f:selectItems value="#{periodoController.listaPeriodo}"  var="periodo" itemValue="#{periodo}"/> 
+                                <p:ajax listener="#{programadorGanttController.consultarPeriodoProgramado}"/> 
+                                <f:ajax execute="@this" render="periodoMessage form-list:periodoTable"/>
+                            </p:selectOneMenu>
+                            <p:message id="periodoMessage" for="periodo" styleClass="error"/>
+                        </div>
+                        <div class="col-md-12">
+                            <p:commandButton class="btn btn-primary btn-block"
+                                             ajax="false"
+                                             value="Generar días"
+                                             icon="fa fa-calendar"
+                                             styleClass="boton-prime"
+                                             style="width: 100%"
+                                             action="#{programadorGanttController.calcularFechas}"
+                                             update="form-list:periodoTable"
+                                             onclick="onSubmitButton();"/>
+                            <p:button styleClass="boton-primeRojo" 
+                                    value="Cancelar" 
+                                    outcome="lista"
+                                    icon="fa fa-arrow-left"
+                                    style="margin-top: 10px; background: red !important; width: 100%"/>
+                        </div>
+                    </div>
+                </h:form>
+                <h:form id="form-list">
+                    <div class="col-md-7">
+                        <p:dataTable value="#{programadorGanttController.listaProgramadorGantt}" var="item"
+                                    rows="50" id="periodoTable" paginator="true"
+                                    paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                    rowsPerPageTemplate="50, 100,150">
+                            <f:facet name="header">
+                               <div class="container-fluid">
+                                   <div class="row">
+                                       <div class="col-md-4">
+                                           <h4 class="colorLetra" style="font-weight: bold" >
+                                               Total días: #{fn:length(programadorGanttController.listaProgramadorGantt)}
+                                           </h4>
+                                       </div>
+                                       <div class="col-md-4">
+
+                                       </div>
+                                       <div class="col-md-4">
+                                           <p:commandButton action="#{programadorGanttController.prepareEdit}"
+                                                        onclick="PF('dlg2').show();"
+                                                        id="configuracionMes"
+                                                        class="btn btn-primary"
+                                                        style="color: white"
+                                                        value="Configurar todo el mes"
+                                                        icon="fa fa-edit"> 
+                                            </p:commandButton>
+                                       </div>
+                                   </div>
+                               </div>
+                            </f:facet>
+                            <p:column filterBy="#{item.fecha}" filterMatchMode="contains">
+                                <f:facet name="header">Fecha</f:facet>
+                                <h:outputText value="#{item.fecha}">
+                                 <f:convertDateTime pattern="MMMM dd, YYYY"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column filterBy="#{item.idConfiguracion.nombre}" filterMatchMode="contains">
+                               <f:facet name="header">Nombre configuracion</f:facet>
+                               <h:outputText value="#{item.idConfiguracion.nombre}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.idConfiguracion.numeroTurnos}" filterMatchMode="contains">
+                               <f:facet name="header">No. turnos</f:facet>
+                               <h:outputText value="#{item.idConfiguracion.numeroTurnos}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.idConfiguracion.undHora}" filterMatchMode="contains">
+                               <f:facet name="header">Und x hora</f:facet>
+                               <h:outputText value="#{item.idConfiguracion.undHora}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.idConfiguracion.undHora}" filterMatchMode="contains">
+                               <f:facet name="header">Hora x turno</f:facet>
+                               <h:outputText value="#{item.idConfiguracion.undHora}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.idConfiguracion.numeroMaquinas}" filterMatchMode="contains">
+                               <f:facet name="header">No. maquinas</f:facet>
+                               <h:outputText value="#{item.idConfiguracion.numeroMaquinas}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.descripcionDia}" filterMatchMode="contains">
+                               <f:facet name="header">día</f:facet>
+                               <h:outputText value="#{item.descripcionDia}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.idConfiguracion.cargaProyectada}" filterMatchMode="contains">
+                                <f:facet name="header">Carga proyectada</f:facet>
+                                <h:outputText value="#{item.idConfiguracion.cargaProyectada}">
+                                    <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column width="50">
+                                <p:commandButton update="form-editConfiguracion:panelConfiguracion"
+                                               onclick="PF('dlg1').show();"
+                                               id="configuracion"
+                                               icon="fa fa-edit"
+                                               style="color: white"> 
+                                    <f:setPropertyActionListener value="#{item}" target="#{programadorGanttController.programadorGanttActual}"/>
+                                </p:commandButton>
+                                <p:tooltip for="configuracion" value="Agregar configuración"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </h:form>
+                <h:form id="form-editConfiguracion">
+                    <p:dialog widgetVar="dlg1" modal="true" header="Configuración por día" width="300">
+                        <p:outputPanel id="panelConfiguracion" style="font-size: 1em !important">
+                            <div class="form-group">
+                                <h:outputLabel value="Fecha: "/> #{programadorGanttController.programadorGanttActual.descripcionDia},
+                                 <h:outputText value="#{programadorGanttController.programadorGanttActual.fecha}">
+                                    <f:convertDateTime pattern="MMMM dd, YYYY"/>
+                                </h:outputText>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel value="Configuración:"  />
+                                <p:selectOneMenu id="configuracion" 
+                                                style="width: 100% !important"
+                                                filter="true"
+                                                autoWidth="false"
+                                                filterMatchMode="contains"
+                                                value="#{programadorGanttController.programadorGanttActual.idConfiguracion}">
+                                    <f:selectItem itemLabel="Seleccionar..." itemValue="#{null}" /> 
+                                    <f:selectItems value="#{configuracionGanttController.listaConfiguracion}"  var="configuracion" itemValue="#{configuracion}"/> 
+                                </p:selectOneMenu>
+                                <p:message id="configuracionMessage" for="configuracion" styleClass="error"/>
+                            </div> 
+                            <div class="form-group">
+                                <p:commandButton styleClass="boton-prime" 
+                                                 value="Guardar" onclick="dlg1.hide();"
+                                                 action="#{programadorGanttController.update}"
+                                                 ajax="false">
+                                    <f:ajax execute="@this" render="form-list:periodoTable"/>
+                                </p:commandButton>
+                                <p:commandButton styleClass="btn btn-danger btn-block" 
+                                          value="Cancelar" 
+                                          oncomplete="PF('dlg1').hide();"
+                                          process="@this"
+                                          style="margin-top: 10px; background: red !important; width: 100%"/>
+                            </div>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+                <h:form id="form-panelConfiguracionMes">
+                    <p:dialog widgetVar="dlg2" modal="true" header="Editar estado" width="300">
+                        <p:outputPanel id="panelConfiguracionMes" style="font-size: 1em !important">
+                            <div class="form-group">
+                                <h:outputLabel value="Configuración:"  />
+                                <p:selectOneMenu id="configuracion" 
+                                                style="width: 100% !important"
+                                                filter="true"
+                                                autoWidth="false"
+                                                filterMatchMode="contains"
+                                                value="#{programadorGanttController.configuracionActual}">
+                                    <f:selectItem itemLabel="Seleccionar..." itemValue="#{null}" /> 
+                                    <f:selectItems value="#{configuracionGanttController.listaConfiguracion}"  var="configuracion" itemValue="#{configuracion}"/> 
+                                </p:selectOneMenu>
+                                <p:message id="configuracionMessage" for="configuracion" styleClass="error"/>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel class="form-group" value="No aplicar a:"  />
+                                <p:selectCheckboxMenu id="menu" 
+                                                      value="#{programadorGanttController.diasSinProgramar}" 
+                                                      label="días"
+                                                      filter="true" 
+                                                      filterMatchMode="contains"
+                                                      style="width: 100% !important">
+                                    <f:selectItem itemLabel="Lunes" itemValue="Lunes" />
+                                    <f:selectItem itemLabel="Martes" itemValue="Martes" />
+                                    <f:selectItem itemLabel="Miercoles" itemValue="Miercoles" />
+                                    <f:selectItem itemLabel="Jueves" itemValue="Jueves" />
+                                    <f:selectItem itemLabel="Viernes" itemValue="Viernes" />
+                                    <f:selectItem itemLabel="Sabado" itemValue="Sabado" />
+                                    <f:selectItem itemLabel="Domingo" itemValue="Domingo" />
+                                </p:selectCheckboxMenu>
+                            </div>
+                            <div class="form-group">
+                                <p:commandButton styleClass="boton-prime" 
+                                                 value="Guardar" onclick="dlg2.hide();"
+                                                 action="#{programadorGanttController.updateMes}"
+                                                 ajax="false">
+                                    <f:ajax execute="@this" render="form-list:periodoTable"/>
+                                </p:commandButton>
+                                <p:commandButton styleClass="btn btn-danger btn-block" 
+                                          value="Cancelar" 
+                                          oncomplete="PF('dlg2').hide();"
+                                          process="@this"
+                                          style="margin-top: 10px; background: red !important; width: 100%"/>
+                            </div>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{creacionItemController.prepareListSolcitud}">
+                            <i class="fa fa-rocket"></i> 
+                            <span>Gestión de creación de items</span>
+                        </h:commandLink>
+                    </li>
+                     <li>
+                        <h:commandLink action="#{creacionItemController.prepareListSolcitudItemPatron}">
+                            <i class="fa fa-file-o"></i> 
+                            <span>Solicitudes items nuevos</span> <span style="background: red; color: white; font-size: 1.2em; font-weight: bold; padding: .3em;
+                                                                        border-radius: 100%"> (#{fn:length(creacionItemController.listaCreacionItemSolicitudItemPatron)}) </span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Crear item existente</ui:define> 
+        <ui:define name="title2">Ingresa los datos del item y sus extensiones</ui:define>
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="formulario-crearDocu" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h:outputLabel value="Codigo del item:"  />
+                            <p:autoComplete required="true"
+                                            forceSelection="true"
+                                            requiredMessage="Poner codigo del item"
+                                            maxResults="20" id="codigoItem"
+                                            style="width: 100%"
+                                            itemValue="#{creacionItemController.itemPatron}"
+                                            value="#{creacionItemController.itemPatron}" 
+                                            completeMethod="#{creacionItemController.completeItemPatron}">
+                                <p:ajax  listener="#{creacionItemController.consultarTipoExt}" event="itemSelect"/>  
+                                <f:ajax execute="@this" render="formulario-crearDocu:ext1"/>
+                                <f:ajax execute="@this" render="formulario-crearDocu:ext2"/>
+                            </p:autoComplete>
+                        </div> 
+                        <div class="form-group">
+                            <h:outputLabel value="Ext. 1:"  />
+                            <p:autoComplete forceSelection="true" required="true" requiredMessage="Poner extensión 1" id="ext1" maxResults="20" style="width: 100%" value="#{creacionItemController.ext1}" completeMethod="#{creacionItemController.completeExt1}"/>
+                        </div> 
+                        <div class="form-group">
+                            <h:outputLabel value="Ext. 2:"  />
+                            <p:autoComplete forceSelection="true" required="true" requiredMessage="Poner extensión 2" id="ext2" maxResults="20"  style="width: 100%" value="#{creacionItemController.ext2}" completeMethod="#{creacionItemController.completeExt2}"/> 
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Lista de precio:"  />
+                            <p:selectOneMenu id="tipo" 
+                                             style="width: 100% !important"
+                                             
+                                             filter="true" filterMatchMode="contains"
+                                             value="#{creacionItemController.idListaPrecio}" 
+                                             requiredMessage="Por favor indique la lista de precios" 
+                                             required="true" >
+                                    <f:selectItems value="#{creacionItemController.listaPrecio}"/> 
+                                    <p:ajax listener="#{creacionItemController.extraerMoneda}"/>  
+                                    <f:ajax execute="@this" render="divPanel divPanel2"/>
+                            </p:selectOneMenu>
+                            <p:message id="tipoMessage" for="tipo" styleClass="error"/>
+                        </div>
+                        
+                        <p:outputPanel id="divPanel">
+                            <div class="form-group">
+                                <h:outputLabel  value="Precio moneda extranjera:" rendered="#{!creacionItemController.nacional}" />
+                                <p:inputNumber id="precioInputText" 
+                                               minValue="0"
+                                               value="#{creacionItemController.creacionItemActual.precio}"
+                                               rendered="#{!creacionItemController.nacional}"
+                                               required="true"
+                                               decimalPlaces="4"
+                                               requiredMessage="Por favor ingrese el precio">
+                                    <f:ajax execute="@this" render="precioMessage"/>
+                                </p:inputNumber>
+                                <p:message id="precioMessage" for="precioInputText" styleClass="error"/>
+                            </div>
+                        </p:outputPanel>
+                        <p:outputPanel id="divPanel2">
+                            <div class="form-group">
+                                <h:outputLabel value="Precio moneda nacional:" rendered="#{creacionItemController.nacional}" />
+                                <p:inputNumber id="precioCopInputText" 
+                                               minValue="0"
+                                               value="#{creacionItemController.creacionItemActual.precio}"
+                                               rendered="#{creacionItemController.nacional}"
+                                               required="true"
+                                               decimalPlaces="2"
+                                               requiredMessage="Por favor ingrese el precio">
+                                    <f:ajax execute="@this" render="precioCopMessage"/>
+                                </p:inputNumber>
+                                <p:message id="precioCopMessage" for="precioCopInputText" styleClass="error"/>
+                            </div>
+                        </p:outputPanel>
+                        <div class="form-group">
+                                <h:outputLabel value="Fecha de activación de lista de precio:"  />
+                                <p:calendar id="fechaActivacion" 
+                                            required="true" 
+                                            value="#{creacionItemController.creacionItemActual.fechaActivacionPrecio}"
+                                            pattern="MM/dd/yyyy">
+                                </p:calendar>
+                                 <h:message id="msgFechaActivacion" for="fechaActivacion"  styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Notas comercial:"/>
+                            <p:inputTextarea id="descripcionAdcional" maxlength="500"
+                                           value="#{creacionItemController.creacionItemActual.notasComercial}">
+                            </p:inputTextarea>
+                            <p:message id="descripcionAdcionaltMessage" for="descripcionAdcional" styleClass="error"/>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 form-group">
+                                <p:commandButton class="btn btn-primary btn-block"
+                                                 ajax="false"
+                                                 value="Guardar solicitud"
+                                                 action="#{creacionItemController.addSolicitudItemExistente}"
+                                                 onclick="onSubmitButton();"/>
+                            </div>
+                            <div class="col-sm-6 form-group">    
+                                <h:button class="btn btn-warning btn-block" value="Cancelar" outcome="lista"/>
+                            </div>
+                        </div>
+                    </div>    
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

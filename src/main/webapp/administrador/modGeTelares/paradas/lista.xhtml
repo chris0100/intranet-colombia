@@ -1,0 +1,233 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                   <li style="margin-top: 20px">
+                        <h:commandLink action="#{capturaParadaGeController.prepareDashboard}">
+                            <i class="fa fa-dashboard" aria-hidden="true"></i> 
+                            <span>Dashboard</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{capturaParadaGeController.prepareList}">
+                            <i class="fa fa-rocket"></i> 
+                            <span>Capturar información</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{operariosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de operarios</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{turnosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de turnos</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                         <h:commandLink action="#{nominalGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de Maquinas/Nominal</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active" jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{paradasGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de tipos de Paradas</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="/administrador/modGeTelares/menuMaestros">
+                            <i class="fa fa-cog"></i> 
+                            <span>Más configuraciones</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Paradas</ui:define>   
+        <ui:define name="title2">Paradas</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="List">
+                <p:outputPanel id="TablePanel">
+                    <p:dataTable value="#{paradasGeController.listaParadasGe}" var="item"
+                                 rows="50" id="Table" paginator="true"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150"
+                                 rowStyleClass="#{item.estado eq false ? 'color2': null}"
+                                 selectionMode="single" selection="#{paradasGeController.paradasGeActual}" rowKey="#{item.idParada}">
+                        <p:ajax event="rowSelect" oncomplete="PF('itemDialog').show()" update="Detalle:detalle"/>
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4 class="colorLetra" style="font-weight: bold" >
+                                            Total tipos de paradas: #{fn:length(paradasGeController.listaParadasGe)}
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p:commandButton icon="ui-icon-folder-open"
+                                                         ajax="false"
+                                                        value="Crear nuevo"
+                                                        style="font-size: 1.2em !important;padding: 5px; right: 0"
+                                                        action="#{paradasGeController.prepareCreate}"
+                                                        rendered="#{loginController.adminGe}">
+                                            <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{paradasGeController.usuarioActual}"/>
+                                        </p:commandButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:column filterBy="#{item.codigo}" filterMatchMode="contains" width="110" >
+                            <f:facet name="header">Código</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.codigo}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcion}" filterMatchMode="contains">
+                            <f:facet name="header">Descripción parada</f:facet>
+                            <h:outputText value="#{item.descripcion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.idCategoria.descripcion}" filterMatchMode="contains">
+                            <f:facet name="header">Categoria</f:facet>
+                            <h:outputText value="#{item.idCategoria.descripcion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.idEsquema.toString()}" filterMatchMode="contains">
+                            <f:facet name="header">Esquema</f:facet>
+                            <h:outputText value="#{item.idEsquema.toString()}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.fechaCreacion}" filterMatchMode="contains">
+                            <f:facet name="header">Fecha creación</f:facet>
+                            <h:outputText value="#{item.fechaCreacion}">
+                                <f:convertDateTime pattern="YYYY/mm/dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{item.usuarioCreacion}" filterMatchMode="contains">
+                            <f:facet name="header">Usuario creacion</f:facet>
+                            <h:outputText value="#{item.usuarioCreacion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.fechaActualizacion}" filterMatchMode="contains">
+                            <f:facet name="header">Fecha actualización</f:facet>
+                            <h:outputText value="#{item.fechaActualizacion}">
+                                <f:convertDateTime pattern="YYYY/mm/dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{item.usuarioActualizacion}" filterMatchMode="contains">
+                            <f:facet name="header">Usuario actualizacion</f:facet>
+                            <h:outputText value="#{item.usuarioActualizacion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.estadoString}" filterMatchMode="contains">
+                            <f:facet name="header">Activo</f:facet>
+                            <h:outputText value="#{item.estadoString}"/>
+                        </p:column>
+                        <p:column width="50" rendered="#{loginController.adminGe}">
+                            <p:commandButton ajax="false" icon="ui-icon-pencil" id="actualizar" action="#{paradasGeController.prepareEdit}">
+                                <f:setPropertyActionListener value="#{item}" target="#{paradasGeController.paradasGeActual}"/>
+                                <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{paradasGeController.usuarioActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-botonActualizacion" for="actualizar" value="Actualizar" trackMouse="true" />
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+            <h:form id="Detalle">
+                <p:dialog header="Detalle" widgetVar="itemDialog" closeOnEscape="true" resizable="true" width="1050" height="60%" modal="true">
+                    <h:panelGroup id="detalle">
+                        <div class="col-md-6">
+                            <div class="panel panel-primary form-group"  style="border-radius: 0;">
+                                <div class="panel-heading"  style="border-radius: 0"><h4 class="letra-panelDescriEdu" style="font-weight: bold">TELARES</h4></div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.urdido}" itemLabel="Urdido y Fadis"/>
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.satinadas}" itemLabel="Satinadas y Fayas"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.reata}" itemLabel="Reata-Hiladillos-Hiladillas"/>
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.cordones}" itemLabel="Cordones-Crochet-Cabet-Trenz"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-warning select boolean form-group"  style="border-radius: 0;">
+                                <div class="panel-heading"  style="border-radius: 0"><h4 class="letra-panelDescriEdu" style="font-weight: bold">DESLIZADORES</h4></div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.troquelado}" itemLabel="Troquelado-Inyectoras- pulido"/>
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.ensamble}" itemLabel="Ensamble"/>
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.galvano}" itemLabel="Galvano"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.empaque}" itemLabel="Empaque"/>
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.epoxica}" itemLabel="Epoxica-Polvo"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-danger form-group"  style="border-radius: 0;">
+                                <div class="panel-heading"  style="border-radius: 0"><h4 class="letra-panelDescriEdu" style="font-weight: bold">TINTORERÍA</h4></div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.continuas}" itemLabel="Continuas"/>
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.autoclaves}" itemLabel="Autoclaves"/>
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.complementarios}" itemLabel="Complementarios"/>
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.empaque}" itemLabel="Empaque"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="panel panel-success form-group"  style="border-radius: 0;">
+                                <div class="panel-heading"  style="border-radius: 0"><h4 class="letra-panelDescriEdu" style="font-weight: bold">TERMINACIONES</h4></div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.cadena}" itemLabel="Cadena Metalica-Galvano"/>
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.metalicasFijas}" itemLabel="Metalicas Fijas"/>
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.metalicasSeparable}" itemLabel="Metalicas Separable"/>
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.poliesterInvisible}" itemLabel="Poliester Invisible"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.poliester3}" itemLabel="Poliester 3"/>
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.poliesterSep4}" itemLabel="Poliester Sep-Fija 4"/>
+                                            <p:selectBooleanCheckbox value="#{paradasGeController.paradasGeActual.poliesterSep6}" itemLabel="Poliester Sep-Fija 6"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </p:dialog>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

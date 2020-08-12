@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{programadorGanttController.prepareList}">
+                                <i class="fa fa-cubes" aria-hidden="true"></i> 
+                            <span>Reporte Gantt</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{centroTrabajoController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Centros de trabajo</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                        <h:commandLink action="#{periodoController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Periodos</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{configuracionGanttController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Configuraciones</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Crear periodo</ui:define>   
+        <ui:define name="title2">Crear periodo</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="form">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group col-md-12">
+                            <h:outputLabel value="Año:"  />
+                            <input type="number"
+                                   style="color: black; text-transform: none; font-size: 1em;width: 100%"
+                                   class="form-control" min="2017"
+                                   jsf:value="#{periodoController.periodoActual.anio}" />
+                        </div>
+                        <p:outputPanel id="periodos">
+                            <div class="form-group col-md-12">
+                                <h:outputLabel id="labelMesInicio" value="Mes:"/>
+                                <h:selectOneMenu id="mesInicio"
+                                                 style="color: black; text-transform: none; font-size: 1em;width: 100%"
+                                                 class="form-control"
+                                                 value="#{periodoController.periodoActual.mes}">
+                                    <f:selectItem itemValue="#{null}" itemLabel="Seleccionar..." />
+                                    <f:selectItem itemValue="01" itemLabel="01" />
+                                    <f:selectItem itemValue="02" itemLabel="02" />
+                                    <f:selectItem itemValue="03" itemLabel="03" />
+                                    <f:selectItem itemValue="04" itemLabel="04" />
+                                    <f:selectItem itemValue="05" itemLabel="05" />
+                                    <f:selectItem itemValue="06" itemLabel="06" />
+                                    <f:selectItem itemValue="07" itemLabel="07" />
+                                    <f:selectItem itemValue="08" itemLabel="08" />
+                                    <f:selectItem itemValue="09" itemLabel="09" />
+                                    <f:selectItem itemValue="10" itemLabel="10" />
+                                    <f:selectItem itemValue="11" itemLabel="11" />
+                                    <f:selectItem itemValue="12" itemLabel="12" />
+                                </h:selectOneMenu>
+                            </div>
+                        </p:outputPanel>
+                        <div class="col-md-12">
+                            <p:commandButton class="btn btn-primary btn-block"
+                                             ajax="false"
+                                             value="Guardar"
+                                             icon="fa fa-cube"
+                                             styleClass="boton-prime"
+                                             style="width: 100%"
+                                             action="#{periodoController.add}"
+                                             onclick="onSubmitButton();"/>
+                            <p:button styleClass="boton-primeRojo" 
+                                    value="Cancelar" 
+                                    outcome="lista"
+                                    icon="fa fa-arrow-left"
+                                    style="margin-top: 10px; background: red !important; width: 100%"/>
+                        </div>
+                    </div>
+                </div> 
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

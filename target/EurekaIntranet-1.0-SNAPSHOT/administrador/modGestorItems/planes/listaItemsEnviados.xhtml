@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                 <ul class="sidebar-menu">
+                    <li style="margin-top: 20px" >
+                        <h:commandLink action="#{grupoItemController.prepareList}">
+                            <i class="fa fa-folder"></i> 
+                            <span>Plan 50 - Grupo</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{tocParetoVentasController.prepareList}">
+                            <i class="fa fa-tasks"></i> 
+                            <span>Maestro de parámetros</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                        <h:commandLink action="listaItemsEnviados">
+                            <i class="fa fa-share-square"></i>
+                            <span>Log de items enviados</span>
+                        </h:commandLink>
+                    </li>
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Gestión de Items - Datos enviados al proceso comercial</ui:define>   
+        <ui:define name="title2">Validación de estados de items </ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="form-itemEstado">
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <h:outputLabel value="Plan 50 - Grupo:"
+                                       style="font-weight: bold; color: #185291"/>
+                        <br></br>
+                        <p:selectOneMenu id="idCargoSeccion"
+                                        style="width: 100%"
+                                        value="#{grupoItemController.plan50}"
+                                        filter="true" filterMatchMode="contains">
+                               <f:selectItem itemLabel="Ninguno" />
+                               <f:selectItems value="#{grupoItemController.listaGrupoItem}" var="item" itemValue="#{item}"/>    
+                                <f:ajax execute="@this" render="form-itemEstado:itemsEstado"/>
+                       </p:selectOneMenu>
+                    </div> 
+                </div>
+                <p:separator></p:separator>
+                <p:dataTable  value="#{grupoItemController.listaEstadoItemComercial}" var="item" style="font-size: .8em !important; margin-top: 20px"
+                              rows="50" paginator="true"  id="itemsEstado"  resizableColumns="true" draggableColumns="true"
+                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                              rowStyleClass="#{item.estado eq 1 ? 'color1':null}"
+                              rowsPerPageTemplate="50,100,150" emptyMessage="No se encontraron documentos con el criterio dado">
+                    <f:facet name="header">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <p:button icon="ui-icon-arrowthick-1-w"
+                                            value="Volver" 
+                                            style="font-size: 1.2em !important; padding: 5px; left: 0"
+                                            outcome="listaPlan50.xhtml"/>
+                                </div>
+                                 <div class="col-md-7">
+                                    <h4 class="colorLetra" style="font-weight: bold; text-align: center" >
+                                        Numero total de items enviados al proceso comercial para evaluación de estado 1: #{fn:length(grupoItemController.listaEstadoItemComercial)} <br></br> Grupo: #{grupoItemController.plan50}
+                                    </h4>
+                                </div>
+                               
+                                <div class="col-md-1" style="margin-top: 1.5em">
+                                    <h:commandLink id="exportExcel">
+                                        <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                                        <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                                target="itemsEstado" fileName="tabla" />
+                                    </h:commandLink>
+                                    <p:tooltip id="descripcion-exportExcel" for="exportExcel" value="Exportar tabla en formato .xls" trackMouse="true"/>
+                                </div>
+                            </div>
+                        </div>
+                    </f:facet>
+                    <p:column filterBy="#{item.referencia}" sortBy="#{item.referencia}" filterMatchMode="contains" width="90" style="text-align: center">
+                         <f:facet class="titulos-tablas" name="header">Referencia</f:facet>
+                         <h:outputText value="#{item.referencia}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.FDescItem}" sortBy="#{item.FDescItem}" width="130" style="text-align: center" filterMatchMode="contains">
+                         <f:facet name="header">Desc. item</f:facet>
+                         <h:outputText value="#{item.FDescItem}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.extension1}" sortBy="#{item.extension1}" width="80" style="text-align: center">
+                         <f:facet name="header">Ext. 1</f:facet>
+                         <h:outputText value="#{item.extension1}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.extension2}" sortBy="#{item.extension2}" width="80" style="text-align: center" >
+                         <f:facet name="header">Ext. 2</f:facet>
+                         <h:outputText value="#{item.extension2}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.comprado}" sortBy="#{item.comprado}" style="text-align: center" filterMatchMode="contains">
+                         <f:facet name="header">Venta total ítem</f:facet>
+                         <h:outputText value="#{item.comprado}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.maxCantidadComprada}" sortBy="#{item.maxCantidadComprada}" style="text-align: center" filterMatchMode="contains">
+                         <f:facet name="header">Máxima venta dia</f:facet>
+                         <h:outputText value="#{item.maxCantidadComprada}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.clientes}" sortBy="#{item.clientes}" style="text-align: center" filterMatchMode="contains">
+                         <f:facet name="header">Total de clientes</f:facet>
+                         <h:outputText value="#{item.clientes}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.rotacion}" sortBy="#{item.rotacion}" style="text-align: center" filterMatchMode="contains">
+                         <f:facet name="header">%Rotación</f:facet>
+                         <h:outputText value="#{item.rotacion}">
+                             <f:convertNumber pattern="#0.00" />
+                         </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{item.participacion}" sortBy="#{item.participacion}" style="text-align: center" filterMatchMode="contains">
+                         <f:facet name="header">%Participacion</f:facet>
+                         <h:outputText value="#{item.participacion}">
+                             <f:convertNumber pattern="#0.00" />
+                         </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{item.participacionSumada}" sortBy="#{item.participacionSumada}" style="text-align: center" filterMatchMode="contains">
+                         <f:facet name="header">%Pareto x tamaño</f:facet>
+                         <h:outputText value="#{item.participacionSumada}">
+                             <f:convertNumber pattern="#0.00" />
+                         </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{item.estadoUnoee}" sortBy="#{item.estadoItem}" style="text-align: center">
+                         <f:facet name="header">Estado UNOEE</f:facet>
+                         <h:outputText value="#{item.estadoUnoee}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.estadoItem}" sortBy="#{item.estadoItem}" style="text-align: center">
+                         <f:facet name="header">Estado Sugerido</f:facet>
+                         <h:outputText value="#{item.estadoItem}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form> 
+        </ui:define>
+    </ui:composition>
+</html>

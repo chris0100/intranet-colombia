@@ -1,0 +1,223 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Ver procesos
+                </h:form>
+                <header class="header-paginas">
+                    <h2><span class="titulo-paginas">Documentos y formatos por procesos</span></h2>
+                </header>
+                <section id="clients">
+                    <h:form>
+                        <div class="row no-gutters clearfix">
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.listaDocumentosUser}">
+                                        <img class="img-responsive" width="100%" src="#{request.contextPath}/resources/images/modGestorDocumental/ListaDocumentos.png"/>
+                                    </h:commandLink> 
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.listaFormatosUser}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/ListaFormatos.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.GC}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/GC.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                 <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.PP}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/PP.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.CM}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/CM.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.GH}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/GH.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <p:commandLink action="#{documentoController.ATE}"
+                                                   ajax="false">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/ATE.png"/>
+                                    </p:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <p:commandLink action="#{documentoController.MTTO}"
+                                                   ajax="false">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/MTTO.png"/>
+                                    </p:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.GI}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/GI.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.CA}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/CA.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.CO}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/CO.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.CC}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/CC.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.TP}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/TP.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.TI}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/TI.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.DE}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/DE.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.TE}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/TE.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.TM}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/TM.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.COT}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/COT.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.ALM}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/ALM.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.VTS}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/VTS.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.TES}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/TES.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.AC}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/AC.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.FI}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/FI.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.SSTA}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/SSTA.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.ING}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/ING.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.TIC}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/TIC.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="itemZoom">
+                                    <h:commandLink action="#{documentoController.IDI}">
+                                        <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/IDI.png"/>
+                                    </h:commandLink>   
+                                </div>
+                            </div>
+                        </div>
+                    </h:form>
+                </section>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>
+
+
+
+
+

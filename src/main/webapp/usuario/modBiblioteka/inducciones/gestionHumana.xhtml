@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > <h:commandLink style="color: #185291" value=" Inducción Corporativa" action="induccionGeneral"/> > TIC
+                </h:form>
+                <header class="header-paginas">
+                    <img jsf:library="images" jsf:name="/modBiblioteca/inducciones/bannerGestionHumana.png" width="100%" alt="Banner"/>
+                </header>
+            </section>
+            <div class="container">
+                <div class="col-md-12">
+                    <figure style="width: 100% !important">
+                        <video controls="true" style="width: 100% !important">
+                            <source src="http://eureka/resources/videos/inducciones/gestionHumana/VideoInduccion.mp4" type="video/mp4"/>
+                        </video>
+                     </figure> 
+                </div>
+            </div>
+            <section id="services" class="section-bg">
+                <header class="section-header text-center">
+                    <h3>¿Qué hacemos en el área?</h3>
+                </header>
+                <div class="container">
+                    <div class="row">
+                        <div class="wow bounceInUp col-md-4" data-wow-duration="1.4s" style="display: inline-block; width: 100%">
+                            <div class="row box">
+                                <h4 class="title"><a href="">BIENESTAR Y FORMACIÓN</a></h4>
+                                <p class="card-text text-justify">Nuestro objetivo es contribuir al crecimiento
+                                    personal y profesional de los colaboradores,
+                                    por eso contamos con capacitaciones, inducciones 
+                                    y entrenamientos corporativos. Adicionalmente, realizamos 
+                                    actividades de bienestar que permitan potencializar el 
+                                    trabajo de todos y finalmente nuestro plan de reconocimiento, 
+                                    que busca exaltar la excelente labor de todos a través de Innóvate. 
+                                </p>
+                            </div>
+                        </div>
+                        <div class="wow bounceInUp col-md-4" data-wow-duration="1.4s" style="display: inline-block; width: 100%">
+                            <div class="row box">
+                                <h4 class="title"><a href="">NÓMINA </a></h4> 
+                                 <p class="card-text text-justify">Nuestro objetivo es garantizar el pago correcto
+                                    de los sueldos, seguridad social y prestaciones. También realizamos liquidación de prestaciones sociales, generamos 
+                                    certificados de ingresos y retenciones, ingresamos novedades de nómina de los colaboradores, 
+                                    revisamos y liquidamos la retención en la fuente del personal al que se aplica, diligenciamos 
+                                    los pagos de AFC, pensión voluntaria y libranzas, entre otras. 
+                                </p>
+                            </div>
+                        </div>
+                         <div class="wow bounceInUp col-md-4" data-wow-duration="1.4s" style="display: inline-block; width: 100%">
+                            <div class="row box ">
+                                <h4 class="title"><a href="">EVALUACIÓN Y SELECCIÓN </a></h4> 
+                                <p class="card-text text-justify">Nuestro propósito es apoyar las actividades de reclutamiento,
+                                    evaluación y selección, de acuerdo al perfil requerido de cada
+                                    área; por eso nos encargamos de realizar todo el proceso de entrevista
+                                    y evaluación, selección con temporales, promoción de personal y diseño 
+                                    de perfiles.
+                               </p>
+                            </div>
+                        </div>
+                        <div class="wow bounceInUp col-md-4" data-wow-duration="1.4s" style="display: inline-block; width: 100%">
+                            <div class="row box">
+                                <h4 class="title"><a href="">CONTRATACIONES </a></h4> 
+                                 <p class="card-text text-justify">Nuestra finalidad es llevar a cabo la
+                                    contratación del personal que ha sido evaluado y seleccionado con 
+                                    anterioridad por parte del encargado en selección, después verificamos 
+                                    los exámenes médicos y procedemos a presentar los documentos de ingreso
+                                    e iniciar el proceso de vinculación, cuando el colaborador ha firmado
+                                    contrato se dispone hacer las afiliaciones a seguridad social (caja de 
+                                    compensación, EPS, ARL y seguro de vida). 
+                                </p>
+                            </div>
+                        </div>
+                        <div class="wow bounceInUp col-md-4" data-wow-duration="1.4s" style="display: inline-block; width: 100%">
+                            <div class="row box">
+                                <h4 class="title"><a href="">COMUNICACIONES INTERNAS </a></h4> 
+                                 <p class="card-text text-justify">El fin de la comunicación interna no es enviar 
+                                    mensajes: es provocar acciones. Es por eso, que la comunicación
+                                    interna es un medio para que las cosas sucedan y trabajamos para
+                                    generar comunicaciones cocreadas, abiertas y colaborativas, a través 
+                                    de realización de productos audiovisuales, campañas de sensibilización,
+                                    creación de contenido, branding interno, entre otros.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="wow bounceInUp col-md-4" data-wow-duration="1.4s" style="display: inline-block; width: 100%">
+                            <div class="row box">
+                                <h4 class="title"><a href="">INCAPACIDADES </a></h4> 
+                                 <p class="card-text text-justify">Nuestro objetivo es dar el adecuado
+                                    manejo y pago de las incapacidades presentadas por los colaboradores. 
+                                </p>
+                            </div>
+                            <div class="row box">
+                                <h4 class="title"><a href="">ASUNTOS CORPORATIVOS </a></h4> 
+                                 <p class="card-text text-justify">Realizamos el control de las fechas de
+                                     finalización de los contratos, liquidación de nómina de vendedores, supervisión
+                                     de los contratos con temporales, reintegros, entre otros.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section><!-- #services -->
+            <section class="container" style="padding: 3em; padding-bottom: 0">
+                <header class="section-header text-center">
+                    <h3>¿Quiénes conformamos el área?</h3>
+                </header>
+                <figure class="img-centrado">
+                    <img src="#{request.contextPath}/resources/images/modBiblioteca/inducciones/organigramaGestionHumana2019.jpg"></img> 
+                </figure> 
+            </section>
+            <section id="about">
+                <h:form>
+                    <div class="container">
+                        <header class="text-left" style="margin-left: 2em">
+                            <h1>Contáctenos</h1>
+                        </header>
+                        <div class="row about-container" style="padding: 2em">
+                            <div class="col-lg-4 content order-lg-1 order-2">
+                                <div class="icon-box wow fadeInUp">
+                                    <div class="icon"><i class="fa fa-user"></i></div>
+                                    <h4 class="title">Vivianne Maissen</h4>
+                                    <p class="description">
+                                        <strong>Directora Gestión Humana</strong>
+                                        <br></br>
+                                        viviannem@ekazipper.com
+                                    </p>
+                                 </div>
+                                <div class="icon-box wow fadeInUp" data-wow-delay="0.4s">
+                                    <div class="icon"><i class="fa fa-user"></i></div>
+                                    <h4 class="title">Mónica Ramos</h4>
+                                    <p class="description">
+                                        <strong>Analista de Selección</strong>
+                                        <br></br>
+                                        monicar@ekazipper.com 
+                                    </p>
+                                </div>
+                                <div class="icon-box wow fadeInUp">
+                                    <div class="icon"><i class="fa fa-user"></i></div>
+                                    <h4 class="title">Felipe Cardona</h4>
+                                    <p class="description">
+                                        <strong>Analista de nómina</strong>
+                                        <br></br>
+                                        analistanomina@ekazipper.com
+                                    </p>
+                                 </div>
+                            </div>
+                            <div class="col-lg-4 content order-lg-1 order-2" style="border-right: 2px solid grey">
+                                <div class="icon-box wow fadeInUp" data-wow-delay="0.2s">
+                                    <div class="icon"><i class="fa fa-user"></i></div>
+                                    <h4 class="title">Sandra Causaya</h4>
+                                    <p class="description">
+                                        <strong>Auxiliar Gestión Humana</strong>
+                                        <br></br>
+                                        aux.gestionhumana@ekazipper.com
+                                    </p>
+                                </div>
+                                <div class="icon-box wow fadeInUp" data-wow-delay="0.4s">
+                                    <div class="icon"><i class="fa fa-user"></i></div>
+                                    <h4 class="title">Maria Camila Devia</h4>
+                                    <p class="description">
+                                        <strong>Auxiliar Gestión Humana</strong>
+                                        <br></br>
+                                        comunicaciones@ekazipper.com
+                                    </p>
+                                </div>
+                                <div class="icon-box wow fadeInUp" data-wow-delay="0.4s">
+                                    <div class="icon"><i class="fa fa-user"></i></div>
+                                    <h4 class="title">Diana Tascón</h4>
+                                    <p class="description">
+                                        <strong>Recepción</strong>
+                                        <br></br>
+                                        eka@ekazipper.com
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 content order-lg-1 order-2">
+                                <div class="icon-box wow fadeInUp" data-wow-delay="0.4s">
+                                    <div class="icon"><i class="fa fa-file"></i></div>
+                                    <h4 class="title">Descargar formatos</h4>
+                                    <p class="description">
+                                        <h:commandLink class="readmore" action="#{documentoController.GH}">
+                                        Clic para descargar formatos
+                                     </h:commandLink>
+                                    </p>
+                                    
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </h:form>
+            </section><!-- #about -->
+        </ui:define>
+    </ui:composition>    
+</html>

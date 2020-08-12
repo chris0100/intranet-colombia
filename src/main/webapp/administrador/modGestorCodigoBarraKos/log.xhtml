@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{lecturasController.prepareCreate}">
+                            <i class="fa fa-barcode"></i> 
+                            <span>Crear código</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                        <h:commandLink action="log">
+                            <i class="fa fa-check"></i> 
+                            <span>Log cargados</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{lecturasController.prepareLogOp}">
+                            <i class="fa fa-codepen"></i> 
+                            <span>Log cargados por OP</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator></p:separator>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Ingresar códigos de barras</ui:define> 
+        <ui:define name="title2">Semiautomático</ui:define>
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="formulario-crearDocu">
+                <p:dataTable value="#{lecturasController.listaLecturasEnviado}" var="item"
+                            rows="50" id="documentosTable" paginator="true"
+                            paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            rowsPerPageTemplate="50, 100,150">
+                   <f:facet name="header">
+                       <div class="container-fluid">
+                           <div class="row">
+                               <div class="col-md-4">
+                                  
+                               </div>
+                               <div class="col-md-4">
+                                   <h4 class="colorLetra" style="font-weight: bold" >
+                                       Códigos creados: #{fn:length(lecturasController.listaLecturasEnviado)}
+                                   </h4>
+                               </div>
+                               <div class="col-md-3">
+                                  
+                               </div>
+                               <div class="col-md-1">
+                                  
+                               </div>
+                           </div>
+                       </div>
+                    </f:facet>
+                    <p:column width="350"  filterBy="#{item.f001IdLectura}" filterMatchMode="contains">
+                        <f:facet name="header">Codigo completo</f:facet>
+                        <h:outputText value="#{item.f001IdLectura}"/>
+                    </p:column>
+                    <p:column priority="2" width="300" filterBy="#{item.f001CodBarraItem}" filterMatchMode="contains">
+                       <f:facet name="header">Cod. barras del item</f:facet>
+                       <h:outputText value="#{item.f001CodBarraItem}"/>
+                   </p:column>
+                    <p:column width="60" priority="3" filterBy="#{item.f001IdOp}" filterMatchMode="contains">
+                       <f:facet name="header">Cod. OP</f:facet>
+                       <h:outputText value="#{item.f001IdOp}"/>
+                   </p:column>
+                    <p:column width="150" priority="4" filterBy="#{item.f001Lote}" filterMatchMode="contains">
+                       <f:facet name="header">Lote</f:facet>
+                       <h:outputText value="#{item.f001Lote}"/>
+                   </p:column>
+                    <p:column width="70" priority="5" filterBy="#{item.f001Unidad}" filterMatchMode="contains">
+                        <f:facet name="header">Unidades</f:facet>
+                        <h:outputText value="#{item.f001Unidad}"/>
+                   </p:column>
+                    <p:column width="50" priority="6" filterBy="#{item.f001Consecutivo}" filterMatchMode="contains">
+                        <f:facet name="header">Consecutivo</f:facet>
+                        <h:outputText value="#{item.f001Consecutivo}"/>
+                   </p:column>
+                    <p:column width="100"  priority="7" filterBy="#{item.f001Usuario.toString()}" filterMatchMode="contains">
+                        <f:facet name="header">Usuario</f:facet>
+                        <h:outputText value="#{item.f001Usuario.toString()}"/>
+                   </p:column>
+                    <p:column width="100" priority="8">
+                        <f:facet name="header">Fecha del cargue</f:facet>
+                        <h:outputText value="#{item.f001Fecha}">
+                            <f:convertDateTime pattern="MMM dd, YYYY HH:mm"/>
+                        </h:outputText>
+                    </p:column>
+               </p:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

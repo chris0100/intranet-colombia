@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{configOrdenDespachoController.prepareList}">
+                            <i class="fa fa-cog" aria-hidden="true"></i> 
+                            <span>Lista configuraciones</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{ordenesDespachoController.prepareList}">
+                            <i class="fa fa-th" aria-hidden="true"></i> 
+                            <span>Reporte ordenes de despacho</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Editar configuración</ui:define>   
+        <ui:define name="title2">Editar configuración</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="Create">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h:outputLabel value="Valor tope:" rendered="#{configOrdenDespachoController.campoNumerico}" />
+                            <p:inputNumber  id="tope"
+                                            rendered="#{configOrdenDespachoController.campoNumerico}"
+                                            requiredMessage="Agregar tope"
+                                            value="#{configOrdenDespachoController.configActual.numerico}"
+                                            decimalPlaces="0">
+                                <f:ajax execute="@this" render="topeMessage"/>
+                            </p:inputNumber>
+                            <p:message id="topeMessage" for="tope" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Descripción configuración:" rendered="#{configOrdenDespachoController.campoString}" />
+                            <p:inputText id="tipo"
+                                        onkeyup="this.value = this.value.toUpperCase();"
+                                        rendered="#{configOrdenDespachoController.campoString}"
+                                        maxlength="2000"
+                                        requiredMessage="Ingresar valor"
+                                        value="#{configOrdenDespachoController.configActual.valor}">
+                            </p:inputText>
+                            <p:message id="tipoMessage" for="tipo" styleClass="error"/>
+                        </div>
+
+                        <div class="form-group">
+                            <p:commandButton class="btn btn-primary btn-block"
+                                             ajax="false"
+                                             value="Guardar"
+                                             icon="fa fa-cube"
+                                             styleClass="boton-prime"
+                                             style="width: 100%"
+                                             action="#{configOrdenDespachoController.update}"
+                                             onclick="onSubmitButton();"/>
+                            <p:button styleClass="boton-primeRojo" 
+                                    value="Cancelar" 
+                                    outcome="listaConfiguracion"
+                                    icon="fa fa-arrow-left"
+                                    style="margin-top: 10px; background: red !important; width: 100%"/>
+                        </div> 
+                     </div>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

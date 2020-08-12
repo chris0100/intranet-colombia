@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{capturaParadaGeController.prepareDashboard}">
+                            <i class="fa fa-dashboard" aria-hidden="true"></i> 
+                            <span>Dashboard</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{capturaParadaGeController.prepareList}">
+                            <i class="fa fa-rocket"></i> 
+                            <span>Capturar información</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{operariosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de operarios</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{turnosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de turnos</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                         <h:commandLink action="#{nominalGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de Maquinas/Nominal</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{paradasGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de tipos de Paradas</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="menuMaestros">
+                            <i class="fa fa-cog"></i> 
+                            <span>Más configuraciones</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Áreas</ui:define>   
+        <ui:define name="title2">Áreas</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="List">
+                <p:outputPanel id="TablePanel">
+                    <p:dataTable value="#{areaPlantaGeController.listaAreaPlantaGe}" var="item"
+                                 rows="50" id="Table" paginator="true"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150">
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4 class="colorLetra" style="font-weight: bold" >
+                                            Total áreas #{fn:length(areaPlantaGeController.listaAreaPlantaGe)}
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p:commandButton icon="ui-icon-folder-open"
+                                                         ajax="false"
+                                                        value="Crear nuevo"
+                                                        style="font-size: 1.2em !important;padding: 5px; right: 0"
+                                                        action="#{areaPlantaGeController.prepareCreate}">
+                                        </p:commandButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:column filterBy="#{item.idArea}" filterMatchMode="contains" width="110" >
+                            <f:facet name="header">Código</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.idArea}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.nombre}" filterMatchMode="contains">
+                            <f:facet name="header">Nombre área</f:facet>
+                            <h:outputText value="#{item.nombre}"/>
+                        </p:column>
+                        <p:column width="50">
+                            <p:commandButton ajax="false" icon="ui-icon-pencil" id="actualizar" action="#{areaPlantaGeController.prepareEdit}">
+                                <f:setPropertyActionListener value="#{item}" target="#{areaPlantaGeController.areaPlantaGeActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-botonActualizacion" for="actualizar" value="Actualizar" trackMouse="true" />
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

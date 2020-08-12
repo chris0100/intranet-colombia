@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Unidades de negocio
+                </h:form>
+                <header class="header-paginas">
+                    <h2> <span class="titulo-paginas">Historia EKA</span></h2>
+                </header>
+                <div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img jsf:library="images" jsf:name="/modNosotros/historia/logoeka.jpg" class="img-responsive" alt="unidad1"/>
+                        </div>
+                        <div class="col-md-8">
+                            <p  class="text-justify">
+                                <br></br><br></br>
+                                Eka corporación s.a es una organización fundada en el año 
+                                1968 en la ciudad de Cali, por los hermanos Joseph y 
+                                Enrique Kadoch, con la intención de ser una empresa 
+                                familiar que pudiese ofrecer al mercado insumos para 
+                                la confección en la industria textil nacional.
+                                <br></br>
+                                Eka, inicia sus primeros pasos en los sótanos de
+                                la cacharrería La Victoria en 1968, ensamblando 
+                                cierres de aluminio N°3, después de las adversidades
+                                al intentar aprobar un registro de importación por el INCOMEX,
+                                Eka nacería en el mercado colombiano al recibir las cuatro 
+                                primeras máquinas que le permitirían confeccionar cierres 
+                                de calidad y distribuirlos.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <p class="text-justify">
+                                <br></br>
+                                Para 1970 se inicia la construcción de lo que sería actualmente,
+                                las primeras instalaciones de Eka, y se abriría los mercados 
+                                de Bogotá y Medellín. Inaugurando a su vez 10 telares para 
+                                tejer nuestras propias cintas.
+                                <br></br>
+                                En 1975, se inicia el proceso de sistematización
+                                de industrias Eka como se llamaba en ese entonces,
+                                y se compraron los primeros computadores. Para 1980 
+                                comenzamos exportaciones a países como Perú, Ecuador, 
+                                México, Venezuela y Panamá.
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                            <img jsf:library="images" jsf:name="/modNosotros/historia/imagen1.jpg" class="img-responsive" alt="unidad1"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <br></br>
+                        <div class="col-md-4">
+                            <br></br>
+                            <img jsf:library="images" jsf:name="/modNosotros/historia/imagen2.jpg" class="img-responsive" alt="unidad1"/>
+                        </div>
+                        <div class="col-md-8">
+                            <p class="text-justify">
+                                <br></br>
+                                En 1985 se inicia la fabricación de cierres de 
+                                poliéster y se inaugura la planta de tintorería y acabados.
+                                <br></br>
+                                En 1996 se lanza al mercado los primeros 
+                                cierres invisibles con la marca INVISIBLE ONE;
+                                y en 1999 nace la marca de cremalleras ABC Jeans;
+                                y en 2002 nace la idea de crear TEXCINTAS dedicada a producir
+                                y comercializar diferentes tipos de cintas, como 
+                                cinta satinada, cinta faya, cinta bandera, cinta 
+                                colchón, hiladillos, reatas y cordones.
+                                <br></br>
+                                Finalmente, en enero de 2009 se crea KOS
+                                como una unidad de negocio dedicada a la 
+                                fabricación de empaques de cartón biodegradables, 
+                                ubicando su planta de producción en Yumbo, 
+                                a las afueras de Cali.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>
+
+
+
+
+

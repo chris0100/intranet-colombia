@@ -1,0 +1,246 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{listaEmpaqueController.prepareListaEmpaque}"
+                                       rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi || loginController.gestorLpVentas}">
+                            <i class="fa fa-cubes" aria-hidden="true"></i> 
+                            <span>Listas de empaque</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{listaEmpaqueController.prepareListaEmpaqueCompleta}"
+                                       rendered="#{loginController.gestorLpAdmin}">
+                            <i class="fa fa-list" aria-hidden="true"></i> 
+                            <span>Listas de empaque completa</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{dimensionCajaController.prepareList}"
+                                       rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi || loginController.gestorLpVentas}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Lista de dimensiones de cajas</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{configImpresoraLabelController.prepareList}"
+                                       rendered="#{loginController.gestorLpAdmin}">
+                            <i class="fa fa-print"></i> 
+                            <span>Lista asignación impresora</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Lista de empaque</ui:define>   
+        <ui:define name="title2">Administración de listas de empaque</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="form-list">
+                <p:outputPanel id="ListaEmpaqueTablePanel">
+                    <p:dataTable value="#{listaEmpaqueController.listaEmpaqueHasCaja}" var="item"
+                                 rows="50" id="ListaEmpaqueTable" paginator="true"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150">
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <h4 class="colorLetra" style="font-weight: bold; text-align: left" >
+                                            Total cajas: #{fn:length(listaEmpaqueController.listaCaja)}
+                                        </h4>
+                                        <div style="text-align: left">
+                                             <div style="display: block">
+                                                 Total peso neto: 
+                                                 <h:outputText value="#{listaEmpaqueController.sumaTotalPesoNeto}">
+                                                    <f:convertNumber type="currency"
+                                                                currencySymbol=""
+                                                                maxFractionDigits="4"/>
+                                                 </h:outputText>
+                                            </div>
+                                            <div style="display: block">
+                                                Total peso bruto: 
+                                                <h:outputText value="#{listaEmpaqueController.sumaTotalPesoBruto}">
+                                                    <f:convertNumber type="currency"
+                                                                currencySymbol=""
+                                                                maxFractionDigits="4"/>
+                                                </h:outputText>
+                                            </div>
+                                            <div style="display: block">
+                                                Total paquetes: 
+                                                <h:outputText value="#{listaEmpaqueController.sumaTotalCantCaja}">
+                                                    <f:convertNumber type="currency"
+                                                                currencySymbol=""
+                                                                maxFractionDigits="0"/>
+                                                </h:outputText>
+                                            </div>
+                                            <div style="display: block">
+                                                Total cantidad leída: 
+                                                <h:outputText value="#{listaEmpaqueController.sumaTotalItem}">
+                                                    <f:convertNumber type="currency"
+                                                                currencySymbol=""
+                                                                maxFractionDigits="0"/>
+                                                </h:outputText>
+                                            </div>
+                                            
+                                            <div style="display: block">
+                                                Total precio lista de empaque: 
+                                                <h:outputText value="#{listaEmpaqueController.sumaPrecioItem}" >
+                                                    <f:convertNumber type="currency"
+                                                                currencySymbol="USD"
+                                                                maxFractionDigits="2"/>
+                                                </h:outputText>
+                                            </div>
+                                         </div>
+                                    </div>
+                                    <div class="col-md-2" style="margin-top: 1.5em">
+                                        <button  jsf:action="#{listaEmpaqueController.sincronizarDescPais}"
+                                                type="submit" 
+                                                style=" border: none; background: red !important"
+                                                class="boton-htmlVerde" 
+                                                onclick="onSubmitButton();"
+                                                id="myButton1">
+                                             <i class="fa fa-undo"></i> Sincronizar entidad dinámica desc. ítem
+                                             <p:ajax process="@this" update="form-list:ListaEmpaqueTable"/>
+                                         </button>
+                                    </div>
+                                    <div class="col-md-1" style="margin-top: 1em">
+                                        <h:commandLink id="exportExcel">
+                                            <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                                            <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                                    target="ListaEmpaqueTable" fileName="tabla" />
+                                        </h:commandLink>
+                                        <p:tooltip id="descripcion-exportExcel" for="exportExcel" value="Exportar tabla en formato .xls" trackMouse="true"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:column width="50" filterBy="#{item.idCaja.numeroCaja}" filterMatchMode="contains">
+                            <f:facet name="header">Caja</f:facet>
+                            <h:outputText style="font-weight: bold; font-size: 1.2em" value="#{item.idCaja.numeroCaja}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.idPedido}" filterMatchMode="contains">
+                            <f:facet name="header">Pedido</f:facet>
+                            <h:outputText value="#{item.idPedido}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.oc}" filterMatchMode="contains">
+                            <f:facet name="header">O.C</f:facet>
+                            <h:outputText value="#{item.oc}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.notasDocto}" filterMatchMode="contains">
+                            <f:facet name="header">Notas docto</f:facet>
+                            <h:outputText value="#{item.notasDocto}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.notasItem}" filterMatchMode="contains">
+                            <f:facet name="header">Notas ítem</f:facet>
+                            <h:outputText value="#{item.notasItem}"/>
+                        </p:column>
+                         <p:column filterBy="#{item.codigoItem}" filterMatchMode="contains">
+                            <f:facet name="header">Código item</f:facet>
+                            <h:outputText value="#{item.codigoItem}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcion}" filterMatchMode="contains">
+                            <f:facet name="header">Descripción</f:facet>
+                            <h:outputText value="#{item.descripcion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descPais}" filterMatchMode="contains">
+                            <f:facet name="header">Descripción país</f:facet>
+                            <h:outputText value="#{item.descPais}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.idExt1Detalle}" filterMatchMode="contains">
+                           <f:facet name="header">Extensión 1</f:facet>
+                           <h:outputText value="#{item.idExt1Detalle}"/> - <h:outputText value="#{item.descripcionExt1}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.idExt2Detalle}" filterMatchMode="contains">
+                           <f:facet name="header">Extensión 2</f:facet>
+                           <h:outputText value="#{item.idExt2Detalle}"/> - <h:outputText value="#{item.descripcionExt2}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descPartidaArancelaria}" filterMatchMode="contains">
+                           <f:facet name="header">Partida arancelaria</f:facet>
+                           <h:outputText value="#{item.partidaArancelaria}"/> - <h:outputText value="#{item.descPartidaArancelaria}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.unidad}" filterMatchMode="contains">
+                            <f:facet name="header">Und. medida</f:facet>
+                            <h:outputText value="#{item.unidad}"/>
+                        </p:column>
+                        <p:column  filterBy="#{item.cantPedida}" filterMatchMode="contains">
+                            <f:facet name="header">Cantidad pedida</f:facet>
+                            <h:outputText value="#{item.cantPedida}">
+                                <f:convertNumber type="currency"
+                                                currencySymbol=""
+                                                maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column  filterBy="#{item.cantComprometida}" filterMatchMode="contains">
+                            <f:facet name="header">Cantidad comprometida</f:facet>
+                            <h:outputText value="#{item.cantComprometida}">
+                                <f:convertNumber type="currency"
+                                                currencySymbol=""
+                                                maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Cantidad leída</f:facet>
+                            <h:outputText style="color: red" value="#{item.cantCodBarraCaja}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Cant. Paquetes</f:facet>
+                            <h:outputText value="#{item.cantPaquete}"/>
+                        </p:column>
+                        <p:column  filterBy="#{item.precioNeto}" filterMatchMode="contains">
+                            <f:facet name="header">Precio neto $(USD)</f:facet>
+                            <h:outputText value="#{item.precioNeto}">
+                                          <f:convertNumber type="currency"
+                                                currencySymbol=""
+                                                maxFractionDigits="4"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column  filterBy="#{item.precioUnitario}" filterMatchMode="contains">
+                            <f:facet name="header">Precio unitario $(USD)</f:facet>
+                            <h:outputText value="#{item.precioUnitario}">
+                                          <f:convertNumber type="currency"
+                                                currencySymbol=""
+                                                maxFractionDigits="4"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+            <div class="load"></div>
+            <script>
+                $('#myButton1').click(function(){
+                  $('#myButton1').hide();
+                  $('.load').addClass('loading');
+                    setTimeout(function () { 
+                    $('.load').removeClass('loading');
+                    $('#myButton1').show();
+
+                  }, 200000000);
+                });
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>

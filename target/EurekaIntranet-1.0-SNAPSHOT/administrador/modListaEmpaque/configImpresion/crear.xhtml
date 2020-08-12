@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{listaEmpaqueController.prepareListaEmpaque}"
+                                       rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi || loginController.gestorLpVentas}">
+                            <i class="fa fa-cubes" aria-hidden="true"></i> 
+                            <span>Listas de empaque</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{listaEmpaqueController.prepareListaEmpaqueCompleta}"
+                                       rendered="#{loginController.gestorLpAdmin}">
+                            <i class="fa fa-list" aria-hidden="true"></i> 
+                            <span>Listas de empaque completa</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{dimensionCajaController.prepareList}"
+                                       rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi || loginController.gestorLpVentas}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Lista de dimensiones de cajas</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                        <h:commandLink action="#{configImpresoraLabelController.prepareList}"
+                                       rendered="#{loginController.gestorLpAdmin}">
+                            <i class="fa fa-print"></i> 
+                            <span>Lista asignación impresora</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Crear asignación de impresora de label</ui:define> 
+        <ui:define name="title2">Crear asignación de impresora de label</ui:define>
+        <ui:define name="body">
+            <h:form id="crear-Form">
+                <h:panelGroup id="crear-group">
+                    <div class="col-md-4">
+                        <div class="form-group col-md-12">
+                            <h:outputLabel value="Nombre equipo:"/>
+                            <h:inputText id="nombreEquipo" 
+                                        maxlength="50"
+                                        required="true"
+                                        requiredMessage="Nombre del equipo"
+                                        class="form-control"
+                                        value="#{configImpresoraLabelController.configImpresoraActual.nombreEquipo}">
+                                <f:ajax execute="@this" render="nombreEquipoMessage"/>
+                            </h:inputText>
+                            <p:message id="nombreEquipoMessage" for="nombreEquipo" styleClass="error"/>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <h:outputLabel value="Descripción:"/>
+                            <h:inputText id="descripcion"
+                                        maxlength="150"
+                                        required="true"
+                                        requiredMessage="Descripción"
+                                        class="form-control"
+                                        value="#{configImpresoraLabelController.configImpresoraActual.descripcionImpresora}">
+                                <f:ajax execute="@this" render="descripcionMessage"/>
+                            </h:inputText>
+                            <p:message id="descripcionMessage" for="descripcion" styleClass="error"/>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <h:outputLabel value="Nombre impresora:"/>
+                            <p:selectOneMenu id="impresora" 
+                                            style="width: 100% !important"
+                                            required="true"
+                                            requiredMessage="Ingresar la impresora"
+                                            filter="true"
+                                            autoWidth="false"
+                                            filterMatchMode="contains"
+                                            value="#{configImpresoraLabelController.configImpresoraActual.nombreImpresora}">
+                                <f:selectItem itemLabel="Seleccionar..." itemValue="#{null}" /> 
+                                <f:selectItems value="#{configImpresoraLabelController.listaImpresorasCreadas}"/> 
+                                <f:ajax execute="@this" render="impresoraMessage"/>
+                            </p:selectOneMenu>
+                            <p:message id="impresoraMessage" for="impresora" styleClass="error"/>
+                        </div>
+                        <div class=" form-group col-md-12">
+                            <p:commandButton class="btn btn-primary btn-block"
+                                ajax="false"
+                                value="Guardar"
+                                icon="fa fa-cube"
+                                styleClass="boton-prime"
+                                style="width: 100%"
+                                action="#{configImpresoraLabelController.add}"
+                                onclick="onSubmitButton();"/>
+                        </div>
+                        <div class="form-group col-md-12">    
+                            <p:button styleClass="boton-primeRojo" 
+                                    value="Cancelar" 
+                                    outcome="lista"
+                                    icon="fa fa-arrow-left"
+                                    style="margin-top: 10px; background: red !important; width: 100%"/>
+                        </div>
+                    </div>
+                </h:panelGroup>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{capturaParadaGeController.prepareDashboard}">
+                            <i class="fa fa-dashboard" aria-hidden="true"></i> 
+                            <span>Dashboard</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{capturaParadaGeController.prepareList}">
+                            <i class="fa fa-rocket"></i> 
+                            <span>Capturar información</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{operariosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de operarios</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{turnosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de turnos</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                         <h:commandLink action="#{nominalGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de Maquinas/Nominal</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{paradasGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de tipos de Paradas</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="/administrador/modGeTelares/menuMaestros">
+                            <i class="fa fa-cog"></i> 
+                            <span>Más configuraciones</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Dashboard</ui:define>   
+        <ui:define name="title2">Dashboard</ui:define>   
+        <ui:define name="body" class="fondoBoard">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form>
+                <div class="row">
+                    <div class="col-md-4">
+                        <span class="fa fa-table"> </span> <span style="font-weight: bold; font-size: 1.2em">Top 5 de paradas con más tiempos capturados</span>
+                        <p:dataTable  id="tablaFuncion" emptyMessage="No se encontraron registros" value="#{capturaParadaGeController.listaTopParadas}" var="item" rowIndexVar="rowIndex">
+                            <p:column headerText="Posición" width="10" style="text-align: center">
+                                <h:outputText style="font-weight: bold; font-size: 1.2em" value="#{rowIndex+1}"/>
+                            </p:column>
+                            <p:column headerText="Parada" width="100">
+                                <h:outputText value="#{item.toString().toUpperCase()}"/>
+                            </p:column>
+                        </p:dataTable>
+                        <div style="font-size: 1.2em; padding: 10px; border: 2px solid grey">
+                            <span class="fa fa-clock-o"> </span> <span style="font-weight: bold"> Total tiempo:</span>  #{capturaParadaGeController.totalHoraCaptura} horas <br></br>
+                            <span class="fa fa-check"> </span> <span style="font-weight: bold"> Total tiempo operativo:</span>  #{capturaParadaGeController.totalHoraNoTrabajada} horas <br></br>
+                            <span class="fa fa-warning"> </span> <span style="font-weight: bold"> Total tiempo paradas: </span> #{capturaParadaGeController.totalHoraParada} horas <br></br>
+                        </div>       
+                    </div>
+                    <div class="col-md-4">
+                        <span class="fa fa-pie-chart"> </span> <span style="font-weight: bold; font-size: 1.2em"> Pie</span>
+                        <p:chart type="pie" model="#{capturaParadaGeController.pieModel1}" responsive="true" style="width:100%; vertical-align: middle !important"/>
+                    </div>
+                </div>  
+            </h:form>
+            <script>
+                function customExtender () {
+                   this.cfg.grid = {
+                      background: "#ecf0f5", //Set background to white
+                      drawBorder: true,  
+                      drawGridLines: true,
+                        gridLineColor: '#cccccc', // *Color of the grid lines.
+                        borderColor: '#999999', // CSS color spec for border around grid.
+                        borderWidth: 2.0, // pixel width of border around grid.
+                        shadow: true, // draw a shadow for grid.
+                        shadowAngle: 45, // angle of the shadow. Clockwise from x axis.
+                        shadowOffset: 1.5, // offset from the line of the shadow.
+                        shadowWidth: 3, // width of the stroke for the shadow.
+                        shadowDepth: 3, // Number of strokes to make when drawing shadow.
+                        // Each stroke offset by shadowOffset from the last.
+                        shadowAlpha: 0 // Opacity of the shadow
+                   };
+                 }
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Solicitudes creadas en UnoEE</ui:define> 
+        <ui:define name="title2">Proceso comercial</ui:define>
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+             <h:form id="documentosFormList">
+                <p:outputPanel id="documentosTablePanel">
+                    <p:dataTable value="#{creacionItemController.listaReporteTiempo}" var="item"
+                                 rows="50" id="documentosTable" paginator="true"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150">
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <h4 class="colorLetra" style="font-weight: bold" >
+                                            Reporte de solicitudes creadas en UnoEE: #{fn:length(creacionItemController.listaReporteTiempo)} solicitudes
+                                            <br></br>
+                                            Periodo: 
+                                            <h:outputText value="#{creacionItemController.fechaParametro1}"> <f:convertDateTime pattern="MMMM dd, YYYY"/> </h:outputText> y 
+                                            <h:outputText value="#{creacionItemController.fechaParametro2}"> <f:convertDateTime pattern="MMMM dd, YYYY"/> </h:outputText>
+                                         </h4>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input jsf:action="#{creacionItemController.ejecutarSpActualizarItemsCreadosPortafolio}" type="submit" style="font-weight: bold; font-size: 1.4em" class="submit-form btn btn-pinterest " value="Sincronizar portafolios" id="myButton1">
+                                        </input>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <h:commandLink id="exportExcel">
+                                            <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                                            <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                                    target="documentosTable" fileName="inventario" />
+                                        </h:commandLink>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:column filterBy="#{item.codigoItem}" width="80" filterMatchMode="contains">
+                            <f:facet name="header">Cod. item</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.codigoItem}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcion}" filterMatchMode="contains">
+                            <f:facet name="header">Descripcion</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.descripcion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcionExt1}" filterMatchMode="contains">
+                            <f:facet name="header">Ext 1.</f:facet>
+                            <h:outputText value="#{item.descripcionExt1}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcionExt2}" filterMatchMode="contains">
+                            <f:facet name="header">Descripción ext 2.</f:facet>
+                            <h:outputText value="#{item.descripcionExt2}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.idListaPrecio}" filterMatchMode="contains">
+                            <f:facet name="header">Lista precio</f:facet>
+                            <h:outputText value="#{item.idListaPrecio}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.precio}" filterMatchMode="contains">
+                            <f:facet name="header">Precio</f:facet>
+                            <h:outputText value="#{item.precio}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.posicionArancelaria}" filterMatchMode="contains">
+                            <f:facet name="header">Pos. arancelaria</f:facet>
+                            <h:outputText value="#{item.posicionArancelaria}"/>
+                        </p:column>
+                        <p:column width="70" filterBy="#{item.moneda}" filterMatchMode="contains">
+                            <f:facet name="header">moneda</f:facet>
+                            <h:outputText value="#{item.moneda}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.usuarioSolicitud}" filterMatchMode="contains">
+                            <f:facet name="header">Usuario solicitud</f:facet>
+                            <h:outputText value="#{item.usuarioSolicitud}"/>
+                        </p:column>
+                        <p:column priority="7">
+                             <f:facet name="header">Fecha de solicitud</f:facet>
+                             <h:outputText value="#{item.fechaSolicitud}">
+                                 <f:convertDateTime pattern="dd/MM/YYYY HH:mm"/>
+                             </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{item.usuarioCreacion}" filterMatchMode="contains">
+                            <f:facet name="header">Usuario creación</f:facet>
+                            <h:outputText value="#{item.usuarioCreacion}"/>
+                        </p:column>
+                        <p:column priority="7">
+                             <f:facet name="header">Fecha del creación</f:facet>
+                             <h:outputText value="#{item.fechaCreacion}">
+                                 <f:convertDateTime pattern="dd/MM/YYYY HH:mm"/>
+                             </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{item.labelPP}" width="50" filterMatchMode="contains">
+                            <f:facet name="header">PP</f:facet>
+                            <h:outputText value="#{item.labelPP}" styleClass="#{item.labelPP}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.labelLM}" width="50" filterMatchMode="contains">
+                            <f:facet name="header">LM</f:facet>
+                            <h:outputText value="#{item.labelLM}" styleClass="#{item.labelLM}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.labelLP}" width="50" filterMatchMode="contains">
+                            <f:facet name="header">LP</f:facet>
+                            <h:outputText value="#{item.labelLP}" styleClass="#{item.labelLP}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.labelCB}" width="50" filterMatchMode="contains">
+                            <f:facet name="header">CB</f:facet>
+                            <h:outputText value="#{item.labelCB}" styleClass="#{item.labelCB}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.labelPOR}" width="50" filterMatchMode="contains">
+                            <f:facet name="header">POR</f:facet>
+                            <h:outputText value="#{item.labelPOR}" styleClass="#{item.labelPOR}"/>
+                        </p:column>
+                        <p:column priority="11" filterBy="#{item.labelRA}" width="50" filterMatchMode="contains">
+                            <f:facet name="header">RA</f:facet>
+                            <h:outputText value="#{item.labelRA}" styleClass="#{item.labelRA}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+            <div class="load"></div>
+            <script>
+                $('#myButton1').click(function(){
+                  $('#myButton1').hide();
+                  $('.load').addClass('sincronizar');
+                    setTimeout(function () { 
+                    $('.load').removeClass('sincronizar');
+                    $('#myButton1').show();
+
+                  }, 200000000);
+                });
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>
+    

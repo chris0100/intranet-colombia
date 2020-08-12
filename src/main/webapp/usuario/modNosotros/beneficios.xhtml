@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Beneficios
+                </h:form>
+                <header class="header-paginas">
+                    <h2><span class="titulo-paginas">Beneficios</span></h2>
+                </header>
+                <div>
+                    <p>
+                        Eka Corporación cuenta con diversos beneficios 
+                        para incentivar y mejorar la calidad de vida en
+                        nuestros colaboradores, a continuación encontrarás 
+                        detallado al tipo de beneficios que puedes acceder si 
+                        eres parte de nuestro equipo Eka.
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row container-beneficios">
+                                <div class="col-md-2 img-beneficios">
+                                    <img jsf:library="images" jsf:name="/modNosotros/beneficios/lentes.png" width="80%" alt="unidad1"/>
+                                </div>
+                                <div class="col-md-9 texto-beneficios">
+                                    <strong>Auxilio para lentes por rango salarial:</strong>
+                                    <br></br>
+                                    SMLV $877.310 al año 2020
+                                    <br></br>
+                                    Hasta dos salarios mínimos ( 877.310 - 1.754.620) un auxilio de $70.000
+                                    <br></br>
+                                    Entre dos salarios mínimos y 2.500,000 un auxilio de $60.000
+                                    <br></br>
+                                    Entre 2.500,000 en adelante un auxilio de $50.000
+                                </div>
+                            </div>
+                            <div class="row container-beneficios">
+                                <div class="col-md-2 img-beneficios">
+                                    <img jsf:library="images" jsf:name="/modNosotros/beneficios/soat.png" width="80%" alt="unidad1"/>
+                                </div>
+                                <div class="col-md-9 texto-beneficios">
+                                    Pago y descuento del seguro SOAT a través de nómina
+                                </div>
+                            </div>
+                            <div class="row container-beneficios">
+                                <div class="col-md-2 img-beneficios">
+                                    <img jsf:library="images" jsf:name="/modNosotros/beneficios/poliza.png" width="80%" alt="unidad1"/>
+                                </div>
+                                <div class="col-md-9 texto-beneficios">
+                                    Póliza contra pérdida, daños o robo para vehículos
+                                </div>
+                            </div>
+                            <div class="row container-beneficios">
+                                <div class="col-md-2 img-beneficios">
+                                    <img jsf:library="images" jsf:name="/modNosotros/beneficios/nomina.png" width="80%" alt="unidad1"/>
+                                </div>
+                                <div class="col-md-9 texto-beneficios">
+                                    Compra de seguro de vida voluntario a través de descuento de nómina.
+                                </div>
+                            </div>
+                            <div class="row container-beneficios">
+                                <div class="col-md-2 img-beneficios">
+                                    <img jsf:library="images" jsf:name="/modNosotros/beneficios/confandi.png" width="80%" alt="unidad1"/>
+                                </div>
+                                <div class="col-md-9 texto-beneficios">
+                                    Beneficios exclusivos por medio de Caja de Compensación Comfandi.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row container-beneficios">
+                                <div class="col-md-2 img-beneficios">
+                                    <img jsf:library="images" jsf:name="/modNosotros/beneficios/utiles.jpg" width="80%" alt="unidad1"/>
+                                </div>
+                                <div class="col-md-9 texto-beneficios">
+                                    Útiles
+                                </div>
+                            </div>
+                            <div class="row container-beneficios">
+                                <div class="col-md-2 img-beneficios">
+                                    <img jsf:library="images" jsf:name="/modNosotros/beneficios/medicamentos.png" width="80%" alt="unidad1"/>
+                                </div>
+                                <div class="col-md-9 texto-beneficios">
+                                    Medicamentos
+                                </div>
+                            </div>
+                            <div class="row container-beneficios">
+                                <div class="col-md-2 img-beneficios">
+                                    <img jsf:library="images" jsf:name="/modNosotros/beneficios/recreacion.png" width="80%" alt="unidad1"/>
+                                </div>
+                                <div class="col-md-9 texto-beneficios">
+                                    Recreación
+                                </div>
+                            </div>
+                            <div class="row container-beneficios">
+                                <div class="col-md-2 img-beneficios">
+                                    <img jsf:library="images" jsf:name="/modNosotros/beneficios/cooptra.png" width="80%" alt="unidad1"/>
+                                </div>
+                                <div class="col-md-9 texto-beneficios">
+                                    Ahorro voluntario, préstamos y otros beneficios a través de la CooptraEka.
+                                </div>
+                            </div>
+                            <div class="row container-beneficios">
+                                <div class="col-md-2 img-beneficios">
+                                    <img jsf:library="images" jsf:name="/modNosotros/beneficios/estudio.png" width="80%" alt="unidad1"/>
+                                </div>
+                                <div class="col-md-9 texto-beneficios">
+                                    Auxilio hasta del 50% en educación, afín al cargo que desempeña
+                                </div>
+                            </div>
+                            <div class="row container-beneficios">
+                                <div class="col-md-2 img-beneficios">
+                                    <img jsf:library="images" jsf:name="/modNosotros/beneficios/juegos.png" width="80%" alt="unidad1"/>
+                                </div>
+                                <div class="col-md-9 texto-beneficios">
+                                    Zona de juegos y esparcimiento para colaboradores.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>
+
+
+
+
+

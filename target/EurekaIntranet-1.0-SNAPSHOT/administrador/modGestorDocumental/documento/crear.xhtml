@@ -1,0 +1,296 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{documentoController.prepareList}">
+                            <i class="fa fa-book"></i> 
+                            <span>Gestión de documentos</span>
+                        </h:commandLink>
+                    </li>
+                    <li >
+                        <h:commandLink action="#{procesoController.prepareList}">
+                            <i class="fa fa-cubes"></i> 
+                            <span>Maestros de procesos</span>
+                        </h:commandLink>
+                    </li>
+                     <li>
+                         <h:commandLink action="#{tipoDocumentoController.prepareList}">
+                            <i class="fa fa-file-text"></i> 
+                            <span>Maestros de tipos archivos</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Crear nuevo archivo</ui:define> 
+        <ui:define name="title2">Ingresa los datos del documento</ui:define>
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="formulario-crearDocu" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h:outputLabel value="Numero consecutivo del documento:"  />
+                            <p:inputText id="consecutivo"
+                                           value="#{documentoController.documentosActual.consecutivo}" 
+                                           maxlength="3"
+                                           requiredMessage="Por favor ingrese el numero de consecutivo al que pertenece el archivo" 
+                                           required="true">
+                                    <f:ajax execute="@this" render="consecutivoMessage"/>
+                            </p:inputText>
+                            <p:message id="consecutivoMessage" for="consecutivo" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Proceso al que pertenece:"  />
+                            <p:selectOneMenu id="idSelectProceso"
+                                             style="width: 100% !important"
+                                             filter="true" filterMatchMode="contains"
+                                             value="#{documentoController.documentosActual.idProceso}" 
+                                             requiredMessage="Por favor ingrese el proceso al que pertenece el archivo" 
+                                             required="true">
+                                    <f:selectItem itemLabel="Seleccionar uno.." />
+                                    <f:selectItems value="#{procesoController.listaProceso}" var="procesos" itemValue="#{procesos}"/>
+                                    <p:ajax listener="#{documentoController.borrarNombreArchivo}"/> 
+                                    <f:ajax execute="@this" render="procesoMessage documentoInputText documentoMessage"/>
+                            </p:selectOneMenu>
+                            <p:message id="procesoMessage" for="idSelectProceso" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Nombre del archivo:"  />
+                            <h:inputText class="form-control" 
+                                   id="documentoInputText" 
+                                   value="#{documentoController.documentosActual.nombre}" 
+                                   required="true"
+                                   maxlength="80"
+                                   validator="#{documentoController.validarNombre}"
+                                   validatorMessage="El nombre que escribiste no puede ser usado debido a que ya se guardo en otro archivo distinto o tiene acentos y símbolos"
+                                   requiredMessage="Por favor ingrese el nombre del documento">
+                                   <f:ajax execute="@this" render="documentoMessage"/>
+                                   <f:validateRegex pattern="[a-zA-Z 1234567890]*"/>
+                            </h:inputText>
+                            <p:message id="documentoMessage" for="documentoInputText" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Tipo de archivo:"  />
+                            <p:selectOneMenu id="tipo" 
+                                             style="width: 100% !important"
+                                             filter="true" filterMatchMode="contains"
+                                             value="#{documentoController.documentosActual.idTipoDocumento}" 
+                                             requiredMessage="Por favor indique el tipo de documento" 
+                                             required="true">
+                                    <f:selectItem itemLabel="Seleccionar uno.." />
+                                    <f:selectItems value="#{tipoDocumentoController.listaTipoDocumento}" var="tipoDocumento" itemValue="#{tipoDocumento}"/>
+                                    <p:ajax listener="#{documentoController.borrarNombreDocSelect}"/>  
+                                    <f:ajax execute="@this" render="tipoMessage divPanel divPanel2 procedimientoFormato"/>
+                            </p:selectOneMenu>
+                            <p:message id="tipoMessage" for="tipo" styleClass="error"/>
+                        </div>
+                        <p:outputPanel id="procedimientoFormato">
+                            <div class="form-group">
+                                <h:outputLabel value="Procedimiento al que pertenece:" rendered="#{documentoController.formato}" />
+                                <p:selectOneMenu id="procedimientoFTO" 
+                                                 rendered="#{documentoController.formato}"
+                                                 style="width: 100% !important"
+                                                 filter="true" filterMatchMode="contains"
+                                                 value="#{documentoController.documentosActual.procedimiento}" 
+                                                 requiredMessage="Por favor indique el tipo de documento" 
+                                                 required="true">
+                                        <f:selectItem itemLabel="Seleccionar uno.." />
+                                        <f:selectItems value="#{documentoController.listaDocumentosFormatoProcedimiento}" var="tipoDocumento" itemValue="#{tipoDocumento}"/>
+                                </p:selectOneMenu>
+                                <p:message id="procedimientoFTOMessage" for="procedimientoFTO" styleClass="error"/>
+                            </div>
+                        </p:outputPanel>
+                        <div class="form-group">
+                            <h:outputLabel value="Versión:"  />
+                            <p:inputNumber id="versionInputText" 
+                                           value="#{documentoController.documentosActual.version}"
+                                           required="true"
+                                           decimalPlaces="0"
+                                           requiredMessage="Por favor ingrese la versión del archivo">
+                                <f:ajax execute="@this" render="versionMessage"/>
+                            </p:inputNumber>
+                            <p:message id="versionMessage" for="versionInputText" styleClass="error"/>
+                        </div> 
+                        <div class="form-group">
+                            <h:outputLabel value="Descripción del archivo:"  />
+                            <h:inputTextarea class="form-control" 
+                                   id="descripcionInputText" 
+                                   value="#{documentoController.documentosActual.descripcion}" 
+                                   required="true"
+                                   requiredMessage="Por favor ingrese una breve descripción del documento">
+                                   <f:ajax execute="@this" render="descripcionMessage"/>
+                            </h:inputTextarea>
+                            <p:message id="descripcionMessage" for="descripcionInputText" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <p:commandButton class="boton-prime"
+                                                 ajax="false"
+                                                 value="Guardar"
+                                                 icon="fa fa-save"
+                                                 action="#{documentoController.add}"
+                                                 onclick="onSubmitButton();"/>
+                        </div>
+                        <div class="form-group">    
+                            <p:button class="boton-prime" 
+                                      style="background: red !important" 
+                                      icon="fa fa-arrow-left"
+                                      value="Cancelar" 
+                                      outcome="lista"/>
+                        </div>
+                    </div>
+                    <p:outputPanel id="divPanel">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-9 form-group">
+                                    <h:outputLabel value="Cargar archivo original:" 
+                                                   rendered="#{!documentoController.formato}"/>
+                                    <p:fileUpload cancelLabel="Cancelar"
+                                                  auto="true"
+                                                  rendered="#{!documentoController.formato}"
+                                                  uploadLabel="Cargar archivo"
+                                                  allowTypes="/(\.|\/)(doc|docx|xls|xlsx)$/"
+                                                  label="Examinar"
+                                                  mode="advanced" 
+                                                  update="preImageDoc messageDoc"
+                                                  required="true"
+                                                  sizeLimit="5000000"
+                                                  fileUploadListener="#{documentoController.cargarDocumentoDOC}" 
+                                                  id="archivoDoc"
+                                                  process="@this"
+                                                  invalidSizeMessage="El archivo que deseas cargar sobrepasa 1MB"
+                                                  converterMessage="proceso terminado"
+                                                  invalidFileMessage="Solo se aceptan archivos DOC o XLS">
+                                     </p:fileUpload>
+                                    <p:messages id="messageDoc" showDetail="true" closable="false"/>
+                                </div> 
+                                <div class="col-md-3 form-group" style="text-align: center">
+                                        <p:graphicImage id="preImageDoc"
+                                                        style="margin-top: 30px"
+                                                        class="img-responsive"
+                                                        rendered="#{!documentoController.formato}"
+                                                        value="#{documentoController.imgDoc}">
+                                        </p:graphicImage>
+                                        <p:commandButton styleClass="btn btn-danger"
+                                             icon=" ui-icon-trash"
+                                             rendered="#{!documentoController.formato}"
+                                             action="#{documentoController.borrarImgDoc}"
+                                             update="preImageDoc messageDoc"
+                                             process="@this"
+                                             style="position: absolute; top: 25px; left: 0;  padding: 0"/>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class=" col-md-9 form-group">
+                                    <h:outputLabel value="Cargar archivo PDF:" 
+                                                   rendered="#{!documentoController.formato}"/>
+                                    <p:fileUpload cancelLabel="Cancelar" 
+                                                  rendered="#{!documentoController.formato}"
+                                                  update="preImagePdf messagePdf"
+                                                  uploadLabel="Cargar archivo PDF"
+                                                  auto="true"
+                                                  label="Examinar"
+                                                  mode="advanced"
+                                                  required="true"
+                                                  sizeLimit="5000000"
+                                                  allowTypes="/(\.|\/)(pdf)$/" 
+                                                  fileUploadListener="#{documentoController.cargarDocumentoPDF}"
+                                                  id="archivoPDF"
+                                                  process="@this"
+                                                  invalidSizeMessage="El archivo que deseas cargar sobrepasa 1MB"
+                                                  converterMessage="proceso terminado"
+                                                  invalidFileMessage="Solo se aceptan archivos pdf">
+
+                                    </p:fileUpload>
+                                    <p:messages id="messagePdf" showDetail="true" closable="false"/>
+                                </div>
+                                <div class="col-md-3 form-group" style="text-align: center">
+                                        <p:graphicImage id="preImagePdf"
+                                                        rendered="#{!documentoController.formato}"
+                                                        style="margin-top: 30px"
+                                                        class="img-responsive" 
+                                                        value="#{documentoController.imgPdf}">
+                                        </p:graphicImage>
+                                        <p:commandButton styleClass="btn btn-danger"
+                                             icon=" ui-icon-trash"
+                                             rendered="#{!documentoController.formato}"
+                                             action="#{documentoController.borrarImgPdf}"
+                                             update="preImagePdf messagePdf"
+                                             process="@this"
+                                             style="position: absolute; top: 25px; left: 0; padding: 0"/>
+                                </div> 
+                            </div>
+                        </div>
+                    </p:outputPanel>
+
+                    <p:outputPanel id="divPanel2">
+                        <div class="col-md-6">
+                           <div class="row">
+                                <div class="col-md-9 form-group">
+                                    <h:outputLabel value="Cargar formato:" 
+                                                   rendered="#{documentoController.formato}"/>
+                                    <p:fileUpload cancelLabel="Cancelar"
+                                                  auto="true"
+                                                  rendered="#{documentoController.formato}"
+                                                  uploadLabel="Cargar archivo"
+                                                  allowTypes="/(\.|\/)(doc|docx|xls|xlsx)$/"
+                                                  label="Examinar"
+                                                  mode="advanced" 
+                                                  update="messageFor preImageFormato"
+                                                  required="true"
+                                                  sizeLimit="5000000"
+                                                  fileUploadListener="#{documentoController.cargarDocumentoDOC}" 
+                                                  id="archivoFormato"
+                                                  process="@this"
+                                                  invalidSizeMessage="El archivo que deseas cargar sobrepasa los 1MB"
+                                                  converterMessage="proceso terminado"
+                                                  invalidFileMessage="Solo se aceptan archivos DOC o XLS">
+                                      </p:fileUpload>
+                                    <p:messages id="messageFor" showDetail="true" closable="false"/>
+                                </div>  
+                                <div class="col-md-3 form-group" style="text-align: center">
+                                        <p:graphicImage id="preImageFormato"
+                                                        style="margin-top: 30px"
+                                                        class="img-responsive"
+                                                        rendered="#{documentoController.formato}"
+                                                        value="#{documentoController.imgDoc}">
+                                        </p:graphicImage>
+                                        <p:commandButton styleClass="btn btn-danger"
+                                             icon=" ui-icon-trash"
+                                             rendered="#{documentoController.formato}"
+                                             action="#{documentoController.borrarImgDoc}"
+                                             update="preImageFormato messageFor"
+                                             process="@this"
+                                             style="position: absolute; top: 25px; left: 0;  padding: 0"/>
+                                </div> 
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

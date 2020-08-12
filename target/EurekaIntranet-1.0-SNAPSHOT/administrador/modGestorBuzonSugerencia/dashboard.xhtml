@@ -1,0 +1,187 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{buzonSugerenciaController.prepareDashboard}">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Dashboard</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Gestión de buzón de sugerencias</ui:define> 
+        <ui:define name="title2">Administra las sugerencias realizadas</ui:define>
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="documentosFormList">
+                <div class="row">
+                    <div class="col-md-5" style="margin-top: 0em">
+                        <h:commandLink action="#{buzonSugerenciaController.prepareListTipo('SGE', 'Sugerencias o quejas a Gerencia')}">
+                            <div class="info-box bg-red sugerencia-containerIcon">
+                              <span class="info-box-icon"><i class="fa fa-users"></i></span>
+
+                              <div class="info-box-content">
+                                <span class="info-box-text">SGE - Sugerencias o quejas a Gerencia</span>
+                                <span class="info-box-number">#{buzonSugerenciaController.buzonSugerenciaFacade.contarTipoSugerencia('SGE')}</span>
+
+                                <div class="progress">
+                                  <div class="progress-bar" style="width: 100%"></div>
+                                </div>
+                                <span class="progress-description">
+                                    </span>
+                              </div>
+                              <!-- /.info-box-content -->
+                            </div>
+                            <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{buzonSugerenciaController.usuarioActual}"/>
+                        </h:commandLink>
+                        <h:commandLink action="#{buzonSugerenciaController.prepareListTipo('SGH', 'Sugerencias o quejas a Gestión Humana')}">
+                            <div class="info-box bg-yellow sugerencia-containerIcon">
+                                <span class="info-box-icon"><i class="fa fa-thumbs-up"></i></span>
+
+                                <div class="info-box-content">
+                                  <span class="info-box-text">SGH - Sugerencias o quejas a Gestión Humana</span>
+                                  <span class="info-box-number">#{buzonSugerenciaController.buzonSugerenciaFacade.contarTipoSugerencia('SGH')}</span>
+
+                                  <div class="progress">
+                                    <div class="progress-bar" style="width: 100%"></div>
+                                  </div>
+                                  <span class="progress-description">
+                                      </span>
+                                </div>
+                                <!-- /.info-box-content -->
+                                <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{buzonSugerenciaController.usuarioActual}"/>
+                            </div>
+                        </h:commandLink>
+                        <h:commandLink action="#{buzonSugerenciaController.prepareListTipo('SKO', 'Sugerencias o quejas relacionado con Planta KOS')}">
+                            <div class="info-box bg-aqua sugerencia-containerIcon">
+                                <span class="info-box-icon"><i class="fa fa-industry"></i></span>
+
+                                <div class="info-box-content">
+                                  <span class="info-box-text">SKO - Sugerencias o quejas relacionado con Planta KOS</span>
+                                  <span class="info-box-number">#{buzonSugerenciaController.buzonSugerenciaFacade.contarTipoSugerencia('SKO')}</span>
+
+                                  <div class="progress">
+                                    <div class="progress-bar" style="width: 100%"></div>
+                                  </div>
+                                  <span class="progress-description">
+                                      </span>
+                                </div>
+                                <!-- /.info-box-content -->
+                                <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{buzonSugerenciaController.usuarioActual}"/>
+                            </div>
+                        </h:commandLink>
+                        <h:commandLink action="#{buzonSugerenciaController.prepareListTipo('SOP', 'Sugerencias o quejas a Operaciones')}">
+                            <div class="info-box bg-green sugerencia-containerIcon">
+                              <span class="info-box-icon"><i class="fa fa-cog"></i></span>
+
+                              <div class="info-box-content">
+                                <span class="info-box-text">SOP - Sugerencias o quejas a Operaciones</span>
+                                <span class="info-box-number">#{buzonSugerenciaController.buzonSugerenciaFacade.contarTipoSugerencia('SOP')}</span>
+
+                                <div class="progress">
+                                  <div class="progress-bar" style="width: 100%"></div>
+                                </div>
+                                <span class="progress-description">
+                                    </span>
+                              </div>
+                              <!-- /.info-box-content -->
+                              <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{buzonSugerenciaController.usuarioActual}"/>
+                            </div>
+                        </h:commandLink>
+                        <h:commandLink action="#{buzonSugerenciaController.prepareListTipo('SRP', 'Sugerencias o quejas de riesgo y prevención')}">
+                            <div class="info-box bg-purple sugerencia-containerIcon">
+                              <span class="info-box-icon"><i class="fa fa-ambulance"></i></span>
+
+                              <div class="info-box-content">
+                                <span class="info-box-text">SRP - Sugerencias o quejas de riesgo y prevención</span>
+                                <span class="info-box-number">#{buzonSugerenciaController.buzonSugerenciaFacade.contarTipoSugerencia('SRP')}</span>
+
+                                <div class="progress">
+                                  <div class="progress-bar" style="width: 100%"></div>
+                                </div>
+                                <span class="progress-description">
+                                    </span>
+                              </div>
+                              <!-- /.info-box-content -->
+                              <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{buzonSugerenciaController.usuarioActual}"/>
+                            </div>
+                        </h:commandLink>
+                        <!-- /.info-box -->
+                        <h:commandLink action="#{buzonSugerenciaController.prepareListTipo('STS', 'Sugerencias o quejas acerca de: temas varios - Servicios de la compañia ')}">
+                            <div class="info-box bg-gray sugerencia-containerIcon">
+                                <span class="info-box-icon"><i class="fa fa-star"></i></span>
+
+                                <div class="info-box-content">
+                                  <span class="info-box-text">STS - Sugerencias o quejas acerca de: temas varios - Servicios de la compañia</span>
+                                  <span class="info-box-number">#{buzonSugerenciaController.buzonSugerenciaFacade.contarTipoSugerencia('STS')}</span>
+
+                                  <div class="progress">
+                                    <div class="progress-bar" style="width: 100%"></div>
+                                  </div>
+                                  <span class="progress-description">
+                                      </span>
+                                </div>
+                                <!-- /.info-box-content -->
+                                <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{buzonSugerenciaController.usuarioActual}"/>
+                            </div>
+                        </h:commandLink>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="col-md-12">
+                            <span class="fa fa-pie-chart"> </span> <span style="font-weight: bold"> Pie - Cantidad de sugerencias por tipo</span>
+                            <p:chart type="pie" model="#{buzonSugerenciaController.pieModel1}" responsive="true" style="width:100%;"/>
+                        </div>
+                        <div class="col-md-12">
+                            <span class="fa fa-line-chart"> </span> <span style="font-weight: bold"> Line - Sugerencias enviadas por día</span>
+                            <p:chart type="line" model="#{buzonSugerenciaController.dateModel}" style="height:400px;"/>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+            <script>
+                function customExtender () {
+                   this.cfg.grid = {
+                      background: "#ecf0f5", //Set background to white
+                      drawBorder: true,  
+                      drawGridLines: true,
+                        gridLineColor: '#cccccc', // *Color of the grid lines.
+                        borderColor: '#999999', // CSS color spec for border around grid.
+                        borderWidth: 2.0, // pixel width of border around grid.
+                        shadow: true, // draw a shadow for grid.
+                        shadowAngle: 45, // angle of the shadow. Clockwise from x axis.
+                        shadowOffset: 1.5, // offset from the line of the shadow.
+                        shadowWidth: 3, // width of the stroke for the shadow.
+                        shadowDepth: 3, // Number of strokes to make when drawing shadow.
+                        // Each stroke offset by shadowOffset from the last.
+                        shadowAlpha: 0 // Opacity of the shadow
+                   };
+                 }
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>
+    

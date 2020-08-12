@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="body" >
+            <f:event type="preRenderView" listener="#{usuarioController.procesarToken}" />
+            <script type="text/javascript">
+                    if (#{loginController.authenticated}) {
+                        location.reload(true);
+                    window.location = "#{request.contextPath}/faces/index.xhtml";
+                }
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>
+

@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > EKA Tutoriales
+                </h:form>
+                <header class="header-paginas">
+                    <h2><span class="fa fa-film"></span> EKA Tutoriales</h2>
+                </header>
+                <div class="row">
+                    <div class="col-md-6 card container-tutorial">
+                        <h3 class="titulo-tutorial1">Producción</h3>
+                        <a class="btn-ver" href="http://eureka/resources/videos/tutorialesInternosEka/Pintura_Calidadyoutube.mp4" target="_blanck">
+                            <span class="fa fa-film "></span> Pintura en polvo, proceso y posibles defectos
+                        </a>
+                        <a class="btn-ver" href="http://eureka/resources/videos/tutorialesInternosEka/Prueba_Cremallerasyoutube.com_.mp4" target="_blanck">
+                            <span class="fa fa-film "></span> ¿Cómo se realizan pruebas de calidad en cremalleras Eka?
+                        </a>
+                        <a class="btn-ver" href="http://eureka/resources/videos/tutorialesInternosEka/CintaRaso_Calidadyoutube.com_.mp4" target="_blanck">
+                            <span class="fa fa-film "></span> ¿Cómo clasificamos cinta raso y cinta satinada?
+                        </a>
+                    </div>
+                    <div class="col-md-6 card container-tutorial">
+                        <h3 class="titulo-tutorial2">Ingeniería</h3>
+                        <a class="btn-ver" href="http://eureka/resources/videos/tutorialesInternosEka/G.E-Eficiencia-global-Calidad-AltaF.mp4" target="_blanck">
+                            <span class="fa fa-film "></span> ¿Qué es eficiencia?
+                        </a>
+                        <a class="btn-ver" href="http://eureka/resources/videos/tutorialesInternosEka/ESCUDO_DE_LAS_5S.mp4" target="_blanck">
+                            <span class="fa fa-film "></span> ¿Qué son 5's?
+                        </a>
+                        <a class="btn-ver" href="http://eureka/resources/videos/tutorialesInternosEka/1_Que_es_GanttProjectyoutube.com_.mp4" target="_blanck">
+                            <span class="fa fa-film "></span> ¿Qué es Gantt Project? y como usarlo
+                        </a>
+                    </div>
+                </div>    
+                <div class="row">   
+                    <div class="col-md-6 card container-tutorial">
+                        <h3 class="titulo-tutorial3">Mantenimiento</h3>
+                        <a class="btn-ver" href="http://eureka/resources/videos/tutorialesInternosEka/Taller_Rpto_Mtto.mp4" target="_blanck">
+                            <span class="fa fa-film "></span> ¿Cómo se hace una entrega de repuestos en horario nocturno?
+                        </a>
+                        <a class="btn-ver" href="http://eureka/resources/videos/tutorialesInternosEka/Seguridad_TallerMtto.mp4" target="_blanck">
+                            <span class="fa fa-film "></span> Seguridad en el almacén de repuestos
+                        </a>
+                        <a class="btn-ver" href="http://eureka/resources/videos/tutorialesInternosEka/HacerSolicitud_mtto.mp4" target="_blanck">
+                            <span class="fa fa-film"></span> ¿Cómo realizar una solicitud de mantenimiento?
+                        </a>
+                    </div>
+                    <div class="col-md-6 card container-tutorial">
+                        <h3 class="titulo-tutorial4">Gestión Humana y Asuntos Corporativos</h3>
+                        <a class="btn-ver" href="http://eureka/resources/videos/tutorialesInternosEka/NominayBeneficios-1.mp4" target="_blanck">
+                            <span class="fa fa-film"></span>  Aprende más acerca de beneficios en Eka y gestión de nómina
+                        </a>
+                        <a class="btn-ver" href="http://eureka/resources/videos/tutorialesInternosEka/ExtintoresCALIDADyoutube.com_.mp4" target="_blanck">
+                            <span class="fa fa-film "></span> ¿Cómo diferenciar y hacer uso de los extintores?
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>
+
+
+
+
+

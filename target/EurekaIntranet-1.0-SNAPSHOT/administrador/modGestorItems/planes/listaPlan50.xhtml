@@ -1,0 +1,237 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px" class="active">
+                        <h:commandLink action="#{grupoItemController.prepareList}">
+                            <i class="fa fa-folder"></i> 
+                            <span>Plan 50 - Grupo</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{tocParetoVentasController.prepareList}">
+                            <i class="fa fa-tasks"></i> 
+                            <span>Maestro de parámetros</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="listaItemsEnviados">
+                            <i class="fa fa-share-square"></i>
+                            <span>Log de items enviados</span>
+                        </h:commandLink>
+                    </li>
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Gestión de Items - Grupos y parámetros</ui:define>   
+        <ui:define name="title2">Validación de parámetros </ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="form-itemEstado">
+                <p:dataTable  value="#{grupoItemController.listaGrupoItem}" var="item" style="font-size: .8em !important; margin-top: 20px"
+                              rows="100" paginator="true"  id="itemsEstado" draggableColumns="true"
+                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                              rowsPerPageTemplate="100,150" emptyMessage="No se encontraron documentos con el criterio dado">
+                    <f:facet name="header">
+                        <div class="container-fluid">
+                            <div class="row">
+                                 <div class="col-md-11">
+                                    <h4 class="colorLetra" style="font-weight: bold; text-align: left; margin-top: 1.5em" >
+                                        Numero total de plan 50: #{fn:length(grupoItemController.listaGrupoItem)} 
+                                    </h4>
+                                </div>
+                                
+                                <div class="col-md-1" style="margin-top: 1em">
+                                    <h:commandLink id="exportExcel">
+                                        <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                                        <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                                target="itemsEstado" fileName="tabla" />
+                                    </h:commandLink>
+                                    <p:tooltip id="descripcion-exportExcel" for="exportExcel" value="Exportar tabla en formato .xls" trackMouse="true"/>
+                                </div>
+                            </div>
+                        </div>
+                    </f:facet>
+                    <p:column filterBy="#{item.descripcion}" filterMatchMode="contains" sortBy="#{item.descripcion}" style="text-align: center">
+                         <f:facet class="titulos-tablas" name="header">Plan 50 - Grupo</f:facet>
+                         <h:outputText value="#{item.descripcion}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.idParamEstadoItem.nombreParametro}" sortBy="#{item.idParamEstadoItem.nombreParametro}" style="text-align: center" filterMatchMode="contains">
+                         <f:facet name="header">Nombre del parametro</f:facet>
+                         <h:outputText value="#{item.idParamEstadoItem.nombreParametro}"/>
+                    </p:column>
+                    <p:column style="text-align: center">
+                         <f:facet name="header">Fecha inicial</f:facet>
+                         <h:outputText value="#{item.idParamEstadoItem.fechaInicial}">
+                            <f:convertDateTime pattern="MMMM dd, YYYY"/>
+                         </h:outputText>
+                    </p:column>
+                    <p:column style="text-align: center">
+                         <f:facet name="header">Fecha final</f:facet>
+                         <h:outputText value="#{item.idParamEstadoItem.fechaFinal}">
+                             <f:convertDateTime pattern="MMMM dd, YYYY"/>
+                         </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{item.idParamEstadoItem.diasHabiles}" filterMatchMode="contains" style="text-align: center" >
+                         <f:facet name="header">Días habiles</f:facet>
+                         <h:outputText value="#{item.idParamEstadoItem.diasHabiles}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.idParamEstadoItem.cantidadClientes}" style="text-align: center" filterMatchMode="contains">
+                         <f:facet name="header">Cant. clientes</f:facet>
+                         <h:outputText value="#{item.idParamEstadoItem.cantidadClientes}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.idParamEstadoItem.rotacion}" style="text-align: center" filterMatchMode="contains">
+                         <f:facet name="header">Rotación</f:facet>
+                         <h:outputText value="#{item.idParamEstadoItem.rotacion}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.idParamEstadoItem.partSumada}" style="text-align: center" filterMatchMode="contains">
+                         <f:facet name="header">Pareto x tamaño(%)</f:facet>
+                         <h:outputText value="#{item.idParamEstadoItem.partSumada}"/>
+                    </p:column>
+                    <p:column filterBy="#{item.idParamEstadoItem.usuario}" style="text-align: center" filterMatchMode="contains">
+                         <f:facet name="header">Creado por:</f:facet>
+                         <h:outputText value="#{item.idParamEstadoItem.usuario}">
+                         </h:outputText>
+                    </p:column>
+                    <p:column style="text-align: center" filterMatchMode="contains">
+                         <f:facet name="header">Fecha de parámetrización</f:facet>
+                         <h:outputText value="#{item.idParamEstadoItem.fechaModificacion}">
+                             <f:convertDateTime pattern="MMMM dd, YYYY"/>
+                         </h:outputText>
+                    </p:column>
+                    <p:column width="100">
+                        <p:commandLink update="form-editParametro:panelParametro" onclick="PF('dlg2').show();"  id="parametro" class="btn btn-primary" style="color: white"> 
+                            <li class="fa fa-edit"></li> 
+                            <f:setPropertyActionListener value="#{item}" target="#{grupoItemController.grupoItemActual}"/>
+                        </p:commandLink>
+                        <p:tooltip for="parametro" value="Cambiar parámetros"/>
+                        <p:commandLink  ajax="false" update="form-itemEstado:itemsEstado" action="#{grupoItemController.updateEnviarDatosComercial}" id="envio" class="btn btn-success" style="color: white; margin-left: 5px"> 
+                            <li class="fa fa-share"></li> 
+                            <f:setPropertyActionListener value="#{item}" target="#{grupoItemController.grupoItemActual}"/>
+                            <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{grupoItemController.usuarioActual}"/>
+                            <p:confirm header="Confirmación" message="¿Esta seguro que desea enviar datos para evaluación de items estado 1 del grupo #{item.descripcion}?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:tooltip for="envio" value="Enviar datos al proceso comercial"/>
+                        <p:confirmDialog global="true">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </h:form> 
+            <h:form id="form-editParametro">
+                <p:dialog widgetVar="dlg2" modal="true" header="Elección de parámetros" width="1000">
+                    <p:outputPanel id="panelParametro" style="font-size: 1.3em !important">
+                        <div class="form-group">
+                            <h:outputLabel value="Nombre del parámetro a utilizar:"/>
+                            <h:selectOneMenu value="#{grupoItemController.grupoItemActual.idParamEstadoItem}"
+                                             style="width: 100%"
+                                             class="form-control" required="true">
+                            <f:selectItem itemLabel="Ninguno" itemValue="#{null}"/>
+                                <f:selectItems value="#{tocParetoVentasController.listaTocParametrosVigente}" var="parametros" itemValue="#{parametros}"/>
+                                <p:ajax listener="#{grupoItemController.consultarTocParametros}"/>  
+                                <f:ajax execute="@this" render="form-editParametro:parametrosTable"/>
+                            </h:selectOneMenu> 
+                        </div>
+                        
+                        <div class="form-group">
+                            <p:dataTable  value="#{grupoItemController.listaTocParametros}" var="item" style="font-size: .8em !important; margin-top: 20px"
+                                          id="parametrosTable" emptyMessage="No se encontraron documentos con el criterio dado">
+                                <p:column style="text-align: center">
+                                <f:facet name="header">Fecha inicial</f:facet>
+                                    <h:outputText value="#{item.fechaInicial}">
+                                       <f:convertDateTime pattern="MMMM dd, YYYY"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column style="text-align: center">
+                                    <f:facet name="header">Fecha final</f:facet>
+                                    <h:outputText value="#{item.fechaFinal}">
+                                        <f:convertDateTime pattern="MMMM dd, YYYY"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column filterBy="#{item.diasHabiles}" style="text-align: center" >
+                                    <f:facet name="header">Días habiles</f:facet>
+                                    <h:outputText value="#{item.diasHabiles}"/>
+                                </p:column>
+                                <p:column filterBy="#{item.cantidadClientes}" style="text-align: center" filterMatchMode="contains">
+                                    <f:facet name="header">Cant. clientes</f:facet>
+                                    <h:outputText value="#{item.cantidadClientes}"/>
+                                </p:column>
+                                <p:column filterBy="#{item.rotacion}" style="text-align: center" filterMatchMode="contains">
+                                    <f:facet name="header">Rotación</f:facet>
+                                    <h:outputText value="#{item.rotacion}"/>
+                                </p:column>
+                                <p:column filterBy="#{item.partSumada}" style="text-align: center" filterMatchMode="contains">
+                                    <f:facet name="header">Pareto x tamaño(%)</f:facet>
+                                    <h:outputText value="#{item.partSumada}"/>
+                                </p:column>
+                                <p:column filterBy="#{item.usuario}" style="text-align: center" width="200" filterMatchMode="contains">
+                                    <f:facet name="header">Creado por:</f:facet>
+                                    <h:outputText value="#{item.usuario}">
+                                    </h:outputText>
+                                </p:column>
+                                <p:column filterBy="#{item.fechaModificacion}" style="text-align: center" filterMatchMode="contains">
+                                    <f:facet name="header">Fecha de parámetrización</f:facet>
+                                    <h:outputText value="#{item.fechaModificacion}">
+                                        <f:convertDateTime pattern="MMMM dd, YYYY"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                        <div class="">
+                            <p:commandButton styleClass="btn btn-primary btn-block" 
+                                             value="Guardar" onclick="dlg2.hide();"
+                                             action="#{grupoItemController.update}"
+                                             ajax="false">
+                                <f:ajax execute="@this" render="form-itemEstado:itemsEstado"/>
+                            </p:commandButton>
+                            <p:commandButton styleClass="btn btn-danger btn-block" 
+                                      value="Cancelar" 
+                                      oncomplete="PF('dlg2').hide();"
+                                      process="@this"/>
+                        </div>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+           
+            <h:form id="form-enviarDatos">
+                <p:dialog widgetVar="dlg3" modal="true" header="Enviar datos" width="500">
+                    <p:outputPanel id="panelDatos" style="font-size: 1.3em !important">
+                        <p:selectOneMenu id="idCargoSeccion"
+                                        style="width: 100%"
+                                        value="#{grupoItemController.grupoItemActual}"
+                                        filter="true" filterMatchMode="contains">
+                               <f:selectItem itemLabel="Ninguno" />
+                               <f:selectItems value="#{grupoItemController.listaGrupoItem}" var="item" itemValue="#{item}"/>
+                        </p:selectOneMenu>
+                        <div class="col-md-3" style="margin-top: 1.5em">
+                            <p:commandButton ajax="false" action="#{grupoItemController.updateEnviarDatosComercial}" value="Terminar evaluación" class="btn btn-success" style="color: white; width: 100%; font-size: 1.3em !important"> 
+                                <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{grupoItemController.usuarioActual}"/>
+                            </p:commandButton>
+                        </div>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

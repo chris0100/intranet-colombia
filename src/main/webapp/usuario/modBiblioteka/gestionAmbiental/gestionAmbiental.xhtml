@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Gestión Ambiental
+                </h:form>
+                <header class="header-paginas">
+                    <h2> <span class="fa fa-recycle "></span> <span class="titulo-paginas">Gestión Ambiental</span></h2>
+                </header>
+                <h4>Programa de Gestión de Residuos EKA</h4>
+                <p class="text-justify">
+                    Aquí podrás encontrar toda la información
+                    relacionada con nuestro programa de gestión
+                    de residuos, documentos, evaluaciones, presentaciones 
+                    para capacitar, vídeos educativos, entre otros. Haz uso de esta 
+                    herramienta para compartir conocimiento y consultar tus dudas acerca 
+                    de cómo gestionar las basuras que producimos.
+                </p>
+                <div class="row">
+                    <div class="col-md-8">                         
+                        <p class="text-justify">
+                         Si deseas conocer acerca de nuestro
+                         programa de gestión de residuos en EKA
+                         Corporación o si quieres capacitar o compartir
+                         tu conocimiento con otro colaborador, aquí podrás
+                         descargar la presentación que te facilitará los conceptos 
+                         claves en este proceso. No olvides que si tienes dudas puedes
+                         comunicarte al correo gestionambiental@ekazipper.com y con gusto 
+                         podrán ser resueltas.
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <h:form>
+                            <a class="btn-ver" href="http://eureka/resources/documentos/gestionAmbiental/Companeros-de-aprendizaje-tema-residuos.pdf" target="_blanck">
+                                <span class="fa fa-file-powerpoint-o"></span> Descargar presentación
+                            </a>
+                        </h:form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-7">
+                        <img width="100%" jsf:library="images" jsf:name="/modBiblioteca/gestionAmbiental/Separa_Presentation.jpg" alt="img"/> 
+                    </div>
+                    <div class="col-md-5">
+                        <p class="text-justify">
+                            Es importante que nuestros colaboradores
+                            siempre estén en constante actualización,
+                            por eso hemos creado un material sencillo 
+                            de portar y entregar a quienes aún no tienen 
+                            acceso a este medio; por eso podrás descargar 
+                            aquí el plegable informativo sobre gestión de 
+                            residuos en EKA con los temas más importantes
+                            condensados de manera práctica y agradable de 
+                            leer.
+                        </p>
+                        <a class="btn-ver" href="http://eureka/resources/documentos/gestionAmbiental/Plegable_GestionDeResiduos.pdf" target="_blanck">
+                            <span class="fa fa-map"></span> Descargar plegable
+                        </a>
+                        <p class="text-justify">
+                            Aquí puedes descargar la evaluación que se
+                            aplicará a todos aquellos colaboradores
+                            que sean capacitados.
+                        </p>
+                        <a class="btn-ver" href="http://eureka/resources/documentos/gestionAmbiental/Evaluacion-companeros-de-aprendizaje_1.pdf" target="_blanck">
+                            <span class="fa fa-check"></span> Descargar evaluación
+                        </a>
+                        <p class="text-justify">
+                            Si vas a iniciar proceso de capacitación y no
+                            tienes un medio electrónico para mostrar 
+                            información importante sobre gestión ambiental 
+                            en EKA, aquí podrás descargar las memo fichas de
+                            trabajo que te facilitará el proceso.
+                           </p>
+                        <a class="btn-ver" href="http://eureka/resources/documentos/gestionAmbiental/Memofichas-companeros-de-aprendizaje-1.pdf" target="_blanck">
+                            <span class="fa fa-cubes"></span> Descargar Fichas
+                        </a>
+                    </div>
+                </div>
+                    
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>
+
+
+
+
+

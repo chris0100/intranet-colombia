@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Unidades de negocio
+                </h:form>
+                <header class="header-paginas">
+                    <h2> <span class="titulo-paginas">Unidades de negocio</span></h2>
+                </header>
+                <div>
+                    <p>En Eka corporación nos conformamos  por tres unidades de negocio, 
+                        EkaCierres, Texcintas y Kos. En este espacio podrás conocer 
+                        a que nos dedicamos diariamente y así descubrir la calidad de 
+                        nuestros productos.
+                    </p>
+                    <section id="testimonials" class="section-bg" style="padding: 0">
+                        <div class="owl-carousel testimonials-carousel wow fadeInUp">
+                            <div>
+                                <img jsf:library="images" jsf:name="/modNosotros/unidadesNegocio/unidad1.jpg" class="image-slider"/>
+                                <p class="texto-pagina">
+                                    <strong>
+                                        Eka Cierres
+                                    </strong>
+                                    <br></br>
+                                    Es una unidad de negocio dedicada a la fabricación de cremalleras, 
+                                    de tipo metálico y poliéster, dentro de nuestros productos
+                                    encontramos cremalleras en diversos colores y tamaños, diversidad 
+                                    de paletas y deslizadores, que convierten única la marca de nuestros
+                                    clientes.
+                                </p>
+                            </div>
+                            <div>
+                                <img jsf:library="images" jsf:name="/modNosotros/unidadesNegocio/unidad2.jpg" class="image-slider"/>
+                                <p class="texto-pagina">
+                                    <strong>
+                                        Tex Cintas
+                                    </strong>>
+                                    <br></br>
+                                    En nuestra segunda unidad de negocio,
+                                    nos dedicamos a la producción de tejidos
+                                    angostos, entregando al mercado diferentes 
+                                    productos como: reatas, hiladillos, cintas satinada, 
+                                    cinta bandera, cinta faya, cordones y cinta colchón.
+                                </p>
+                            </div>
+                            <div>
+                                <img jsf:library="images" jsf:name="/modNosotros/unidadesNegocio/unidad3.jpg" class="image-slider"/>
+                                <p class="texto-pagina">
+                                    <strong>
+                                        KOS
+                                    </strong>>
+                                    <br></br>
+                                     Como tercera y última unidad de negocio,
+                                     nos dedicamos a la fabricación de 
+                                     diversos empaques de cartón ecológicos
+                                     para alimentos como: vasos, tazones, platos,
+                                     asas, anillos y porta vasos, tapas para vasos
+                                     y bandejas de cartón.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>
+
+
+
+
+

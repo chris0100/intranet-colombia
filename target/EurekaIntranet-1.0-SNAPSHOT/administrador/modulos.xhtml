@@ -1,0 +1,259 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="title">
+            Bienvenido al administrador de EUREKA.  
+        </ui:define>
+        <ui:define name="title2">
+            Selección de modulos.
+        </ui:define>
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <h:panelGroup>
+                         <li style="margin-top: 20px">
+                             <h:commandLink action="#{usuarioController.prepareList}" rendered="#{loginController.admin}">
+                               <i class="fa fa-users"></i> 
+                               <span>Administrar usuarios</span>
+                            </h:commandLink>
+                        </li>
+                        <li>
+                            <h:commandLink action="/index">
+                               <i class="fa fa-dashboard"></i> 
+                               <span>Vista de usuario estandar</span>
+                            </h:commandLink>
+                        </li>
+                    </h:panelGroup>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="body" >
+            <div class="row">
+                <h:form>
+                    <div class="col-md-2 col-lg-2" jsf:rendered="#{loginController.gestorDocumental}">
+                        <div class="itemZoom img-bordered">
+                            <h:commandLink action="#{documentoController.prepareList}" >
+                                  <img class="img-responsive" src="#{request.contextPath}/resources/images/GD.png"/>
+                            </h:commandLink> 
+                            <div class="item-overlay top"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2" jsf:rendered="#{loginController.gestorContenido}">
+                        <div class="itemZoom img-bordered">
+                            <h:commandLink action="#{contenidoController.prepareList}">
+                                  <img class="img-responsive" src="#{request.contextPath}/resources/images/GC.png"/>
+                            </h:commandLink> 
+                            <div class="item-overlay top"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2" jsf:rendered="#{loginController.planeacionToc || loginController.comercialToc}">
+                        <div class="itemZoom img-bordered">
+                            <p:commandLink onclick="PF('dlg1').show();">
+                                  <img class="img-responsive" src="#{request.contextPath}/resources/images/GTOC.png"/>
+                            </p:commandLink> 
+                            <div class="item-overlay top"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2" jsf:rendered="#{loginController.codigoBarrasKos}">
+                        <div class="itemZoom img-bordered">
+                            <h:commandLink action="#{lecturasController.prepareCreate}">
+                                <img class="img-responsive" src="#{request.contextPath}/resources/images/GKOS.png"/>
+                            </h:commandLink> 
+                            <div class="item-overlay top"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2" jsf:rendered="#{loginController.gestorCreacionItemsComercial || loginController.gestorCreacionItemsIngenieria}">
+                        <div class="itemZoom img-bordered">
+                            <p:commandLink onclick="PF('dlg2').show();">
+                                  <img class="img-responsive" src="#{request.contextPath}/resources/images/GCI.png"/>
+                            </p:commandLink> 
+                            <div class="item-overlay top"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2" jsf:rendered="#{loginController.gestorBuzonSugerencias}">
+                        <div class="itemZoom img-bordered">
+                            <h:commandLink action="#{buzonSugerenciaController.prepareDashboard}">
+                                <img class="img-responsive" src="#{request.contextPath}/resources/images/GBS.png"/>
+                            </h:commandLink> 
+                            <div class="item-overlay top"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2" jsf:rendered="#{loginController.gestorVolantesNomina}">
+                        <div class="itemZoom img-bordered">
+                            <h:commandLink action="#{volantesNominaController.prepareListVolante}">
+                                <img class="img-responsive" src="#{request.contextPath}/resources/images/GVN.png"/>
+                            </h:commandLink> 
+                            <div class="item-overlay top"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2" jsf:rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi || loginController.gestorLpVentas}">
+                        <div class="itemZoom img-bordered">
+                            <h:commandLink action="#{listaEmpaqueController.prepareListaEmpaque}">
+                                <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{listaEmpaqueController.usuarioActual}"/>
+                                <img class="img-responsive" src="#{request.contextPath}/resources/images/GLE.png"/>
+                            </h:commandLink> 
+                            <div class="item-overlay top"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2" jsf:rendered="#{loginController.reporteProgramacion}">
+                        <div class="itemZoom img-bordered">
+                            <p:commandLink onclick="PF('dlg3').show();">
+                                <img class="img-responsive" src="#{request.contextPath}/resources/images/RPRO.png"/>
+                            </p:commandLink> 
+                            <div class="item-overlay top"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2" jsf:rendered="#{loginController.gestorGanttKos || loginController.verGanttKos }">
+                        <div class="itemZoom img-bordered">
+                            <h:commandLink action="#{programadorGanttController.prepareList}">
+                                <img class="img-responsive" src="#{request.contextPath}/resources/images/RKOS.png"/>
+                            </h:commandLink> 
+                            <div class="item-overlay top"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2" jsf:rendered="#{loginController.digitadorGeTelares || loginController.adminGe || loginController.consultaGe}">
+                        <div class="itemZoom img-bordered">
+                            <h:commandLink action="#{capturaParadaGeController.prepareDashboard}">
+                               <img class="img-responsive" src="#{request.contextPath}/resources/images/GE.png"/>
+                            </h:commandLink> 
+                            <div class="item-overlay top"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2" jsf:rendered="#{loginController.adminOrdenDespacho || loginController.consultaOrdenDespacho}">
+                        <div class="itemZoom img-bordered">
+                            <h:commandLink action="#{ordenesDespachoController.prepareList}">
+                              <img class="img-responsive" src="#{request.contextPath}/resources/images/GDES.png"/>
+                              <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{ordenesDespachoController.usuarioActual}"/>
+                            </h:commandLink> 
+                            <div class="item-overlay top"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2" jsf:rendered="#{loginController.tableroControlKos}">
+                        <div class="itemZoom img-bordered">
+                            <h:commandLink action="/administrador/modGestorReporteTableroControl/reporte">
+                              <img class="img-responsive" src="#{request.contextPath}/resources/images/TCKOS.png"/>
+                              <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{ordenesDespachoController.usuarioActual}"/>
+                            </h:commandLink> 
+                            <div class="item-overlay top"></div>
+                        </div>
+                    </div>
+                </h:form>
+                <h:form>
+                    <p:dialog widgetVar="dlg1" header="Proceso a trabajar" modal="true" width="1000">
+                        <div class="col-md-6 col-lg-3" jsf:rendered="#{loginController.planeacionToc}">
+                            <div class="itemZoom img-bordered">
+                                <h:commandLink id="param" action="#{grupoItemController.prepareList}">
+                                      <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorItems/param.png"/>
+                                </h:commandLink> 
+                                <div class="item-overlay top"></div>
+                                <p:tooltip for="param" value="Parametrización de grupos"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3" jsf:rendered="#{loginController.comercialToc}">
+                            <div class="itemZoom img-bordered">
+                                <h:commandLink id="comercial" action="#{estadoItemController.prepareListComercial}">
+                                      <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/COMER.png"/>
+                                </h:commandLink> 
+                                <div class="item-overlay top"></div>
+                                <p:tooltip for="comercial" value="Calcular estado 1"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3" jsf:rendered="#{loginController.planeacionToc}">
+                            <div class="itemZoom img-bordered" >
+                                <h:commandLink id="planeacion" action="#{estadoItemController.prepareListPlaneacion}">
+                                    <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/PP.png"/>
+                                </h:commandLink> 
+                                <div class="item-overlay top"></div>
+                                <p:tooltip for="planeacion" value="Calcular Noi"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3" jsf:rendered="#{loginController.planeacionToc || loginController.comercialToc}">
+                            <div class="itemZoom img-bordered" >
+                                <h:commandLink id="log" action="#{estadoItemController.prepareListLogUnoEE}">
+                                      <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorItems/log.png"/>
+                                </h:commandLink> 
+                                <div class="item-overlay top"></div>
+                                <p:tooltip for="log" value="Datos enviado al UnoEE"/>
+                            </div>
+                        </div>
+                    </p:dialog>
+                </h:form>
+                <h:form>
+                    <p:dialog widgetVar="dlg2" header="Proceso a trabajar" modal="true" width="1000">
+                        <div class="col-md-6 col-lg-3" jsf:rendered="#{loginController.gestorCreacionItemsComercial}">
+                            <div class="itemZoom img-bordered">
+                                <h:commandLink id="Solicitud" action="#{creacionItemController.prepareListSolcitud}" style="text-align: center">
+                                    <span style="font-weight: bold; font-size: 8em; display: block;">#{fn:length(creacionItemController.listaCreacionItemSolicitudTodos)}</span>
+                                     <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorCreacionItems/solicitud.png"/>
+                                </h:commandLink> 
+                                <div class="item-overlay top"></div>
+                                <p:tooltip for="Solicitud" value="Solicitud de creación de item"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3" jsf:rendered="#{loginController.gestorCreacionItemsIngenieria}">
+                            <div class="itemZoom img-bordered">
+                                <h:commandLink id="responder" action="#{creacionItemController.prepareListResponder}" style="text-align: center">
+                                    <span style="font-weight: bold; font-size: 8em; display: block">#{fn:length(creacionItemController.listaCreacionItemRespuestaTodos)}</span> 
+                                    <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorCreacionItems/responder.png"/>
+                                </h:commandLink> 
+                                <div class="item-overlay top"></div>
+                                <p:tooltip for="responder" value="Solicitudes por responder"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3" jsf:rendered="#{loginController.gestorCreacionItemsIngenieria || loginController.gestorCreacionItemsComercial}">
+                            <div class="itemZoom img-bordered">
+                                <h:commandLink id="rechazadas" action="#{creacionItemController.prepareListRechazadas}" style="text-align: center">
+                                    <span style="font-weight: bold; font-size: 8em; display: block"> #{fn:length(creacionItemController.listaCreacionItemRechazosTodos)} </span>
+                                    <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorCreacionItems/rechazadas.png"/>
+                                </h:commandLink> 
+                                <div class="item-overlay top"></div>
+                                <p:tooltip for="rechazadas" value="Solcitudes rechazadas"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3" jsf:rendered="#{loginController.gestorCreacionItemsIngenieria || loginController.gestorCreacionItemsComercial}">
+                            <div class="itemZoom img-bordered">
+                                <h:commandLink id="creados" action="#{creacionItemController.prepareListCreadas}" style="text-align: center">
+                                    <span style="font-weight: bold; font-size: 8em; display: block">#{fn:length(creacionItemController.listaCreacionItemCreado)}</span>
+                                    <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorCreacionItems/pendientes.png"/>
+                                </h:commandLink> 
+                                <div class="item-overlay top"></div>
+                                <p:tooltip for="creados" value="Solicitudes con pendientes"/>
+                            </div>
+                        </div>
+                    </p:dialog>
+                </h:form>
+                <h:form>
+                    <p:dialog widgetVar="dlg3" header="Reporte a trabajar" modal="true" width="500">
+                        <div class="col-md-6 col-lg-6">
+                            <div class="itemZoom img-bordered" >
+                                <h:commandLink id="planeacion" action="#{reporteProgramacionController.prepareListProgramacion}">
+                                    <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/PP.png"/>
+                                </h:commandLink> 
+                                <div class="item-overlay top"></div>
+                                <p:tooltip for="planeacion" value="Reporte para programación"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="itemZoom img-bordered">
+                                <h:commandLink id="comercial" action="#{reporteProgramacionController.prepareListVentas}">
+                                      <img class="img-responsive" src="#{request.contextPath}/resources/images/modGestorDocumental/COMER.png"/>
+                                </h:commandLink> 
+                                <div class="item-overlay top"></div>
+                                <p:tooltip for="comercial" value="Reporte para comercial"/>
+                            </div>
+                        </div>
+                    </p:dialog>
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>
+

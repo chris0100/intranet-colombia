@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{usuarioController.prepareList}" rendered="#{loginController.admin}">
+                          <i class="fa fa-users"></i> 
+                          <span>Administrar usuarios</span>
+                       </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Gestión de usuarios</ui:define>   
+        <ui:define name="title2">Formulario de edición de usuarios</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form>
+                        <div class="form-group">
+                            <h:outputLabel value="Nombre:"  />
+                            <input class="form-control" jsf:id="nomUsuarioInputText" jsf:value="#{usuarioController.usuarioActual.nombre}" 
+                                   type="text" required="true" placeholder="Nombres"
+                                         jsf:requiredMessage="Por favor ingrese el nombre del usuario"
+                                         jsf:validatorMessage="Use solo letras, ej: Luis"> 
+                                         <f:validateRegex pattern="[a-zA-Z áéíóúÁÉÍÓÚÑñ]*"/>
+                                         <f:ajax execute="@this" render="nomUsuarioMessage"/>
+                            </input>
+                            <p:message id="nomUsuarioMessage" for="nomUsuarioInputText"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <h:outputLabel value="Cargo que desempeña:" />
+                            <p:selectOneMenu id="idCargoSeccion"
+                                             style="width: 100%"
+                                             value="#{usuarioController.usuarioActual.proceso}"
+                                             filter="true" filterMatchMode="contains">
+                                    <f:selectItem itemLabel="Ninguno" />
+                                    <f:selectItems value="#{procesoController.listaProceso}" var="proceso" itemValue="#{proceso}"/>  
+                            </p:selectOneMenu>
+                        </div>
+                        <p:separator />
+                        <div class="form-group">
+                            <h:outputLabel value="Email:"  />
+                            <input class="form-control" type="text" jsf:id="correoInputText" 
+                                   jsf:value="#{usuarioController.usuarioActual.correo}" placeholder="Correo corporativo"
+                                   jsf:validatorMessage="Dirección de correo electronico no valido">
+                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]*"/>
+                                <f:ajax execute="@this" render="correoMessage"/>
+                            </input>
+                            <p:message id="correoMessage" for="correoInputText"/>
+                        </div>
+                        <h:outputLabel value="Username:"  />
+                        <div class="row form-group">
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" jsf:id="usernameInputText" disabled="true"
+                                       jsf:value="#{usuarioController.usuarioActual.username}">
+                                    <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]*"/>
+                                </input>
+                            </div>
+                            <div class="col-sm-1">
+                                <p:commandButton  icon="ui-icon-wrench" id="EditarCorreo" action="#{usuarioController.prepareEditUsername}" ajax="false"/>
+                                <p:tooltip id="descripcion-botonCorreo" for="EditarCorreo" value="Reestablecer username de usuario" trackMouse="true" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Rol:" for="rolInputText" />
+                            <p:selectManyCheckbox layout="grid" columns="1" id="rolInputText" value="#{usuarioController.listaRol}"
+                                                  converter="rolConverter">
+                                <f:selectItems value="#{rolController.itemsAvailableSelectOne}"
+                                               var="rol"
+                                               itemValue="#{rol}"/>
+                                <f:ajax execute="@this" render="rolMessage"/>
+                            </p:selectManyCheckbox>
+                        </div>
+                        <h:outputLabel value="Contraseña"  />
+                        <div class="row form-group">
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" jsf:id="contraInputText" disabled="true"
+                                       jsf:value="******">
+                                </input>
+                                <p:message id="contraMessage" for="contraInputText"/>
+                            </div>
+                            <div class="col-sm-1">
+                                <p:commandButton  icon="ui-icon-wrench" id="EditarContra" action="#{usuarioController.prepareEditContrasena}" ajax="false"/>
+                                <p:tooltip id="descripcion-botonContra" for="EditarContra" value="Reestablecer Contraseña de usuario" trackMouse="true" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Solicitar cambio de clave al ingresar: "  />
+                            <p:selectBooleanCheckbox value="#{usuarioController.usuarioActual.primerLogin}" /> 
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 form-group">
+                                <p:commandButton class="btn btn-primary btn-block"
+                                        ajax="false"
+                                        value="Guardar usuario"
+                                        action="#{usuarioController.updateUsuario}"
+                                        onclick="onSubmitButton();"/>
+                            </div>
+                            <div class="col-sm-6 form-group">    
+                                <h:button class="btn btn-cancelar btn-block" value="Cancelar" outcome="lista"/>
+                            </div>
+                        </div>
+                    </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

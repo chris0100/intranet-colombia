@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{buzonSugerenciaController.prepareDashboard}">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Dashboard</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Lista de sugerencias enviadas</ui:define>   
+        <ui:define name="title2">Administración de sugerencias</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="documentosFormList">
+                <p:outputPanel id="documentosTablePanel">
+                    <p:dataTable value="#{buzonSugerenciaController.listaBuzonSugerencia}" var="item"
+                                 rows="50" id="documentosTable" paginator="true"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150">
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p:button icon="ui-icon-arrowthick-1-w"
+                                                value="Volver al Dashboard" 
+                                                style="font-size: 1.2em !important; padding: 5px; left: 0"
+                                                outcome="dashboard.xhtml"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4 class="colorLetra" style="font-weight: bold" >
+                                            Sugerencias creadas: #{fn:length(buzonSugerenciaController.listaBuzonSugerencia)}
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-3">
+                                        
+                                    </div>
+                                    <div class="col-md-1">
+                                        <h:commandLink id="exportExcel">
+                                            <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                                            <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                                    target="documentosTable" fileName="inventario" />
+                                        </h:commandLink>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:column filterBy="#{item.idBuzonSugerencia}" filterMatchMode="contains">
+                            <f:facet name="header">Código</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.idBuzonSugerencia}"/>
+                            <h:outputText style="font-weight: bold" value="#{item.idTipoSugerencia.idTipoSugerencia}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.nombreUsuario}" filterMatchMode="contains">
+                            <f:facet name="header">Usuario</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.nombreUsuario.toUpperCase()}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.idTipoSugerencia.nombre}" filterMatchMode="contains">
+                            <f:facet name="header">Tipo de sugerencia</f:facet>
+                            <h:outputText value="#{item.idTipoSugerencia.nombre}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcion}" filterMatchMode="contains">
+                            <f:facet name="header">Descripción</f:facet>
+                            <h:outputText value="#{item.descripcion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.area}" filterMatchMode="contains">
+                            <f:facet name="header">Área</f:facet>
+                            <h:outputText value="#{item.area}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.calificacion}" width="80"  filterMatchMode="contains">
+                            <f:facet name="header">Calificación</f:facet>
+                            <h:outputText value="#{item.calificacion}" style="float:right"/>
+                        </p:column>
+                        <p:column priority="7">
+                             <f:facet name="header">Fecha de actualización</f:facet>
+                             <h:outputText value="#{item.fechaCreacion}">
+                                 <f:convertDateTime pattern="MMMM dd, YYYY HH:mm"/>
+                             </h:outputText>
+                        </p:column>
+                        <p:column priority="7">
+                             <f:facet name="header">Fecha de segumiento</f:facet>
+                             <h:outputText value="#{item.fechaSeguimiento}">
+                                 <f:convertDateTime pattern="MMMM dd, YYYY HH:mm"/>
+                             </h:outputText>
+                        </p:column>
+                        <p:column width="60">
+                            <p:commandButton ajax="false" icon="ui-icon-search" id="ver" action="#{buzonSugerenciaController.prepareView}" >
+                                <f:setPropertyActionListener value="#{item}" target="#{buzonSugerenciaController.buzonSugerenciaActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-print" for="ver" value="Ver sugerencia" trackMouse="true"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

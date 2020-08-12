@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{creacionItemController.prepareListResponder}">
+                            <i class="fa fa-rocket"></i> 
+                            <span>Gestión de creación de items</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                         <h:commandLink action="#{creacionItemController.prepareListResponderItemNuevo}">
+                            <i class="fa fa-file-o"></i> 
+                            <span>Solicitudes items nuevos</span> <span style="background: red; color: white; font-size: 1.2em; font-weight: bold; padding: .3em;
+                                                                        border-radius: 100%"> (#{fn:length(creacionItemController.listaCreacionItemSolicitudItemPatron)}) </span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Solicitudes de creación de items</ui:define> 
+        <ui:define name="title2">Proceso de ingenieria y mejoramiento</ui:define>
+        <ui:define name="body">
+            <div class="loader-page"></div>
+            <p:growl id="growl" showDetail="true" life="2000"/>
+             <h:form id="documentosFormList">
+                <p:outputPanel id="documentosTablePanel">
+                    <p:dataTable value="#{creacionItemController.listaCreacionItemRespuesta}" var="item"
+                                 rows="50" id="documentosTable" paginator="true"
+                                 rowStyleClass="#{item.estado eq 1 ? 'color1': item.estado eq 0 ? 'color2': null}"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150">
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <p:button icon="ui-icon-arrowthick-1-w"
+                                                value="Volver pagina principal" 
+                                                style="font-size: 1.2em !important; padding: 5px; left: 0"
+                                                outcome="/administrador/modulos.xhtml"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4 class="colorLetra" style="font-weight: bold" >
+                                           Items por respuesta: #{fn:length(creacionItemController.listaCreacionItemSolicitud)}
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input jsf:action="#{creacionItemController.ejecutarSissItemExt}" type="submit" style="font-weight: bold; font-size: 1.3em" class="submit-form btn btn-pinterest " value="Crear items en UnoEE" id="myButton1"/>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p:commandButton icon="ui-icon-script"
+                                                         type="button" value="Items creados"
+                                                         style="font-size: 1.2em !important; padding: 5px; left: 0"
+                                                         onclick="PF('tiempoIndicador').show();"/>
+                                        
+                                    </div>
+                                    <div class="col-md-1">
+                                        <h:commandLink id="exportExcel">
+                                            <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                                            <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                                    target="documentosTable" fileName="inventario" />
+                                        </h:commandLink>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:column filterBy="#{item.codigoItem}" width="80" filterMatchMode="contains">
+                            <f:facet name="header">Cod. item</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.codigoItem}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcion}" filterMatchMode="contains">
+                            <f:facet name="header">Descripcion</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.descripcion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcionExt1}" filterMatchMode="contains">
+                            <f:facet name="header">Ext 1.</f:facet>
+                            <h:outputText value="#{item.descripcionExt1}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcionExt2}" filterMatchMode="contains">
+                            <f:facet name="header">Ext 2.</f:facet>
+                            <h:outputText value="#{item.descripcionExt2}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcionListaPrecio}" filterMatchMode="contains">
+                            <f:facet name="header">Lista precio</f:facet>
+                            <h:outputText value="#{item.descripcionListaPrecio}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.precio}" filterMatchMode="contains">
+                            <f:facet name="header">Precio</f:facet>
+                            <h:outputText value="#{item.precio}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.usuarioSolicitud}" filterMatchMode="contains">
+                            <f:facet name="header">Usuario solicitud</f:facet>
+                            <h:outputText value="#{item.usuarioSolicitud}"/>
+                        </p:column>
+                        <p:column priority="7">
+                             <f:facet name="header">Fecha de solicitud</f:facet>
+                             <h:outputText value="#{item.fechaSolicitud}">
+                                 <f:convertDateTime pattern="dd/MM/YYYY HH:mm"/>
+                             </h:outputText>
+                        </p:column>
+                        <p:column>
+                             <f:facet name="header">Notas comercial</f:facet>
+                             <h:outputText value="#{item.notasComercial}">
+                             </h:outputText>
+                        </p:column>
+                        <p:column width="50">
+                            <p:commandButton id="actualizar" update=":formEditar" onclick="PF('dlg1').show();"  icon="fa fa-check">
+                                <f:setPropertyActionListener value="#{item}" target="#{creacionItemController.creacionItemActual}"/>
+                                <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{creacionItemController.usuarioActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-botonActualizacion" for="actualizar" value="Editar contenido" trackMouse="true" />
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+            <p:dialog header="Crear respuesta" widgetVar="dlg1" minHeight="40" modal="true" width="30%">
+                <h:form id="formEditar">
+                    <div class="row">
+                       <div class="col-md-5">
+                            <h:outputLabel class="letra-form" value="Codigo:"/>
+                            <h:outputLabel class="form-control" value="#{creacionItemController.creacionItemActual.codigoItem}"/>
+                       </div>
+                       <div class="col-md-3">
+                            <h:outputLabel class="letra-form" value="Ext. 1:"/>
+                            <h:outputLabel class="form-control" value="#{creacionItemController.creacionItemActual.idExt1Detalle}"/>
+                       </div>
+                       <div class="col-md-4">
+                            <h:outputLabel class="letra-form" value="Ext. 2:"/>
+                            <h:outputLabel class="form-control" value="#{creacionItemController.creacionItemActual.idExt2Detalle}"/>
+                       </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <h:outputLabel class="letra-form" value="Estado:"/>
+                        <h:selectOneMenu value="#{creacionItemController.estadoItem}"
+                                         required="true"
+                                         id="estadoRespuesta"
+                                         class="form-control"
+                                         requiredMessage="Por favor selecciona la marca">
+                             <f:selectItem itemValue="aprobado" itemLabel="Aprobado"/>
+                             <f:selectItem itemValue="rechazado" itemLabel="Rechazado"/>
+                             <f:selectItem itemValue="sin revisar" itemLabel="Sin revisar"/>
+                        </h:selectOneMenu>
+                        <p:message id="estadoRespuestaMessage" for="estadoRespuesta" styleClass="error"/>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel class="letra-form" value="Aplicar a todos: " />
+                        <br></br>
+                        <p:inputSwitch value="#{creacionItemController.aplicarTodo}" onLabel="SI" offLabel="NO">
+                        </p:inputSwitch>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel class="letra-form" value="Descripción:"/>
+                        <h:inputTextarea class="form-control" 
+                                id="descripcionInputText" 
+                                value="#{creacionItemController.creacionItemActual.descripcionRespuesta}" 
+                                requiredMessage="Por favor ingrese una breve descripción">
+                                <f:ajax execute="@this" render="descripcionMessage"/>
+                         </h:inputTextarea>
+                        <p:message id="descripcionMessage" for="descripcionInputText" styleClass="error"/>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p:commandButton styleClass="btn btn-primary btn-block" 
+                                             value="Guardar respuesta" update=":documentosFormList:documentosTablePanel"
+                                             action="#{creacionItemController.addRespuesta}">
+                                <f:ajax onevent="dlg1.hide()" execute="@this" render=":documentosFormList:documentosTablePanel"/>
+                            </p:commandButton>
+                        </div>
+                        <div class="col-sm-6">
+                            <p:commandButton styleClass="btn btn-danger btn-block" 
+                                      value="Cancelar" 
+                                      oncomplete="PF('dlg1').hide();"
+                                      process="@this"/>
+                        </div>
+                    </div>
+                </h:form>
+            </p:dialog>
+            <div class="load"></div>
+            <script>
+                $('#myButton1').click(function(){
+                  $('#myButton1').hide();
+                  $('.load').addClass('loading');
+                    setTimeout(function () { 
+                    $('.load').removeClass('loading');
+                    $('#myButton1').show();
+
+                  }, 200000000);
+                });
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>
+    

@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <head jsf:id="head">
+        <title><ui:insert name="title"></ui:insert></title>
+        <link rel="icon" type="image/png" href="#{request.contextPath}/resources/images/logoSoloLoginWeb.png"/>
+        <style>
+            .NARANJA{
+                background : orange !important;
+                color: orange;
+                font-size: 1em;
+                font-weight: bold;
+                padding: 1.8em;
+                padding-right: 1.8em;
+                margin: 0 !important;
+                margin-left: -1em !important;
+            }
+            .VERDE{
+                background : green !important;
+                color: green;
+                font-size: 1em;
+                font-weight: bold;
+                padding: 1.8em;
+                padding-right: 1.8em;
+                margin: 0 !important;
+                margin-left: -1em !important;
+            }
+            .ROJO{
+                background : red !important;
+                color: red;
+                font-size: 1em;
+                font-weight: bold;
+                padding: 1.8em;
+                padding-right: 1.8em;
+                margin: 0 !important;
+                margin-left: -1em !important;
+            }
+        </style>
+    </head>
+    <body style="margin: 0 !important; padding: 0 !important" >
+        <p:outputPanel id="MyDivName" style="height: 1500px; width: 100%; overflow:hidden;">
+            <p:carousel vertical="true"  numVisible="1" effect="easeInStrong" autoPlayInterval="30000" style="margin-bottom:0" easing="easeOutBounce">
+                <p:tab title="Reporte 1" >
+                    <div style="text-align: center;">
+                        <h1 style="margin-left: .5em; display: inline-block; font-size: 1.8em">FORMADORA 4 OZ  - Total: #{fn:length(programadorGanttController.listaDetalleProgramadorR1)}</h1> 
+                    </div>
+                    <img style="right: 0; position: fixed; width:100px; margin-top: -80px" src="#{request.contextPath}/resources/images/logo_kos.png"/>
+                    <h:form id="form-list1">
+                        <p:outputPanel id="periodoTablePanel">
+                            <p:dataTable value="#{programadorGanttController.listaDetalleProgramadorR1}" var="item"
+                                         rows="50" id="periodoTable" 
+                                         style="font-size: 1.8em !important">
+                                <p:column >
+                                    <f:facet name="header">Consecutivo</f:facet>
+                                    <h:outputText value="#{item.tipoDocumento}-#{item.numeroDocumento}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Descripción ítem</f:facet>
+                                    <h:outputText value="#{item.descItem}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 1</f:facet>
+                                    <h:outputText value="#{item.descExt1}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 2</f:facet>
+                                    <h:outputText value="#{item.descExt2}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. planeada</f:facet>
+                                    <h:outputText value="#{item.cantPlaneada}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. pendiente</f:facet>
+                                    <h:outputText value="#{item.cantPendiente}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Fecha de entrega</f:facet>
+                                    <h:outputText value="#{item.fechaTerminacion}"/>
+                                </p:column>
+                                <p:column width="50">
+                                    <f:facet name="header">Color</f:facet>
+                                    <h:outputText value="#{item.color}" styleClass="#{item.color}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Reporte 3" >
+                    <div style="text-align: center;">
+                        <h1 style="margin-left: .5em; display: inline-block; font-size: 1.8em">FORMADORA 7 OZ  - Total: #{fn:length(programadorGanttController.listaDetalleProgramadorR3)}</h1> 
+                    </div>
+                    <h:form id="form-list3">
+                        <p:outputPanel id="periodoTablePanel">
+                            <p:dataTable value="#{programadorGanttController.listaDetalleProgramadorR3}" var="item"
+                                         rows="50" id="periodoTable" 
+                                         style="font-size: 1.8em !important"
+                                         
+                                         >
+                                <p:column >
+                                    <f:facet name="header">Consecutivo</f:facet>
+                                    <h:outputText value="#{item.tipoDocumento}-#{item.numeroDocumento}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Descripción ítem</f:facet>
+                                    <h:outputText value="#{item.descItem}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 1</f:facet>
+                                    <h:outputText value="#{item.descExt1}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 2</f:facet>
+                                    <h:outputText value="#{item.descExt2}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. planeada</f:facet>
+                                    <h:outputText value="#{item.cantPlaneada}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. pendiente</f:facet>
+                                    <h:outputText value="#{item.cantPendiente}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Fecha de entrega</f:facet>
+                                    <h:outputText value="#{item.fechaTerminacion}"/>
+                                </p:column>
+                                <p:column width="50">
+                                    <f:facet name="header">Color</f:facet>
+                                    <h:outputText value="#{item.color}" styleClass="#{item.color}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </h:form>
+                </p:tab>
+                 <p:tab title="Reporte 4" >
+                     <div style="text-align: center;">
+                        <h1 style="margin-left: .5em; display: inline-block; font-size: 1.8em">FORMADORA 9 OZ  - Total: #{fn:length(programadorGanttController.listaDetalleProgramadorR4)}</h1> 
+                    </div>
+                    <h:form id="form-list4">
+                        <p:outputPanel id="periodoTablePanel">
+                            <p:dataTable value="#{programadorGanttController.listaDetalleProgramadorR4}" var="item"
+                                         rows="50" id="periodoTable" 
+                                         style="font-size: 1.8em !important"
+                                         
+                                         >
+                                <p:column >
+                                    <f:facet name="header">Consecutivo</f:facet>
+                                    <h:outputText value="#{item.tipoDocumento}-#{item.numeroDocumento}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Descripción ítem</f:facet>
+                                    <h:outputText value="#{item.descItem}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 1</f:facet>
+                                    <h:outputText value="#{item.descExt1}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 2</f:facet>
+                                    <h:outputText value="#{item.descExt2}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. planeada</f:facet>
+                                    <h:outputText value="#{item.cantPlaneada}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. pendiente</f:facet>
+                                    <h:outputText value="#{item.cantPendiente}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Fecha de entrega</f:facet>
+                                    <h:outputText value="#{item.fechaTerminacion}"/>
+                                </p:column>
+                                <p:column width="50">
+                                    <f:facet name="header">Color</f:facet>
+                                    <h:outputText value="#{item.color}" styleClass="#{item.color}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Reporte 5" >
+                    <div style="text-align: center;">
+                        <h1 style="margin-left: .5em; display: inline-block; font-size: 1.8em">FORMADORA VASO 9/14 OZ  - Total: #{fn:length(programadorGanttController.listaDetalleProgramadorR5)}</h1> 
+                    </div>
+                    <h:form id="form-list5">
+                        <p:outputPanel id="periodoTablePanel">
+                            <p:dataTable value="#{programadorGanttController.listaDetalleProgramadorR5}" var="item"
+                                         rows="50" id="periodoTable" 
+                                         style="font-size: 1.8em !important"
+                                         
+                                         >
+                                <p:column >
+                                    <f:facet name="header">Consecutivo</f:facet>
+                                    <h:outputText value="#{item.tipoDocumento}-#{item.numeroDocumento}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Descripción ítem</f:facet>
+                                    <h:outputText value="#{item.descItem}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 1</f:facet>
+                                    <h:outputText value="#{item.descExt1}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 2</f:facet>
+                                    <h:outputText value="#{item.descExt2}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. planeada</f:facet>
+                                    <h:outputText value="#{item.cantPlaneada}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. pendiente</f:facet>
+                                    <h:outputText value="#{item.cantPendiente}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Fecha de entrega</f:facet>
+                                    <h:outputText value="#{item.fechaTerminacion}"/>
+                                </p:column>
+                                <p:column width="50">
+                                    <f:facet name="header">Color</f:facet>
+                                    <h:outputText value="#{item.color}" styleClass="#{item.color}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Reporte 6" >
+                    <div style="text-align: center;">
+                        <h1 style="margin-left: .5em; display: inline-block; font-size: 1.8em">FORMADORA VASO 12 OZ - Total: #{fn:length(programadorGanttController.listaDetalleProgramadorR6)}</h1> 
+                    </div>
+                    <h:form id="form-list6">
+                        <p:outputPanel id="periodoTablePanel">
+                            <p:dataTable value="#{programadorGanttController.listaDetalleProgramadorR6}" var="item"
+                                         rows="50" id="periodoTable" 
+                                         style="font-size: 1.8em !important"
+                                         
+                                         >
+                                <p:column >
+                                    <f:facet name="header">Consecutivo</f:facet>
+                                    <h:outputText value="#{item.tipoDocumento}-#{item.numeroDocumento}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Descripción ítem</f:facet>
+                                    <h:outputText value="#{item.descItem}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 1</f:facet>
+                                    <h:outputText value="#{item.descExt1}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 2</f:facet>
+                                    <h:outputText value="#{item.descExt2}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. planeada</f:facet>
+                                    <h:outputText value="#{item.cantPlaneada}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. pendiente</f:facet>
+                                    <h:outputText value="#{item.cantPendiente}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Fecha de entrega</f:facet>
+                                    <h:outputText value="#{item.fechaTerminacion}"/>
+                                </p:column>
+                                <p:column width="50">
+                                    <f:facet name="header">Color</f:facet>
+                                    <h:outputText value="#{item.color}" styleClass="#{item.color}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Reporte 7" >
+                    <div style="text-align: center;">
+                        <h1 style="margin-left: .5em; display: inline-block; font-size: 1.8em">FORMADORA VASO 16 OZ  - Total: #{fn:length(programadorGanttController.listaDetalleProgramadorR7)}</h1> 
+                    </div>
+                    <h:form id="form-list7">
+                        <p:outputPanel id="periodoTablePanel">
+                            <p:dataTable value="#{programadorGanttController.listaDetalleProgramadorR7}" var="item"
+                                         rows="50" id="periodoTable" 
+                                         style="font-size: 1.8em !important"
+                                         
+                                         >
+                                <p:column >
+                                    <f:facet name="header">Consecutivo</f:facet>
+                                    <h:outputText value="#{item.tipoDocumento}-#{item.numeroDocumento}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Descripción ítem</f:facet>
+                                    <h:outputText value="#{item.descItem}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 1</f:facet>
+                                    <h:outputText value="#{item.descExt1}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 2</f:facet>
+                                    <h:outputText value="#{item.descExt2}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. planeada</f:facet>
+                                    <h:outputText value="#{item.cantPlaneada}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. pendiente</f:facet>
+                                    <h:outputText value="#{item.cantPendiente}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Fecha de entrega</f:facet>
+                                    <h:outputText value="#{item.fechaTerminacion}"/>
+                                </p:column>
+                                <p:column width="50">
+                                    <f:facet name="header">Color</f:facet>
+                                    <h:outputText value="#{item.color}" styleClass="#{item.color}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Reporte 8" >
+                    <div style="text-align: center;">
+                        <h1 style="margin-left: .5em; display: inline-block; font-size: 1.8em">	FORMADORA VASO 21/32/42 OZ  - Total: #{fn:length(programadorGanttController.listaDetalleProgramadorR8)}</h1> 
+                    </div>
+                     <h:form id="form-list8">
+                        <p:outputPanel id="periodoTablePanel">
+                            <p:dataTable value="#{programadorGanttController.listaDetalleProgramadorR8}" var="item"
+                                         rows="50" id="periodoTable" 
+                                         style="font-size: 1.8em !important"
+                                         
+                                         >
+                                <p:column >
+                                    <f:facet name="header">Consecutivo</f:facet>
+                                    <h:outputText value="#{item.tipoDocumento}-#{item.numeroDocumento}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Descripción ítem</f:facet>
+                                    <h:outputText value="#{item.descItem}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 1</f:facet>
+                                    <h:outputText value="#{item.descExt1}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 2</f:facet>
+                                    <h:outputText value="#{item.descExt2}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. planeada</f:facet>
+                                    <h:outputText value="#{item.cantPlaneada}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. pendiente</f:facet>
+                                    <h:outputText value="#{item.cantPendiente}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Fecha de entrega</f:facet>
+                                    <h:outputText value="#{item.fechaTerminacion}"/>
+                                </p:column>
+                                <p:column width="50">
+                                    <f:facet name="header">Color</f:facet>
+                                    <h:outputText value="#{item.color}" styleClass="#{item.color}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Reporte 9" >
+                    <div style="text-align: center;">
+                        <h1 style="margin-left: .5em; display: inline-block; font-size: 1.8em">FORMADORA CONTENEDOR 7 OZ - Total: #{fn:length(programadorGanttController.listaDetalleProgramadorR9)}</h1> 
+                    </div>
+                    <h:form id="form-list9">
+                        <p:outputPanel id="periodoTablePanel">
+                            <p:dataTable value="#{programadorGanttController.listaDetalleProgramadorR9}" var="item"
+                                         rows="50" id="periodoTable" 
+                                         style="font-size: 1.8em !important"
+                                         
+                                         >
+                                <p:column >
+                                    <f:facet name="header">Consecutivo</f:facet>
+                                    <h:outputText value="#{item.tipoDocumento}-#{item.numeroDocumento}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Descripción ítem</f:facet>
+                                    <h:outputText value="#{item.descItem}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 1</f:facet>
+                                    <h:outputText value="#{item.descExt1}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 2</f:facet>
+                                    <h:outputText value="#{item.descExt2}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. planeada</f:facet>
+                                    <h:outputText value="#{item.cantPlaneada}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. pendiente</f:facet>
+                                    <h:outputText value="#{item.cantPendiente}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Fecha de entrega</f:facet>
+                                    <h:outputText value="#{item.fechaTerminacion}"/>
+                                </p:column>
+                                <p:column width="50">
+                                    <f:facet name="header">Color</f:facet>
+                                    <h:outputText value="#{item.color}" styleClass="#{item.color}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Reporte 10" >
+                    <div style="text-align: center;">
+                        <h1 style="margin-left: .5em; display: inline-block; font-size: 1.8em">FORMADORA CONTENEDOR 12 OZ  - Total: #{fn:length(programadorGanttController.listaDetalleProgramadorR10)}</h1> 
+                    </div>
+                    <h:form id="form-list10">
+                        <p:outputPanel id="periodoTablePanel">
+                            <p:dataTable value="#{programadorGanttController.listaDetalleProgramadorR10}" var="item"
+                                         rows="50" id="periodoTable" 
+                                         style="font-size: 1.8em !important"
+                                         
+                                         >
+                                <p:column >
+                                    <f:facet name="header">Consecutivo</f:facet>
+                                    <h:outputText value="#{item.tipoDocumento}-#{item.numeroDocumento}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Descripción ítem</f:facet>
+                                    <h:outputText value="#{item.descItem}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 1</f:facet>
+                                    <h:outputText value="#{item.descExt1}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 2</f:facet>
+                                    <h:outputText value="#{item.descExt2}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. planeada</f:facet>
+                                    <h:outputText value="#{item.cantPlaneada}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. pendiente</f:facet>
+                                    <h:outputText value="#{item.cantPendiente}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Fecha de entrega</f:facet>
+                                    <h:outputText value="#{item.fechaTerminacion}"/>
+                                </p:column>
+                                <p:column width="50">
+                                    <f:facet name="header">Color</f:facet>
+                                    <h:outputText value="#{item.color}" styleClass="#{item.color}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Reporte 11" >
+                    <div style="text-align: center;">
+                        <h1 style="margin-left: .5em; display: inline-block; font-size: 1.8em">FORMADORA CONTENEDOR 16 OZ  - Total: #{fn:length(programadorGanttController.listaDetalleProgramadorR11)}</h1> 
+                    </div>
+                    <h:form id="form-list11">
+                        <p:outputPanel id="periodoTablePanel">
+                            <p:dataTable value="#{programadorGanttController.listaDetalleProgramadorR11}" var="item"
+                                         rows="50" id="periodoTable" 
+                                         style="font-size: 1.8em !important"
+                                         
+                                         >
+                                <p:column >
+                                    <f:facet name="header">Consecutivo</f:facet>
+                                    <h:outputText value="#{item.tipoDocumento}-#{item.numeroDocumento}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Descripción ítem</f:facet>
+                                    <h:outputText value="#{item.descItem}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 1</f:facet>
+                                    <h:outputText value="#{item.descExt1}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 2</f:facet>
+                                    <h:outputText value="#{item.descExt2}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. planeada</f:facet>
+                                    <h:outputText value="#{item.cantPlaneada}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. pendiente</f:facet>
+                                    <h:outputText value="#{item.cantPendiente}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Fecha de entrega</f:facet>
+                                    <h:outputText value="#{item.fechaTerminacion}"/>
+                                </p:column>
+                                <p:column width="50">
+                                    <f:facet name="header">Color</f:facet>
+                                    <h:outputText value="#{item.color}" styleClass="#{item.color}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </h:form>
+                </p:tab>
+            </p:carousel>
+        </p:outputPanel>
+        <script language="javascript">
+            setTimeout(function(){
+               window.location.reload(1);
+            }, 310000);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,554 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{capturaParadaGeController.prepareDashboard}">
+                            <i class="fa fa-dashboard" aria-hidden="true"></i> 
+                            <span>Dashboard</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                        <h:commandLink action="#{capturaParadaGeController.prepareList}">
+                            <i class="fa fa-rocket"></i> 
+                            <span>Capturar información</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{operariosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de operarios</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{turnosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de turnos</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                         <h:commandLink action="#{nominalGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de Maquinas/Nominal</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{paradasGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de tipos de Paradas</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="/administrador/modGeTelares/menuMaestros">
+                            <i class="fa fa-cog"></i> 
+                            <span>Más configuraciones</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Captura de información <span style="font-weight: bold"> Telares</span> </ui:define>   
+        <ui:define name="title2">Formulario de creación</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="Create">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <h:outputLabel value="Fecha:"/>
+                            <p:calendar required="true" 
+                                        requiredMessage="Ingresar la fecha" 
+                                        id="fecha" 
+                                        autocomplete="off"
+                                        maxdate="#{capturaParadaGeController.fechaActual}"
+                                        mindate="#{capturaParadaGeController.validarFechaAtras}"
+                                        value="#{capturaParadaGeController.capturaParadaGeActual.fechaCaptura}" >
+                                <f:ajax execute="@this" render="fechaMessage"/>
+                            </p:calendar>
+                            <p:message id="fechaMessage" for="fecha" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Turno:"  />
+                            <p:selectOneMenu id="turno" 
+                                            style="width: 100% !important"
+                                            required="true"
+                                            requiredMessage="Ingresar turno"
+                                            filter="true"
+                                            autoWidth="false"
+                                            filterMatchMode="contains"
+                                            value="#{capturaParadaGeController.capturaParadaGeActual.idTurno}">
+                                <f:selectItem itemLabel="Seleccionar..." itemValue="#{null}" /> 
+                                <f:selectItems value="#{turnosGeController.listaTurnosGeEstadoActivo}" var="turno" itemValue="#{turno}"/>
+                                <f:ajax execute="@this" render="turnoMessage"/>
+                            </p:selectOneMenu>
+                            <p:message id="turnoMessage" for="turno" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Operario:"  />
+                            <p:selectOneMenu id="operario" 
+                                            style="width: 100% !important"
+                                            required="true"
+                                            requiredMessage="Ingresar operario"
+                                            filter="true"
+                                            autoWidth="false"
+                                            filterMatchMode="contains"
+                                            value="#{capturaParadaGeController.capturaParadaGeActual.idOperario}">
+                                <f:selectItem itemLabel="Seleccionar..." itemValue="#{null}" /> 
+                                <f:selectItems value="#{operariosGeController.listaOperariosGeEstadoActivo}" var="operario" itemValue="#{operario}"/>
+                                <f:ajax execute="@this" render="operarioMessage"/>
+                            </p:selectOneMenu>
+                            <p:message id="operarioMessage" for="operario" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Maquina:"  />
+                            <p:selectOneMenu id="maquina" 
+                                            style="width: 100% !important"
+                                            required="true"
+                                            requiredMessage="Ingresar maquina"
+                                            filter="true"
+                                            autoWidth="false"
+                                            filterMatchMode="contains"
+                                            value="#{capturaParadaGeController.capturaParadaGeActual.idNominal}">
+                                <f:selectItem itemLabel="Seleccionar..." itemValue="#{null}" /> 
+                                <f:selectItems value="#{nominalGeController.listaNominalGeEstadoActivo}" var="nominal" itemValue="#{nominal}"/>
+                                <f:ajax execute="@this" render="puntasNominal"/>
+                                <f:ajax execute="@this" render="maquinaMessage"/>
+                            </p:selectOneMenu>
+                            <p:message id="maquinaMessage" for="maquina" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Hora inicio:"  />
+                            <p:calendar id="horaInicio" 
+                                        required="true"
+                                        autocomplete="off"
+                                        requiredMessage="Favor ingresar la hora inicial"
+                                        value="#{capturaParadaGeController.horaInicio}"
+                                        pattern="HH:mm" 
+                                        timeOnly="true" >
+                                <f:ajax execute="@this" render="horaInicioMessage"/>
+                            </p:calendar>    
+                            <p:message id="horaInicioMessage" for="horaInicio" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Hora fin:"  />
+                            <p:calendar id="horaFin"
+                                        autocomplete="off"
+                                        required="true"
+                                        requiredMessage="Favor ingresar la hora final"
+                                        value="#{capturaParadaGeController.horaFin}"
+                                        pattern="HH:mm" 
+                                        timeOnly="true"> 
+                                <f:ajax execute="@this" render="horaFinMessage"/>
+                            </p:calendar> 
+                            <p:message id="horaFinMessage" for="horaFin" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Captura de tiempo no programado:"  />
+                            <p:selectOneMenu style="width: 100% !important"
+                                            autoWidth="false"
+                                            rendered="true"
+                                            id="capturaTiempoProgramado"
+                                            requiredMessage="Debes seleccionar si la captura es de tiempo no programado"
+                                            value="#{capturaParadaGeController.conOp}">
+                                <f:selectItem itemLabel="Seleccionar.." itemValue="#{null}" /> 
+                                <f:selectItem itemLabel="NO" itemValue="n" /> 
+                                <f:selectItem itemLabel="SI" itemValue="s" /> 
+                                <p:ajax listener="#{capturaParadaGeController.limpiarCamposParadaSinOp}" event="itemSelect" update="maquina op item ext1 ext2 cantProgramada und cantEntregada ruta ct puntasUnoee pp mproducidos kilos conversion puntasProduccion claseb rechazado formParada:codParada formParada:horaInicioDetalle formParada:horaFinDetalle formParada:agregarDetalle formParada:tablaFuncion"/>  
+                                <f:ajax execute="@this" render="capturaTiempoProgramadoMessage maquina op item ext1 ext2 cantProgramada und cantEntregada ruta ct puntasUnoee pp mproducidos kilos conversion puntasProduccion claseb rechazado formParada:codParada formParada:horaInicioDetalle formParada:horaFinDetalle formParada:agregarDetalle formParada:tablaFuncion"  />
+                            </p:selectOneMenu>
+                            <p:message id="capturaTiempoProgramadoMessage" for="capturaTiempoProgramado" styleClass="error"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <h:outputLabel value="Orden de produción:"  />
+                            <div class="input-group">
+                                <span class="input-group-addon" style="background: lightgrey"><i class="fa fa-search"></i></span>
+                                <p:autoComplete forceSelection="true"
+                                    required="true"
+                                    disabled="#{capturaParadaGeController.capturaParadaGeActual.sinOp}"
+                                    requiredMessage="No se encontro la orden de producción"
+                                    id="op" 
+                                    maxResults="20"  
+                                    style="width: 100%" 
+                                    value="#{capturaParadaGeController.capturaParadaGeActual.op}" 
+                                    completeMethod="#{capturaParadaGeController.completeOp}">
+                                    <p:ajax listener="#{capturaParadaGeController.consultarDatosOp}" event="itemSelect" update="item ext1 ext2 cantProgramada und cantEntregada ruta ct puntasUnoee pp kilos conversion formParada"/>  
+                                    <f:ajax execute="@this" render="item cantProgramada cantEntregada und item ext1 ext2 ruta ct puntasUnoee pp kilos conversion formParada"/>
+                                    <f:ajax execute="@this" render="opMessage"/>
+                                </p:autoComplete> 
+                            </div>
+                            <p:message id="opMessage" for="op" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Desc. ítem:"  />
+                            <p:inputText id="item"
+                                        required="true"
+                                        disabled="true"
+                                        requiredMessage="Ingresar item"
+                                        value="#{capturaParadaGeController.capturaParadaGeActual.descripcionItem}">
+                                <f:ajax execute="@this" render="itemMessage"/>
+                            </p:inputText>
+                            <p:message id="itemMessage" for="item" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Ext 1:"  />
+                            <p:inputText id="ext1"
+                                         required="true"
+                                        disabled="true"
+                                        requiredMessage="Ingresar item"
+                                        value="#{capturaParadaGeController.capturaParadaGeActual.ext1Detalle}">
+                                <f:ajax execute="@this" render="ext1Message"/>
+                            </p:inputText>
+                            <p:message id="ext1Message" for="ext1" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Ext 2:"  />
+                            <p:inputText id="ext2"
+                                        required="true"
+                                        disabled="true"
+                                        requiredMessage="Ingresar item"
+                                        value="#{capturaParadaGeController.capturaParadaGeActual.ext2Detalle}">
+                                <f:ajax execute="@this" render="ext2Message"/>
+                            </p:inputText>
+                            <p:message id="ext2Message" for="ext2" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Ruta operación:"  />
+                            <p:inputText id="ruta"
+                                        disabled="true"
+                                        value="#{capturaParadaGeController.capturaParadaGeActual.ruta}">
+                                <f:ajax execute="@this" render="rutaMessage"/>
+                            </p:inputText>
+                            <p:message id="rutaMessage" for="ruta" styleClass="error"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Centro de trabajo:"  />
+                            <p:inputText id="ct"
+                                        disabled="true"
+                                        value="#{capturaParadaGeController.capturaParadaGeActual.centroTrabajo}">
+                                <f:ajax execute="@this" render="ctMessage"/>
+                            </p:inputText>
+                            <p:message id="ctMessage" for="ct" styleClass="error"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <h:outputLabel value="Puntas nominal:"  />
+                                <p:inputNumber id="puntasNominal"
+                                            required="true"
+                                            disabled="true"
+                                            requiredMessage="Ingresar las puntas"
+                                            value="#{capturaParadaGeController.capturaParadaGeActual.idNominal.puntas}"
+                                            decimalPlaces="0">
+                                    <p:ajax event="keypress" process="@this"/>
+                                    <f:ajax execute="@this" render="puntasNominalMessage"/>
+                                </p:inputNumber>
+                                <p:message id="puntasNominalMessage" for="puntasNominal" styleClass="error"/>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <h:outputLabel value="Puntas unoee:"  />
+                                <p:inputNumber id="puntasUnoee"
+                                            required="true"
+                                            disabled="true"
+                                            requiredMessage="Ingresar las puntas"
+                                            value="#{capturaParadaGeController.capturaParadaGeActual.puntas}"
+                                            decimalPlaces="0">
+                                    <p:ajax event="keypress" process="@this"/>
+                                    <f:ajax execute="@this" render="puntasUnoeeMessage"/>
+                                </p:inputNumber>
+                                <p:message id="puntasUnoeeMessage" for="puntasUnoee" styleClass="error"/>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <h:outputLabel value="Puntas prod.:"  />
+                                <p:inputNumber id="puntasProduccion"
+                                            required="true"
+                                            disabled="#{capturaParadaGeController.capturaParadaGeActual.sinOp}"
+                                            requiredMessage="Ingresar las puntas"
+                                            value="#{capturaParadaGeController.capturaParadaGeActual.puntasProduccion}"
+                                            decimalPlaces="0">
+                                    <p:ajax event="keypress" process="@this"/>
+                                    <f:ajax execute="@this" render="puntasProduccionMessage"/>
+                                </p:inputNumber>
+                                <p:message id="puntasProduccionMessage" for="puntasProduccion" styleClass="error"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="P/P:"  />
+                            <p:inputNumber id="pp"
+                                        required="true"
+                                        disabled="true"
+                                        requiredMessage="Ingresar P/P"
+                                        value="#{capturaParadaGeController.capturaParadaGeActual.pp}"
+                                        decimalPlaces="0">
+                                <p:ajax event="keypress" process="@this"/>
+                                <f:ajax execute="@this" render="ppMessage"/>
+                            </p:inputNumber>
+                            <p:message id="ppMessage" for="pp" styleClass="error"/>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <h:outputLabel value="Cant.programada"  />
+                                <p:inputText id="cantProgramada"
+                                            required="true"
+                                            disabled="true"
+                                            requiredMessage="Ingresar cant. programada"
+                                            value="#{capturaParadaGeController.capturaParadaGeActual.cantProgramada}">
+                                    <f:convertNumber type="currency"
+                                                                 currencySymbol=""
+                                                                 maxFractionDigits="0"/>
+                                    <f:ajax execute="@this" render="cantProgramadaMessage"/>
+                                </p:inputText>
+                                <p:message id="cantProgramadaMessage" for="cantProgramada" styleClass="error"/>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <h:outputLabel value="Cant. entregada:"  />
+                                <p:inputText id="cantEntregada"
+                                            required="true"
+                                            disabled="true"
+                                            requiredMessage="Ingresar cant. programada"
+                                            value="#{capturaParadaGeController.capturaParadaGeActual.cantEntregada}">
+                                    <f:convertNumber type="currency"
+                                                                 currencySymbol=""
+                                                                 maxFractionDigits="0"/>
+                                    <f:ajax execute="@this" render="cantEntregadaMessage"/>
+                                </p:inputText>
+                                <p:message id="cantEntregadaMessage" for="cantEntregada" styleClass="error"/>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <h:outputLabel value="Und. medida:"  />
+                                <p:inputText id="und"
+                                            required="true"
+                                            disabled="true"
+                                            value="#{capturaParadaGeController.capturaParadaGeActual.undMedida}">
+                                    <f:ajax execute="@this" render="undMessage"/>
+                                </p:inputText>
+                                <p:message id="undMessage" for="und" styleClass="error"/>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-warning" role="alert">
+                            <strong>¡Importante!</strong> Si se requiere el uso de decimales debe utilizar la coma (,) para la separación de dígitos.
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <h:outputLabel value="Mtrs. producidos buenos:"  />
+                                <p:inputNumber id="mproducidos"
+                                            required="true"
+                                            disabled="#{capturaParadaGeController.capturaParadaGeActual.sinOp}"
+                                            requiredMessage="Ingresar Mtrs. producidos"
+                                            value="#{capturaParadaGeController.capturaParadaGeActual.mtrsProducidos}"
+                                            decimalPlaces="2">
+                                    <p:ajax listener="#{capturaParadaGeController.validarMtrosProducidos}" event="keyup" update="mproducidos kilos"/>  
+                                    <f:ajax execute="@this" render="kilos"/>
+                                </p:inputNumber>
+                                <p:message id="mproducidosMessage" for="mproducidos" styleClass="error"/>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <h:outputLabel value="Kilos producidos buenos:"  />
+                                <p:inputNumber id="kilos"
+                                               disabled="#{capturaParadaGeController.capturaParadaGeActual.sinOp}"
+                                            required="true"
+                                            requiredMessage="Ingresar kilos"
+                                            value="#{capturaParadaGeController.capturaParadaGeActual.peso}"
+                                            decimalPlaces="2">
+                                    <p:ajax listener="#{capturaParadaGeController.convertirKilosMtros}" event="keyup" update="mproducidos kilos"/>  
+                                    <f:ajax execute="@this" render="mproducidos"/>
+                                </p:inputNumber>
+                                <p:message id="kilosMessage" for="kilos" styleClass="error"/>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <h:outputLabel value="Factor de conversión:"  />
+                                <p:inputNumber id="conversion"
+                                            required="true"
+                                            disabled="true"
+                                            requiredMessage="Ingresar producto rechazado"
+                                            value="#{capturaParadaGeController.capturaParadaGeActual.factorConversion}"
+                                            decimalPlaces="2">
+                                    <p:ajax event="keypress" process="@this"/>
+                                    <f:ajax execute="@this" render="conversion"/>
+                                </p:inputNumber>
+                                <p:message id="conversionMessage" for="conversion" styleClass="error"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <h:outputLabel value="Clase b (Mtrs):"  />
+                                <p:inputNumber id="claseb"
+                                            required="true"
+                                            disabled="#{capturaParadaGeController.capturaParadaGeActual.sinOp}"
+                                            requiredMessage="Ingresar clase b"
+                                            value="#{capturaParadaGeController.capturaParadaGeActual.claseb}"
+                                            decimalPlaces="2">
+                                    <p:ajax event="keypress" process="@this"/>
+                                    <f:ajax execute="@this" render="claseb"/>
+                                </p:inputNumber>
+                                <p:message id="clasebMessage" for="claseb" styleClass="error"/>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <h:outputLabel value="Producto rechazado (Mtrs):"  />
+                                <p:inputNumber id="rechazado"
+                                            required="true"
+                                            disabled="#{capturaParadaGeController.capturaParadaGeActual.sinOp}"
+                                            requiredMessage="Ingresar producto rechazado"
+                                            value="#{capturaParadaGeController.capturaParadaGeActual.productoRechazado}"
+                                            decimalPlaces="2">
+                                    <p:ajax event="keypress" process="@this"/>
+                                    <f:ajax execute="@this" render="rechazado"/>
+                                </p:inputNumber>
+                                <p:message id="rechazadoMessage" for="rechazado" styleClass="error"/>
+                            </div>
+                        </div>
+                    </div>   
+                </div>
+                <div style="position: absolute; bottom: 4em;" >
+                    <div class="container row">
+                        <div class="col-sm-4 form-group">    
+                            <p:commandButton class="btn btn-primary btn-block"
+                                         ajax="false"
+                                         value="Guardar"
+                                         icon="fa fa-cube"
+                                         styleClass="boton-prime"
+                                         style="width: 100%"
+                                         action="#{capturaParadaGeController.add}"
+                                         onclick="onSubmitButton();"/>
+                        </div>
+                        <div class="col-sm-2 form-group">    
+
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <p:button styleClass="boton-primeRojo" 
+                                value="Cancelar" 
+                                outcome="lista"
+                                icon="fa fa-arrow-left"
+                                style="background: red !important; width: 100%"/>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+            <h:form id="formParada">
+                <div class="panel panel-primary form-group" style="border-radius: 0; margin-bottom: 5em">
+                    <div class="panel-heading"  style="border-radius: 0"><h4 class="letra-panelDescriEdu"><i class="fa fa-stop" aria-hidden="true"> </i> Ingresar paradas</h4></div>
+                    <div class="panel-body">   
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <h:outputLabel value="Código parada:"  />
+                                        <p:selectOneMenu id="codParada" 
+                                                style="width: 100% !important"
+                                                required="true"
+                                                disabled="#{capturaParadaGeController.capturaParadaGeActual.sinOp}"
+                                                requiredMessage="Ingresar código parada"
+                                                filter="true"
+                                                autoWidth="false"
+                                                filterMatchMode="contains"
+                                                value="#{capturaParadaGeController.detalleParadaGeActual.idParada}">
+                                        <f:selectItem itemLabel="Seleccionar..." itemValue="#{null}" /> 
+                                        <f:selectItems value="#{paradasGeController.listaParadasGe}" var="parada" itemValue="#{parada}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <h:outputLabel value="Hora inicio:"  />
+                                    <p:calendar id="horaInicioDetalle" 
+                                                autocomplete="off"
+                                                required="true"
+                                                disabled="#{capturaParadaGeController.capturaParadaGeActual.sinOp}"
+                                                requiredMessage="Favor ingresar la hora final"
+                                                value="#{capturaParadaGeController.detalleParadaGeActual.horaInicio}"
+                                                pattern="HH:mm"
+                                                timeOnly="true" >
+                                        <f:ajax execute="@this" render="horaInicioDetalleMessage"/>
+                                    </p:calendar>    
+                                    <p:message id="horaInicioDetalleMessage" for="horaInicioDetalle" styleClass="error"/>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <h:outputLabel value="Hora fin:"  />
+                                    <p:calendar id="horaFinDetalle"
+                                                autocomplete="off"
+                                                required="true"
+                                                disabled="#{capturaParadaGeController.capturaParadaGeActual.sinOp}"
+                                                requiredMessage="Favor ingresar la hora final"
+                                                value="#{capturaParadaGeController.detalleParadaGeActual.horaFin}"
+                                                pattern="HH:mm" 
+                                                timeOnly="true"> 
+                                        <f:ajax execute="@this" render="horaFinDetalleMessage"/>
+                                    </p:calendar> 
+                                    <p:message id="horaFinDetalleMessage" for="horaFinDetalle" styleClass="error"/>
+                                </div>
+                            </div>
+                        </div>    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <p:commandButton styleClass="boton-prime" 
+                                                     id="agregarDetalle"
+                                        action="#{capturaParadaGeController.addDetalle}"
+                                        disabled="#{capturaParadaGeController.capturaParadaGeActual.sinOp}"
+                                        value="Agregar parada"
+                                        style="height: 2.5em"
+                                        update="codParada horaInicioDetalle Create:horaInicio horaFinDetalle Create:horaFin tablaFuncion :growl"
+                                        icon="fa fa-level-down">
+                                    </p:commandButton>
+                                </div>
+                            </div>
+                        </div>
+                        <p:dataTable id="tablaFuncion" emptyMessage="No se encontraron registros" value="#{capturaParadaGeController.listaDetalleParadaGe}" var="item">
+                            <p:column headerText="Código de la parada">
+                                <h:outputText value="#{item.idParada.codigo}" style="font-weight: bold"/>
+                            </p:column>
+                            <p:column headerText="Descripción parada">
+                                <h:outputText value="#{item.idParada.descripcion}" style="font-weight: bold"/>
+                            </p:column>
+                            <p:column headerText="Hora inicio">
+                                <h:outputText value="#{item.horaInicio}">
+                                    <f:convertDateTime pattern="HH:mm" /> 
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Hora final">
+                                <h:outputText value="#{item.horaFin}">
+                                    <f:convertDateTime pattern="HH:mm" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column width="50">
+                                <p:commandButton icon="ui-icon-trash" 
+                                                 action="#{capturaParadaGeController.deleteDetalle}"
+                                                process="@this" 
+                                                update="tablaFuncion">
+                                    <f:ajax execute="@this"/>
+                                    <f:setPropertyActionListener value="#{item}" target="#{capturaParadaGeController.detalleParadaGeActual}"/>
+                                </p:commandButton>
+                           </p:column>
+                       </p:dataTable>
+                    </div>
+                </div> 
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

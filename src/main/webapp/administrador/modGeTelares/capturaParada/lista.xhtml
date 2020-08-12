@@ -1,0 +1,213 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{capturaParadaGeController.prepareDashboard}">
+                            <i class="fa fa-dashboard" aria-hidden="true"></i> 
+                            <span>Dashboard</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                        <h:commandLink action="#{capturaParadaGeController.prepareList}">
+                            <i class="fa fa-rocket"></i> 
+                            <span>Capturar información</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{operariosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de operarios</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{turnosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de turnos</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                         <h:commandLink action="#{nominalGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de Maquinas/Nominal</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{paradasGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de tipos de Paradas</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="/administrador/modGeTelares/menuMaestros">
+                            <i class="fa fa-cog"></i> 
+                            <span>Más configuraciones</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Captura de información <span style="font-weight: bold"> Telares</span></ui:define>   
+        <ui:define name="title2">Lista de capturas</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="List">
+                <p:outputPanel id="TablePanel">
+                    <p:dataTable value="#{capturaParadaGeController.listaCapturaParadaGe}" var="item"
+                                 rows="50" id="Table" paginator="true"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150">
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h4 class="colorLetra" style="font-weight: bold" >
+                                            Total captura: #{fn:length(capturaParadaGeController.listaCapturaParadaGe)}
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p:commandButton icon="ui-icon-folder-open"
+                                                         ajax="false"
+                                                        value="Crear nuevo"
+                                                        style="font-size: 1.2em !important;padding: 5px; right: 0 ; width: 100%"
+                                                        action="#{capturaParadaGeController.prepareCreate}"
+                                                        rendered="#{loginController.digitadorGeTelares || loginController.adminGe}">
+                                             <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{capturaParadaGeController.usuarioActual}"/>
+                                        </p:commandButton>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p:commandButton icon="ui-icon-folder-open"
+                                                         ajax="false"
+                                                        value="Ver reporte"
+                                                        style="font-size: 1.2em !important;padding: 5px; right: 0; width: 100%"
+                                                        action="#{reporteCapturaGeController.prepareReporte}"
+                                                        rendered="#{loginController.consultaGe || loginController.adminGe}">
+                                        </p:commandButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:ajax event="rowSelect" update="@form" />
+                        <p:ajax event="rowToggle" listener="#{capturaParadaGeController.llenarListaDetalleCaptura(item)}" update="Table"/>
+                        <p:column exportable="false" width="40">  
+                            <p:rowToggler/>  
+                        </p:column>  
+                        <p:rowExpansion>
+                            <p:dataTable style="font-size: 1.1em !important" value="#{capturaParadaGeController.listaDetalleParadaGe}" var="item2">
+                                <f:facet name="header">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                             <div class="col-md-8">
+                                                <h5 class="colorLetra" style="font-weight: bold; text-align: left" >
+                                                    Total paradas: #{fn:length(capturaParadaGeController.listaDetalleParadaGe)}
+                                                </h5>
+                                             </div>
+                                        </div>
+                                    </div>
+                                </f:facet>
+                                <p:column>
+                                    <f:facet name="header">Codigo parada</f:facet>
+                                    <h:outputText value="#{item2.idParada.codigo.toUpperCase()}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">Descripción parada</f:facet>
+                                    <h:outputText value="#{item2.idParada.descripcion.toUpperCase()}"/>
+                                </p:column>
+                                 <p:column>
+                                    <f:facet name="header">Hora inicio</f:facet>
+                                    <h:outputText value="#{item2.horaInicio}">
+                                        <f:convertDateTime pattern="HH:mm"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">Hora fin</f:facet>
+                                    <h:outputText value="#{item2.horaFin}">
+                                        <f:convertDateTime pattern="HH:mm"/>
+                                    </h:outputText>
+                                </p:column>
+                           </p:dataTable>
+                        </p:rowExpansion>
+                        <p:column filterBy="#{item.idCaptura}" width="60" filterMatchMode="contains" >
+                        <f:facet name="header"># captura</f:facet>
+                        <h:outputText style="font-weight: bold" value="#{item.idCaptura}"/>
+                    </p:column>                        
+                        <p:column filterBy="#{item.fechaCaptura}" filterMatchMode="contains" width="110" >
+                            <f:facet name="header">Fecha captura</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.fechaCaptura}">
+                                <f:convertDateTime pattern="YYYY/dd/MM"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{item.horaInicio}" width="70" filterMatchMode="contains">
+                            <f:facet name="header">Hora de inicio</f:facet>
+                            <h:outputText value="#{item.horaInicio}">
+                                <f:convertDateTime pattern="HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{item.horaFinal}" width="70" filterMatchMode="contains">
+                            <f:facet name="header">Hora final</f:facet>
+                            <h:outputText value="#{item.horaFinal}">
+                                <f:convertDateTime pattern="HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{item.idOperario.toString()}" filterMatchMode="contains">
+                            <f:facet name="header">Operario</f:facet>
+                            <h:outputText value="#{item.idOperario.toString()}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.idTurno.toString()}" filterMatchMode="contains">
+                            <f:facet name="header">turno</f:facet>
+                            <h:outputText value="#{item.idTurno.toString()}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.idNominal.toString()}" filterMatchMode="contains">
+                            <f:facet name="header">Maquina</f:facet>
+                            <h:outputText value="#{item.idNominal.toString()}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.op}" filterMatchMode="contains">
+                            <f:facet name="header">Op</f:facet>
+                            <h:outputText value="#{item.op}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.idItem}" width="100" filterMatchMode="contains">
+                            <f:facet name="header">Cod. item</f:facet>
+                            <h:outputText value="#{item.idItem}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcionItem}" filterMatchMode="contains">
+                            <f:facet name="header">Descripción item</f:facet>
+                            <h:outputText value="#{item.descripcionItem}"/>
+                        </p:column>
+                        <p:column width="100" >
+                            <p:commandButton rendered="#{loginController.adminGe}" ajax="false" icon="ui-icon-pencil" id="actualizar" action="#{capturaParadaGeController.prepareEdit}">
+                                <f:setPropertyActionListener value="#{item}" target="#{capturaParadaGeController.capturaParadaGeActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-botonActualizacion" for="actualizar" value="Actualizar" trackMouse="true" />
+                            <p:commandButton ajax="false" icon="ui-icon-newwin" id="duplicar" action="#{capturaParadaGeController.prepareDuplicar}">
+                                <f:setPropertyActionListener value="#{item}" target="#{capturaParadaGeController.capturaParadaGeActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-botonDuplicar" for="duplicar" value="Duplicar" trackMouse="true" />
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

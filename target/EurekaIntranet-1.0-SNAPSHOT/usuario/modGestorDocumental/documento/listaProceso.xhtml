@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > <h:commandLink style="color: #185291" value="Ver procesos" action="principal"/> > Documentos y formatos
+                </h:form>
+                <header class="header-paginas">
+                    <h2> <span class="titulo-paginas">Documentos y formatos por procesos</span></h2>
+                </header>
+                <div>
+                    <p:tabView dynamic="true">
+                        <p:tab title="Formatos de #{documentoController.procesoActual.toString()}">
+                           <h:form id="registrosFormList">
+                                <p:outputPanel id="registrosTablePanel">
+                                    <p:dataTable value="#{documentoController.listaDocumentosProcesoFtp}" var="registro"
+                                                 rows="50" paginator="true"  id="documentosTable" class="table-font table table-striped table-bordered dt-responsive nowrap"
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 rowsPerPageTemplate="50,100,150" emptyMessage="No se encontraron formatos con el criterio dado">
+                                        <p:column width="180" filterBy="#{registro.codigo}" filterMatchMode="contains" class="codigo-tabla">
+                                            <f:facet name="header"><span class="titulos-tablas"> Código del Formato </span></f:facet>
+                                            <h:outputText value="#{registro.codigo.toUpperCase()}"/>
+                                        </p:column>
+                                        <p:column  width="400" filterBy="#{registro.nombre}" filterMatchMode="contains" class="item-tabla">
+                                            <f:facet name="header"><span class="titulos-tablas">Nombre del formato</span></f:facet>
+                                            <h:outputText value="#{registro.nombre.toUpperCase()}"/>
+                                        </p:column>
+                                        <p:column filterBy="#{registro.version}" width="100" filterMatchMode="contains" class="item-tabla">
+                                            <f:facet class="titulos-tablas" name="header"><span class="titulos-tablas">Versión</span></f:facet>
+                                            <h:outputText value="#{registro.version}"/>
+                                        </p:column>
+                                        <p:column width="150" filterMatchMode="contains" class="item-tabla">
+                                            <f:facet name="header"><span class="titulos-tablas">Fecha de actualización</span></f:facet>
+                                            <h:outputText value="#{registro.fecha}">
+                                                <f:convertDateTime pattern="MMMM dd, YYYY"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column filterBy="#{registro.procedimiento.toString()}" filterMatchMode="contains" class="item-tabla">
+                                             <f:facet class="titulos-tablas" name="header"><span class="titulos-tablas">Procedimiento</span></f:facet>
+                                             <h:outputText value="#{registro.procedimiento.toString()}"/>
+                                         </p:column>
+                                        <p:column width="55" class="item-tabla">
+                                            <h:commandLink id="boton-descargar" class="btn-tabla">
+                                                <span class="fa fa-download"></span>
+                                                <f:attribute name="registro" value="#{registro}" />
+                                                <f:setPropertyActionListener value="#{registro}" target="#{documentoController.documentosActual}"/>
+                                                <p:fileDownload value="#{documentoController.descargaDOC}" />
+                                            </h:commandLink>
+                                            <p:tooltip id="descripcion-descargar" for="boton-descargar" value="Descargar formato" trackMouse="true"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:outputPanel>
+                            </h:form>
+                        </p:tab>
+                        <p:tab title="Documentos de #{documentoController.procesoActual.toString()}">
+                            <p:outputPanel id="documentosTablePanel" rendered="#{loginController.authenticated}">
+                                <h:form id="documentosFormList">
+                                     <p:dataTable value="#{documentoController.listaDocumentosProcesoDoc}" var="documento"
+                                                  rows="50" paginator="true"  id="documentosTable" class="table-font table table-striped table-bordered dt-responsive nowrap"
+                                                  paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                  rowsPerPageTemplate="50,100,150" emptyMessage="No se encontraron documentos con el criterio dado">
+                                        <p:column width="160" filterBy="#{documento.codigo}" filterMatchMode="contains" class="codigo-tabla">
+                                             <f:facet name="header"><span class="titulos-tablas"> Código del Formato </span></f:facet>
+                                             <h:outputText value="#{documento.codigo.toUpperCase()}"/>
+                                        </p:column>
+                                        <p:column  width="300" filterBy="#{documento.nombre}" filterMatchMode="contains" class="item-tabla">
+                                             <f:facet name="header"><span class="titulos-tablas">Nombre del documento</span></f:facet>
+                                             <h:outputText value="#{documento.nombre.toUpperCase()}"/>
+                                        </p:column>
+                                        <p:column filterBy="#{documento.version}" width="100" filterMatchMode="contains" class="item-tabla">
+                                             <f:facet class="titulos-tablas" name="header"><span class="titulos-tablas">Versión</span></f:facet>
+                                             <h:outputText value="#{documento.version}"/>
+                                        </p:column>
+                                        <p:column width="150" filterMatchMode="contains" class="item-tabla">
+                                             <f:facet name="header"><span class="titulos-tablas">Fecha de actualización</span></f:facet>
+                                             <h:outputText value="#{documento.fecha}">
+                                                 <f:convertDateTime pattern="MMMM dd, YYYY"/>
+                                             </h:outputText>
+                                        </p:column>
+                                        <p:column filterBy="#{documento.idProceso.toString()}" filterMatchMode="contains" class="item-tabla">
+                                            <f:facet class="titulos-tablas" name="header"><span class="titulos-tablas">Proceso</span></f:facet>
+                                            <h:outputText value="#{documento.idProceso.toString()}"/>
+                                        </p:column>
+                                        <p:column filterBy="#{documento.idTipoDocumento.toString()}" filterMatchMode="contains" class="item-tabla">
+                                            <f:facet class="titulos-tablas" name="header"><span class="titulos-tablas">tipo de documento</span></f:facet>
+                                            <h:outputText value="#{documento.idTipoDocumento.toString()}"/>
+                                        </p:column>
+                                         <p:column width="55" class="item-tabla">
+                                             <h:commandLink class="btn-tabla" id="boton-descargar" target="_blank" action="#{documentoController.prepareViewPdfUser}">
+                                                 <span class="fa fa-desktop"/>
+                                                 <f:attribute name="documento" value="#{documento}" />
+                                                 <f:setPropertyActionListener value="#{documento}" target="#{documentoController.documentosActual}"/>
+                                             </h:commandLink>
+                                             <p:tooltip id="descripcion-descargar" for="boton-descargar" value="Ver documento" trackMouse="true"/>
+                                         </p:column>
+                                     </p:dataTable>
+                                </h:form>
+                            </p:outputPanel>
+                            <p:outputPanel id="loginTablePanel" rendered="#{!loginController.authenticated}">
+                                <div class="alert alert-warning">
+                                    <strong>¡Error de autenticación!</strong> Debes iniciar sesión para poder ver los documentos del proceso.
+                                    <h:form>
+                                        <div class="card-body col-md-4">
+                                            <div>
+                                                <figure class="text-center">
+                                                    <img jsf:library="images" jsf:name="/logoSoloLoginWeb.png" width="70%"/>
+                                                </figure>
+                                            </div>
+                                            <h:panelGroup id="messagePanel" layout="block">
+                                                <h:messages class="alert alert-danger"/>
+                                            </h:panelGroup>
+                                            <div class="form-group">
+                                                <label class="label-formulario">Usuario:</label>
+                                                <h:inputText id="user" 
+                                                             class="form-control"
+                                                             value="#{loginController.username}" 
+                                                             required="true"
+                                                             requiredMessage="Escribe el correo">
+                                                </h:inputText>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="label-formulario">Contraseña:</label>
+                                                <h:inputSecret id="password" 
+                                                               class="form-control"
+                                                               value="#{loginController.password}" 
+                                                               required="true"
+                                                               requiredMessage="Escribir la contraseña"/>
+                                            </div> 
+                                            <div class="form-group text-center">
+                                                <h:commandButton class="btn-ver"
+                                                                 value="Acceder"
+                                                                 action="#{loginController.login}">
+                                                    <f:ajax onevent="dlg1.show()" execute="@this"/>
+                                                </h:commandButton>
+                                            </div>
+                                        </div>
+                                    </h:form>
+                                </div>
+                            </p:outputPanel>
+                        </p:tab>
+                    </p:tabView>
+                </div>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>

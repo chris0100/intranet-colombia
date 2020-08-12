@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <head jsf:id="head">
+        <title><ui:insert name="title"></ui:insert></title>
+        <link rel="icon" type="image/png" href="#{request.contextPath}/resources/images/logoSoloLoginWeb.png"/>
+        <style>
+            .NARANJA{
+                background : orange !important;
+                color: orange;
+                font-size: 1em;
+                font-weight: bold;
+                padding: 1.8em;
+                padding-right: 1.8em;
+                margin: 0 !important;
+                margin-left: -1em !important;
+            }
+            .NEGRO{
+                background : black !important;
+                color: black;
+                font-size: 1em;
+                font-weight: bold;
+                padding: 1.8em;
+                padding-right: 1.8em;
+                margin: 0 !important;
+                margin-left: -1em !important;
+            }
+            .ROJO{
+                background : red !important;
+                color: red;
+                font-size: 1em;
+                font-weight: bold;
+                padding: 1.8em;
+                padding-right: 1.8em;
+                margin: 0 !important;
+                margin-left: -1em !important;
+            }
+        </style>
+    </head>
+    <body onLoad="scrollwindow();" style="margin: 0 !important; padding: 0 !important" >
+        <p:outputPanel id="MyDivName" style="height: 100%;width: 100%; overflow:hidden;">
+            <p:carousel vertical="true" rendered="true" numVisible="1" effect="easeInStrong" autoPlayInterval="40000" style="margin-bottom:0" >
+                <p:tab title="Reporte 1" >
+                    <div style="text-align: center;">
+                        <h1 style="margin-left: .5em; display: inline-block; font-size: 1.3em">IN1430K.ex | PRODUCTO TERMINADO KOS: #{fn:length(reporteTableroControlController.listaR1)}</h1> 
+                    </div>
+                    <div style="text-align: right">
+                       <img style="right: 0; width:100px; margin-top: -80px" src="#{request.contextPath}/resources/images/logo_kos.png"/>
+                     
+                    </div>
+                    <h:form id="form-list1">
+                        <p:outputPanel id="periodoTablePanel">
+                            <p:dataTable value="#{reporteTableroControlController.listaR1}" var="item"
+                                         id="periodoTable" 
+                                         style="font-size: 1.2em !important">
+                                <p:column >
+                                    <f:facet name="header">Item</f:facet>
+                                    <h:outputText value="#{item.f_item}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Descripción ítem</f:facet>
+                                    <h:outputText value="#{item.f_desc_item}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. normal detalle ext 1</f:facet>
+                                    <h:outputText value="#{item.f_desc_ext_detalle_1_normal}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 2</f:facet>
+                                    <h:outputText value="#{item.f_desc_ext_detalle_2}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. existencia</f:facet>
+                                    <h:outputText value="#{item.f_cant_existencia_1}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Existencia mes</f:facet>
+                                    <h:outputText value="#{item.f_existencia_dias}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Costo prom diario</f:facet>
+                                    <h:outputText value="#{item.f_cons_prom_diario}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Nivel mínimo</f:facet>
+                                    <h:outputText value="#{item.f_nivel_minimo}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Nivel pedido</f:facet>
+                                    <h:outputText value="#{item.f_nivel_pedido}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                 <p:column >
+                                    <f:facet name="header">Nivel máximo</f:facet>
+                                    <h:outputText value="#{item.f_nivel_maximo}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Bodega</f:facet>
+                                    <h:outputText value="#{item.f_bodega}"/>
+                                </p:column>
+                                <p:column width="50">
+                                    <f:facet name="header">Color</f:facet>
+                                    <h:outputText value="#{item.color}" styleClass="#{item.color}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </h:form>
+                </p:tab>
+               <p:tab title="Reporte 2" >
+                    <div style="text-align: center;">
+                        <h1 style="margin-left: .5em; display: inline-block; font-size: 1.3em">IN1405K | MP KOS SIN EXTENSION: #{fn:length(reporteTableroControlController.listaR2)}</h1> 
+                    </div>
+                    <div style="text-align: right">
+                       <img style="right: 0; width:100px; margin-top: -80px" src="#{request.contextPath}/resources/images/logo_kos.png"/>
+                     
+                    </div>
+                    <h:form id="form-list2">
+                        <p:outputPanel id="periodoTablePanel">
+                            <p:dataTable value="#{reporteTableroControlController.listaR2}" var="item"
+                                         id="periodoTable" 
+                                         style="font-size: 1.2em !important">
+                                <p:column >
+                                    <f:facet name="header">Item</f:facet>
+                                    <h:outputText value="#{item.f_item}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Descripción ítem</f:facet>
+                                    <h:outputText value="#{item.f_desc_item}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. normal detalle ext 1</f:facet>
+                                    <h:outputText value="#{item.f_desc_ext_detalle_1_normal}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 2</f:facet>
+                                    <h:outputText value="#{item.f_desc_ext_detalle_2}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. existencia</f:facet>
+                                    <h:outputText value="#{item.f_cant_existencia_1}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Existencia mes</f:facet>
+                                    <h:outputText value="#{item.f_existencia_dias}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Costo prom. mes</f:facet>
+                                    <h:outputText value="#{item.f_cons_prom_diario}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Nivel mínimo</f:facet>
+                                    <h:outputText value="#{item.f_nivel_minimo}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Nivel pedido</f:facet>
+                                    <h:outputText value="#{item.f_nivel_pedido}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                 <p:column >
+                                    <f:facet name="header">Nivel máximo</f:facet>
+                                    <h:outputText value="#{item.f_nivel_maximo}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Bodega</f:facet>
+                                    <h:outputText value="#{item.f_bodega}"/>
+                                </p:column>
+                                <p:column width="50">
+                                    <f:facet name="header">Color</f:facet>
+                                    <h:outputText value="#{item.color}" styleClass="#{item.color}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Reporte 3" >
+                    <div style="text-align: center;">
+                        <h1 style="margin-left: .5em; display: inline-block; font-size: 1.3em">IN1460K | EMPAQUES / ENVASES KOS: #{fn:length(reporteTableroControlController.listaR3)}</h1> 
+                    </div>
+                    <div style="text-align: right">
+                       <img style="right: 0; width:100px; margin-top: -80px" src="#{request.contextPath}/resources/images/logo_kos.png"/>
+                     
+                    </div>
+                    <h:form id="form-list3">
+                        <p:outputPanel id="periodoTablePanel">
+                            <p:dataTable value="#{reporteTableroControlController.listaR3}" var="item"
+                                         id="periodoTable" 
+                                         style="font-size: 1.2em !important">
+                                <p:column >
+                                    <f:facet name="header">Item</f:facet>
+                                    <h:outputText value="#{item.f_item}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Descripción ítem</f:facet>
+                                    <h:outputText value="#{item.f_desc_item}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. normal detalle ext 1</f:facet>
+                                    <h:outputText value="#{item.f_desc_ext_detalle_1_normal}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Desc. extensión 2</f:facet>
+                                    <h:outputText value="#{item.f_desc_ext_detalle_2}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Cant. existencia</f:facet>
+                                    <h:outputText value="#{item.f_cant_existencia_1}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Existencia mes</f:facet>
+                                    <h:outputText value="#{item.f_existencia_dias}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Costo prom diario</f:facet>
+                                    <h:outputText value="#{item.f_cons_prom_diario}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Nivel mínimo</f:facet>
+                                    <h:outputText value="#{item.f_nivel_minimo}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Nivel pedido</f:facet>
+                                    <h:outputText value="#{item.f_nivel_pedido}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                 <p:column >
+                                    <f:facet name="header">Nivel máximo</f:facet>
+                                    <h:outputText value="#{item.f_nivel_maximo}">
+                                        <f:convertNumber type="currency"
+                                                             currencySymbol=""
+                                                             maxFractionDigits="0"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">Bodega</f:facet>
+                                    <h:outputText value="#{item.f_bodega}"/>
+                                </p:column>
+                                <p:column width="50">
+                                    <f:facet name="header">Color</f:facet>
+                                    <h:outputText value="#{item.color}" styleClass="#{item.color}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </h:form>
+                </p:tab>
+            </p:carousel>
+        </p:outputPanel>
+        <script src="#{request.contextPath}/resources/js/movimientoScroll.js"></script>
+        <script language="javascript">
+            setTimeout(function(){
+               window.location.reload(1);
+            }, 310000);
+        </script>
+    </body>
+</html>

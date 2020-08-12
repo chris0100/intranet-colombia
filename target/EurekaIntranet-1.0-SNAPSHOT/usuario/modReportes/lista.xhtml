@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Reportes
+                </h:form>
+                <header class="header-paginas">
+                    <h2><span class="titulo-paginas">Reportes</span></h2>
+                </header>
+                <div>
+                    <h:form>
+                        <h:commandLink class="btn-ver" value="TOC" action="/usuario/modReportes/toc/reporte"/>
+                        <h:commandLink class="btn-ver" value="CEDI"  action="/usuario/modReportes/cedi/reporte"/> 
+                        <h:commandLink class="btn-ver" value="Gestión humana" action="/usuario/modReportes/gestionHumana/reporte"/> 
+                        <h:commandLink class="btn-ver" value="Programación KOS" action="/usuario/modReportes/programacionKos/pantallaCompleta"/>
+                        <h:commandLink class="btn-ver" value="Tablero de control compras KOS" action="/usuario/modReportes/tableroControlKos/pantallaCompleta"/>
+                    </h:form>
+                </div>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>
+
+
+
+
+

@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{programadorGanttController.prepareList}">
+                                <i class="fa fa-cubes" aria-hidden="true"></i> 
+                            <span>Reporte Gantt</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{centroTrabajoController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Centros de trabajo</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                        <h:commandLink action="#{periodoController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Periodos</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{configuracionGanttController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Configuraciones</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Crear periodo</ui:define>   
+        <ui:define name="title2">Crear periodo</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="form-list">
+                <p:outputPanel id="periodoTablePanel">
+                    <p:dataTable value="#{periodoController.listaPeriodo}" var="item"
+                                 rows="50" id="periodoTable" paginator="true"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150"
+                                 style="width: 600px">
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h4 class="colorLetra" style="font-weight: bold" >
+                                            Total periodos: #{fn:length(periodoController.listaPeriodo)}
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-4">
+                                        
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p:commandButton icon="ui-icon-folder-open"
+                                                         ajax="false"
+                                                        value="Crear nuevo"
+                                                        style="font-size: 1.2em !important;padding: 5px; right: 0"
+                                                        action="#{periodoController.prepareCreate}">
+                                        </p:commandButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:column filterBy="#{item.mes}" filterMatchMode="contains">
+                            <f:facet name="header">Mes</f:facet>
+                            <h:outputText value="#{item.mes}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.anio}" filterMatchMode="contains">
+                            <f:facet name="header">Año</f:facet>
+                            <h:outputText value="#{item.anio}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

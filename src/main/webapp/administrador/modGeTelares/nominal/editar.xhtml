@@ -1,0 +1,220 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{capturaParadaGeController.prepareDashboard}">
+                            <i class="fa fa-dashboard" aria-hidden="true"></i> 
+                            <span>Dashboard</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{capturaParadaGeController.prepareList}">
+                            <i class="fa fa-rocket"></i> 
+                            <span>Capturar información</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{operariosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de operarios</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{turnosGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de turnos</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active" jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                         <h:commandLink action="#{nominalGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de Maquinas/Nominal</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="#{paradasGeController.prepareList}">
+                            <i class="fa fa-chevron-right"></i> 
+                            <span>Maestro de tipos de Paradas</span>
+                        </h:commandLink>
+                    </li>
+                    <li jsf:rendered="#{loginController.adminGe || loginController.consultaGe}">
+                        <h:commandLink action="/administrador/modGeTelares/menuMaestros">
+                            <i class="fa fa-cog"></i> 
+                            <span>Más configuraciones</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Nominal</ui:define>   
+        <ui:define name="title2">Nominal</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <div class="row">
+                <h:form id="Create">   
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h:outputLabel value="Nombre homologado de la maquina:"  />
+                            <div class="input-group">
+                                <span class="input-group-addon" style="background: lightgrey"><i class="fa fa-search"></i></span>
+                                <p:autoComplete forceSelection="true"
+                                    id="homologadoMaquina" 
+                                    disabled="#{nominalGeController.estadoMaquinaEncontrada}"
+                                    maxResults="20"  
+                                    style="width: 100%" 
+                                    value="#{nominalGeController.nominalGeActual.nombreHomologado}" 
+                                    completeMethod="#{nominalGeController.completeHomologadoMaquina}">
+                                    <p:ajax listener="#{nominalGeController.consultarDatosMaquinaHomologado}" event="itemSelect" update="codigo homologadoMaquina descMaquina "/>  
+                                    <f:ajax execute="@this" render="codigo descMaquina "/>
+                                    <f:ajax execute="@this" render="homologadoMaquinaMessage"/>
+                                </p:autoComplete> 
+                                <p:message id="homologadoMaquinaMessage" for="homologadoMaquina" styleClass="error"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Código de la maquina:"  />
+                            <div class="input-group">
+                                <span class="input-group-addon" style="background: lightgrey"><i class="fa fa-search"></i></span>
+                                <p:autoComplete forceSelection="true"
+                                    required="true"
+                                    requiredMessage="No se encontro código de la maquina"
+                                    id="codigo" 
+                                    disabled="#{nominalGeController.estadoMaquinaEncontrada}"
+                                    maxResults="20"  
+                                    style="width: 100%" 
+                                    value="#{nominalGeController.nominalGeActual.codigoMaquina}" 
+                                    completeMethod="#{nominalGeController.completeCodMaquina}">
+                                    <p:ajax listener="#{nominalGeController.consultarDatosMaquinaCodigo}" event="itemSelect" update="codigo descMaquina homologadoMaquina"/>  
+                                    <f:ajax execute="@this" render="descMaquina homologadoMaquina"/>
+                                    <f:ajax execute="@this" render="codigoMessage"/>
+                                </p:autoComplete> 
+                                <p:message id="codigoMessage" for="codigo" styleClass="error"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Nombre de la maquina:"  />
+                            <div class="input-group">
+                                <span class="input-group-addon" style="background: lightgrey"><i class="fa fa-search"></i></span>
+                                <p:autoComplete forceSelection="true"
+                                    required="true"
+                                    requiredMessage="No se encontro descripción de la maquina"
+                                    id="descMaquina" 
+                                    disabled="#{nominalGeController.estadoMaquinaEncontrada}"
+                                    maxResults="20"  
+                                    style="width: 100%" 
+                                    value="#{nominalGeController.nominalGeActual.nombreMaquina}" 
+                                    completeMethod="#{nominalGeController.completeDescMaquina}">
+                                    <p:ajax listener="#{nominalGeController.consultarDatosMaquinaDesc}" event="itemSelect" update="codigo descMaquina homologadoMaquina"/>  
+                                    <f:ajax execute="@this" render="codigo  homologadoMaquina"/>
+                                    <f:ajax execute="@this" render="descMaquinaMessage"/>
+                                </p:autoComplete> 
+                                <p:message id="descMaquinaMessage" for="descMaquina" styleClass="error"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Proceso:"  />
+                            <p:selectOneMenu id="proceso" 
+                                            style="width: 100% !important"
+                                            required="true"
+                                            requiredMessage="Ingresar el equipo"
+                                            filter="true"
+                                            autoWidth="false"
+                                            filterMatchMode="contains"
+                                            value="#{nominalGeController.nominalGeActual.idProceso}">
+                                <f:selectItem itemLabel="Seleccionar..." itemValue="#{null}" /> 
+                                <f:selectItems value="#{procesoGeController.listaProceso}" var="proceso" itemValue="#{proceso}"/>
+                                <f:ajax execute="@this" render="procesoMessage"/>
+                            </p:selectOneMenu>
+                            <p:message id="procesoMessage" for="proceso" styleClass="error"/>
+                        </div>
+                        <div class=" form-group">
+                            <h:outputLabel class="letra-form" value="Rpm:"/>
+                            <p:inputNumber id="rpm"
+                                        required="true"
+                                        requiredMessage="Ingresar rpm"
+                                        value="#{nominalGeController.nominalGeActual.rpm}"
+                                        decimalPlaces="0">
+                                <p:ajax event="keypress" process="@this"/>
+                            </p:inputNumber>
+                            <p:message id="rpmMessage" for="rpm" styleClass="error"/>
+                        </div>
+                        <div class=" form-group">
+                            <h:outputLabel class="letra-form" value="Puntas:"/>
+                            <p:inputNumber id="puntas"
+                                        required="true"
+                                        requiredMessage="Ingresar puntas"
+                                        value="#{nominalGeController.nominalGeActual.puntas}"
+                                        decimalPlaces="0">
+                                <p:ajax event="keypress" process="@this"/>
+                            </p:inputNumber>
+                            <p:message id="puntasMessage" for="puntas" styleClass="error"/>
+                        </div>
+                        <div class=" form-group">
+                            <h:outputLabel class="letra-form" value="Factor de conversión:"/>
+                            <p:inputNumber id="factorConversion"
+                                        required="true"
+                                        requiredMessage="Ingresar factor de conversión"
+                                        value="#{nominalGeController.nominalGeActual.factorConversion}"
+                                        decimalPlaces="2">
+                                <p:ajax event="keypress" process="@this"/>
+                            </p:inputNumber>
+                            <p:message id="factorConversionMessage" for="factorConversion" styleClass="error"/>
+                        </div>
+                         <div class="form-group">
+                            <p:selectBooleanCheckbox value="#{nominalGeController.nominalGeActual.estado}" itemLabel="Activado"/>
+                        </div>
+                        <div class="form-group">
+                            <p:commandButton class="btn btn-primary btn-block"
+                                             ajax="false"
+                                             value="Guardar"
+                                             icon="fa fa-cube"
+                                             styleClass="boton-prime"
+                                             style="width: 100%"
+                                             action="#{nominalGeController.update}"
+                                             onclick="onSubmitButton();"/>
+                            <p:button styleClass="boton-primeRojo" 
+                                    value="Cancelar" 
+                                    outcome="lista"
+                                    icon="fa fa-arrow-left"
+                                    style="margin-top: 10px; background: red !important; width: 100%"/>
+                        </div> 
+                    </div>
+                </h:form>
+                <h:form>
+                    <div class="col-md-1">
+                         <p:commandButton class="btn btn-primary btn-block"
+                                id="limpiarCamposMaquina"
+                                icon="fa fa-refresh"
+                                style="margin-top: 1.8em"
+                                action="#{nominalGeController.activarCamposMaquina}"
+                                update="Create:codigo Create:descMaquina Create:homologadoMaquina"/>
+                         <p:tooltip for="limpiarCamposMaquina" value="Limpiar información de maquina" trackMouse="true" />
+                    </div>
+                </h:form>
+                </div>
+        </ui:define>
+    </ui:composition>
+</html>

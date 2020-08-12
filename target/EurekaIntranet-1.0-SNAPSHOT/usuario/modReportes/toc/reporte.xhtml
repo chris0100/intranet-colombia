@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > <h:commandLink class="navegacion-paginas" value="Reportes" action="/usuario/modReportes/lista"/> > TOC - Reportes
+                </h:form>
+                <header class="header-paginas">
+                    <h2><span class="titulo-paginas">TOC - Reportes</span></h2>
+                </header>
+                <div style="display: inline-block !important;margin-bottom: 2em; vertical-align: top;margin-left: .3em; border: 2px solid #185291; width: 100%;" class="panel-body row">
+                    <div class="col-md-12">
+                        <p:carousel numVisible="1" effect="easeInStrong" autoPlayInterval="300000" style="margin-bottom:0" easing="easeOutBounce">
+                            <f:facet name="header">
+                                <h:form>
+                                    <h:commandLink id="tv" class="btn btn-primary" style="color: white" action="pantallaCompleta">
+                                        <li class="fa fa-television"></li> 
+                                    </h:commandLink>
+                                    <p:tooltip for="tv" value="Ver en pantalla completa"/>
+                                </h:form>
+                            </f:facet>
+                            <p:tab title="Reporte 1">
+                                <h3>Plan 50(Grupo) - SEP POL 4</h3>    
+                                <iframe width="100%"
+                                    height="1000"
+                                    src="http://192.168.160.153:8080/Reports_EKACORP/Pages/Report.aspx?ItemPath=%2fEka_Reportes%2fReportesEstadoPriorizacionColores%2fpoliester-reporte1">
+                                </iframe>
+                            </p:tab>
+                            <p:tab title="Reporte 2">
+                                <h3>Plan 50(Grupo) - FIJAS POL 3</h3>  
+                                <iframe width="100%"
+                                    height="1000"
+                                    src="http://192.168.160.153:8080/Reports_EKACORP/Pages/Report.aspx?ItemPath=%2fEka_Reportes%2fReportesEstadoPriorizacionColores%2fpoliester-reporte2">
+                                </iframe>
+                            </p:tab>
+                            <p:tab title="Reporte 3">
+                                <h3>Plan 50(Grupo) - FIJAS POL 4</h3>
+                                <iframe width="100%"
+                                    height="1000"
+                                    src="http://192.168.160.153:8080/Reports_EKACORP/Pages/Report.aspx?ItemPath=%2fEka_Reportes%2fReportesEstadoPriorizacionColores%2fpoliester-reporte3">
+                                </iframe>
+                            </p:tab>
+                            <p:tab title="Reporte 4">
+                                <h3>Plan 50(Grupo) - INVISIBLES</h3>
+                                <iframe width="100%"
+                                    height="1000"
+                                    src="http://192.168.160.153:8080/Reports_EKACORP/Pages/Report.aspx?ItemPath=%2fEka_Reportes%2fReportesEstadoPriorizacionColores%2fpoliester-reporte4">
+                                </iframe>
+                            </p:tab>
+                            <p:tab title="Reporte 5">
+                                <h3>Plan 50(Grupo) - SEP POL 6 EKA</h3>
+                                <iframe width="100%"
+                                    height="1000"
+                                    src="http://192.168.160.153:8080/Reports_EKACORP/Pages/Report.aspx?ItemPath=%2fEka_Reportes%2fReportesEstadoPriorizacionColores%2fpoliester-reporte5">
+                                </iframe>
+                            </p:tab>
+                            <p:tab title="Reporte 6">
+                                <h3>Plan 50(Grupo) - FIJAS POL 6 </h3>
+                                <iframe width="100%"
+                                    height="1000"
+                                    src="http://192.168.160.153:8080/Reports_EKACORP/Pages/Report.aspx?ItemPath=%2fEka_Reportes%2fReportesEstadoPriorizacionColores%2fpoliester-reporte6">
+                                </iframe>
+                            </p:tab>
+                            <p:tab title="Reporte 7">
+                                <h3>Plan 50(Grupo) - CC POL 3 EKA | CC POL 4 | CC POL 6 EKA </h3>
+                                <iframe width="100%"
+                                    height="1000"
+                                    src="http://192.168.160.153:8080/Reports_EKACORP/Pages/Report.aspx?ItemPath=%2fEka_Reportes%2fReportesEstadoPriorizacionColores%2fpoliester-reporte7">
+                                </iframe>
+                            </p:tab>
+                        </p:carousel>
+                    </div>
+                </div>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>

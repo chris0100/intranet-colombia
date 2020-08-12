@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{documentoController.prepareList}">
+                            <i class="fa fa-book"></i> 
+                            <span>Gestión de documentos</span>
+                        </h:commandLink>
+                    </li>
+                    <li >
+                        <h:commandLink action="#{procesoController.prepareList}">
+                            <i class="fa fa-cubes"></i> 
+                            <span>Maestros de procesos</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                         <h:commandLink action="#{tipoDocumentoController.prepareList}">
+                            <i class="fa fa-file-text"></i> 
+                            <span>Maestros de tipos archivos</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Gestión documental</ui:define>   
+        <ui:define name="title2">Lista de tipos de archivos</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="procesoFormList">
+                <p:outputPanel id="procesoTablePanel">
+                    <p:dataTable value="#{tipoDocumentoController.listaTipoDocumento}" var="item"
+                                 rows="50" id="procesoTable" paginator="true"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150">
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4 class="colorLetra" style="font-weight: bold" >
+                                            Total tipos de archivos: #{fn:length(tipoDocumentoController.listaTipoDocumento)}
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p:commandButton icon="ui-icon-folder-open"
+                                                         ajax="false"
+                                                        value="Crear nuevo tipo de archivo"
+                                                        style="font-size: 1.2em !important;padding: 5px; right: 0"
+                                                        action="#{tipoDocumentoController.prepareCreate}"/>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <h:commandLink id="exportExcel">
+                                            <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                                            <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                                    target="procesoTable" fileName="tabla" />
+                                        </h:commandLink>
+                                        <p:tooltip id="descripcion-exportExcel" for="exportExcel" value="Exportar tabla en formato .xls" trackMouse="true"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:column filterBy="#{item.idTipoDocumento}" filterMatchMode="contains" width="110" >
+                            <f:facet name="header">Código</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.idTipoDocumento.toUpperCase()}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.nombre}" filterMatchMode="contains" width="200">
+                            <f:facet name="header">Nombre</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.nombre.toUpperCase()}"/>
+                        </p:column>
+                        <p:column width="50">
+                            <p:commandButton ajax="false" icon="ui-icon-pencil" id="actualizar" action="#{tipoDocumentoController.prepareEdit}" >
+                                <f:setPropertyActionListener value="#{item}" target="#{tipoDocumentoController.tipoDocumentoActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-botonActualizacion" for="actualizar" value="Actualizar tipo de archivo" trackMouse="true" />
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

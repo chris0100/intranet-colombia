@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{programadorGanttController.prepareList}">
+                                <i class="fa fa-cubes" aria-hidden="true"></i> 
+                            <span>Reporte Gantt</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{centroTrabajoController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Centros de trabajo</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{periodoController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Periodos</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                        <h:commandLink action="#{configuracionGanttController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Configuraciones</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Lista de configuraciones</ui:define>   
+        <ui:define name="title2">Lista de configuraciones</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="form-list">
+                <p:outputPanel id="periodoTablePanel">
+                    <p:dataTable value="#{configuracionGanttController.listaConfiguracion}" var="item"
+                                 rows="50" id="periodoTable" paginator="true"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150"
+                                 style="width: 1000px">
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h4 class="colorLetra" style="font-weight: bold" >
+                                            Total configuraciones: #{fn:length(configuracionGanttController.listaConfiguracion)}
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-4">
+                                        
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p:commandButton icon="ui-icon-folder-open"
+                                                         ajax="false"
+                                                        value="Crear nuevo"
+                                                        style="font-size: 1.2em !important;padding: 5px; right: 0"
+                                                        action="#{configuracionGanttController.prepareCreate}">
+                                        </p:commandButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:column filterBy="#{item.idConfiguracion}" width="80" filterMatchMode="contains">
+                            <f:facet name="header">Cod. </f:facet>
+                            <h:outputText value="#{item.idConfiguracion}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.nombre}" width="300" filterMatchMode="contains">
+                            <f:facet name="header">Nombre</f:facet>
+                            <h:outputText value="#{item.nombre.toUpperCase()}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.numeroTurnos}" filterMatchMode="contains">
+                            <f:facet name="header">Número de turnos</f:facet>
+                            <h:outputText value="#{item.numeroTurnos}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.undHora}" filterMatchMode="contains">
+                            <f:facet name="header">Unidad por hora</f:facet>
+                            <h:outputText value="#{item.undHora}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.horaTurno}" filterMatchMode="contains">
+                            <f:facet name="header">Hora por tunos</f:facet>
+                            <h:outputText value="#{item.horaTurno}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.numeroMaquinas}" filterMatchMode="contains">
+                            <f:facet name="header">Número de maquinas</f:facet>
+                            <h:outputText value="#{item.numeroMaquinas}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.cargaProyectada}" filterMatchMode="contains">
+                            <f:facet name="header">Carga proyectada</f:facet>
+                            <h:outputText value="#{item.cargaProyectada}">
+                                <f:convertNumber type="currency"
+                                                     currencySymbol=""
+                                                     maxFractionDigits="0"/>
+                            </h:outputText>
+                        </p:column>
+                         <p:column width="80">
+                            <p:commandButton id="editar"
+                                             action="#{configuracionGanttController.prepareEdit}"
+                                           icon="fa fa-edit"
+                                           ajax="false"
+                                           style="color: white"> 
+                                <f:setPropertyActionListener value="#{item}" target="#{configuracionGanttController.configuracionActual}"/>
+                            </p:commandButton>
+                            <p:tooltip for="editar" value="Editar configuración"/>
+                            <p:commandButton id="duplicar"
+                                             action="#{configuracionGanttController.prepareDuplicar}"
+                                           icon="fa fa-exchange"
+                                           ajax="false"
+                                           style="color: white"> 
+                                <f:setPropertyActionListener value="#{item}" target="#{configuracionGanttController.configuracionActual}"/>
+                            </p:commandButton>
+                            <p:tooltip for="duplicar" value="Duplicar configuración"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

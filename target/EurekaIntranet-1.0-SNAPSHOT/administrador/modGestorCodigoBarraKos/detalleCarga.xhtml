@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{lecturasController.prepareCreate}">
+                            <i class="fa fa-barcode"></i> 
+                            <span>Crear código</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="log">
+                            <i class="fa fa-check"></i> 
+                            <span>Log cargados</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{lecturasController.prepareLogOp}">
+                            <i class="fa fa-codepen"></i> 
+                            <span>Log cargados por OP</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator></p:separator>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Ingresar códigos de barras</ui:define> 
+        <ui:define name="title2">Semiautomático</ui:define>
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="formulario-crearDocu">
+                <div class="panel panel-danger">
+                    <div class="panel-heading"><span style="font-weight: bold; font-size: 1.3em">Observaciones</span></div>
+                    <div class="panel-body">
+                        <h:outputText style="font-weight: bold; font-size: 1.3em" value="#{lecturasController.lecturasActual.f001Observaciones}" escape="false">
+                        </h:outputText>
+                    </div>
+                    <p:commandButton icon="ui-icon-arrowthick-1-w" ajax="false" value="Volver atrás" action="#{lecturasController.prepareCreate}">
+                    </p:commandButton>
+                  </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

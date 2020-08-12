@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{facturaController.prepareList()}">
+                            <i class="fa fa-file-text-o"></i> 
+                            <span>Gestión de facturas</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estandar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Gestión de facturas</ui:define>   
+        <ui:define name="title2">Administración de arcchivos</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="documentosFormList">
+                <p:outputPanel id="documentosTablePanel">
+                    <p:dataTable value="#{facturaController.listaFactura}" var="item"
+                                 rows="50" id="documentosTable" paginator="true" style="width:50%"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150">
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h4 class="colorLetra" style="font-weight: bold" >
+                                            Total de archivos: #{fn:length(facturaController.listaFactura)}
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <h:commandLink id="exportExcel">
+                                            <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                                            <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                                    target="documentosTable" fileName="tabla" />
+                                        </h:commandLink>
+                                        <p:tooltip id="descripcion-exportExcel" for="exportExcel" value="Exportar tabla en formato .xls" trackMouse="true"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:column filterMatchMode="contains" filterBy="#{item.toString()}">
+                            <f:facet name="header">Nombre factura</f:facet>
+                            <h:outputText value="#{item.toString()}" style="font-weight: bold; font-size: 1.3em"/>
+                        </p:column>   
+                        <p:column width="80">
+                            <p:commandButton icon="ui-icon-search" ajax="false" id="ver" value="Ver" action="#{facturaController.prepareView}" >
+                                <f:setPropertyActionListener value="#{item.toString()}" target="#{facturaController.facturaActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-print" for="ver" value="Vista previa del contenido" trackMouse="true"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{listaEmpaqueController.prepareListaEmpaque}"
+                                       rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi || loginController.gestorLpVentas}">
+                            <i class="fa fa-cubes" aria-hidden="true"></i> 
+                            <span>Listas de empaque</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{listaEmpaqueController.prepareListaEmpaqueCompleta}"
+                                       rendered="#{loginController.gestorLpAdmin}">
+                            <i class="fa fa-list" aria-hidden="true"></i> 
+                            <span>Listas de empaque completa</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                        <h:commandLink action="#{dimensionCajaController.prepareList}"
+                                       rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi || loginController.gestorLpVentas}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Lista de dimensiones de cajas</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{configImpresoraLabelController.prepareList}"
+                                       rendered="#{loginController.gestorLpAdmin}">
+                            <i class="fa fa-print"></i> 
+                            <span>Lista asignación impresora</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Editar nueva dimensión de caja</ui:define> 
+        <ui:define name="title2">Ingresa los datos</ui:define>
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="formulario-crearDocu">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="col-md-4 form-group">
+                            <h:outputLabel value="Alto (CM):"  />
+                            <p:inputNumber id="alto"
+                                        style="font-size: 1.2em !important"
+                                        required="true"
+                                        requiredMessage="ingresar alto"
+                                        value="#{dimensionCajaController.dimensionCajaActual.alto}"
+                                        decimalPlaces="0">
+                            </p:inputNumber>
+                            <p:message id="altoMessage" for="alto" styleClass="error"/>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <h:outputLabel value="Largo (CM):"  />
+                            <p:inputNumber id="largo"
+                                        style="font-size: 1.2em !important"
+                                        required="true"
+                                        requiredMessage="Ingresar largo"
+                                        value="#{dimensionCajaController.dimensionCajaActual.largo}"
+                                        decimalPlaces="0">
+                            </p:inputNumber>
+                            <p:message id="largoMessage" for="largo" styleClass="error"/>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <h:outputLabel value="Ancho (CM):"  />
+                            <p:inputNumber id="ancho"
+                                        style="font-size: 1.2em !important"
+                                        required="true"
+                                        requiredMessage="Ingresar ancho"
+                                        value="#{dimensionCajaController.dimensionCajaActual.ancho}"
+                                        decimalPlaces="0">
+                            </p:inputNumber>
+                            <p:message id="anchoMessage" for="ancho" styleClass="error"/>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <h:outputLabel class="letra-form" value="Peso máximo de la caja (KG):"/>
+                            <p:inputNumber id="peso"
+                                        style="font-size: 1.2em !important"
+                                        required="true"
+                                        requiredMessage="Ingresar peso"
+                                        value="#{dimensionCajaController.dimensionCajaActual.peso}"
+                                        decimalPlaces="2">
+                                <p:ajax event="keypress" process="@this"/>
+                            </p:inputNumber>
+                            <p:message id="pesoMessage" for="peso" styleClass="error"/>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <h:outputLabel class="letra-form" value="Peso corrugada de la caja (KG):"/>
+                            <p:inputNumber id="pesoCorrugada"
+                                        style="font-size: 1.2em !important"
+                                        required="true"
+                                        requiredMessage="Ingresar peso"
+                                        value="#{dimensionCajaController.dimensionCajaActual.pesoCorrugada}"
+                                        decimalPlaces="2">
+                                <p:ajax event="keypress" process="@this"/>
+                            </p:inputNumber>
+                            <p:message id="pesoCorrugadaMessage" for="pesoCorrugada" styleClass="error"/>
+                        </div>
+                        <div class="col-md-12">
+                            <p:commandButton class="btn btn-primary btn-block"
+                                             ajax="false"
+                                             value="Guardar"
+                                             icon="fa fa-cube"
+                                             styleClass="boton-prime"
+                                             style="width: 100%"
+                                             action="#{dimensionCajaController.update}"
+                                             onclick="onSubmitButton();"/>
+                            <p:button styleClass="boton-primeRojo" 
+                                    value="Cancelar" 
+                                    outcome="lista"
+                                    icon="fa fa-arrow-left"
+                                    style="margin-top: 10px; background: red !important; width: 100%"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <img jsf:library="images" jsf:name="/modListaEmpaque/caja.jpg" class="img-responsive img-bordered" alt="img1"/>
+                    </div>
+                </div>    
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

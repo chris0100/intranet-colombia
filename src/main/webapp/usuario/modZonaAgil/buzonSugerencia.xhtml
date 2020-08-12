@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Buzón de sugerencias
+                </h:form>
+                <header class="header-paginas">
+                    <img jsf:library="images" jsf:name="/modBuzonSugerencias/bannerBuzonSugerencias.jpg" width="100%" alt="Banner"/>
+                </header>
+                <div>
+                   <h:form id="formulario-crearBuzon">
+                        <div class="row">
+                            <div class="buzon-sugerenciaContainer">
+                                <div class="col-md-12">
+                                    <div class="col-md-12 form-group card card-body card-personal">
+                                        ¡Hola!, este es el buzón de sugerencias Eka, en donde podrás enviarnos todas tus opiniones. 
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 form-group">
+                                            <h:outputLabel class="label-formulario" value="Tipo de asunto:"  />
+                                            <h:selectOneMenu id="tipo"
+                                                             class="form-control" 
+                                                             value="#{buzonSugerenciaController.buzonSugerenciaActual.idTipoSugerencia}" 
+                                                             requiredMessage="Por favor indique el tipo de asunto" 
+                                                             required="true" >
+                                                <f:selectItem itemLabel="Seleccionar.." value="#{null}"/> 
+                                                <f:selectItems value="#{tipoSugerenciaController.listaTipoSugerencia}"/>
+                                                <f:ajax execute="@this" render="divPanel"/>
+                                            </h:selectOneMenu>
+                                            <span class="highlight"></span>
+                                            <span class="bar"></span>
+                                            <p:message id="tipoMessage" for="tipo" styleClass="error"/>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            <h:outputLabel class="label-formulario" value="¿Cuál es tu nombre?:"  />
+                                            <h:inputText id="usuario"
+                                                         class="form-control" 
+                                                         maxlength="80"
+                                                        style="width: 100% !important;"
+                                                        value="#{buzonSugerenciaController.buzonSugerenciaActual.nombreUsuario}"> 
+                                            </h:inputText>
+                                            <span class="highlight"></span>
+                                            <span class="bar"></span>
+                                        </div> 
+                                        <div class="col-md-6 form-group">
+                                            <h:outputLabel class="label-formulario" value="¿Cuál es el área a la que perteneces?:"  />
+                                            <h:selectOneMenu id="area"
+                                                             class="form-control" 
+                                                            style="width: 100% !important"
+                                                            value="#{buzonSugerenciaController.buzonSugerenciaActual.area}" 
+                                                            requiredMessage="Por favor indicar el área"
+                                                            required="true">
+                                                   <f:selectItem itemLabel="Seleccionar.." />
+                                                   <f:selectItems value="#{procesoController.listaProcesoString}"/>
+                                            </h:selectOneMenu>
+                                            <span class="highlight"></span>
+                                            <span class="bar"></span>
+                                            <p:message id="areaMessage" for="area" styleClass="error"/>
+                                        </div> 
+                                        <div class="col-md-12 form-group">
+                                            <h:outputLabel class="label-formulario" value="Descripción:"/>
+                                            <p:inputTextarea id="descripcion"
+                                                             maxlength="500"
+                                                             class="form-control" 
+                                                             required="true"
+                                                             requiredMessage="Por favor poner una breve descripción"
+                                                             value="#{buzonSugerenciaController.buzonSugerenciaActual.descripcion}">
+                                            </p:inputTextarea>
+                                            <p:message id="descripcionMessage" for="descripcion" styleClass="error"/>
+                                            <span class="highlight"></span>
+                                            <span class="bar"></span>
+                                        </div>
+                                        <div class="col-md-12 form-group text-center">
+                                            <h:commandButton class="btn-ver"
+                                                             style="margin-top: .5em; margin-bottom: 0em; font-weight: bold; font-size: 1.1em"
+                                                             value="Enviar"
+                                                             action="#{buzonSugerenciaController.add}"
+                                                             onclick="onSubmitButton();"/>
+                                        </div>  
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>
+
+
+
+
+

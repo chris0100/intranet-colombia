@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li style="margin-top: 20px">
+                        <h:commandLink action="#{listaEmpaqueController.prepareListaEmpaque}"
+                                       rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi || loginController.gestorLpVentas}">
+                            <i class="fa fa-cubes" aria-hidden="true"></i> 
+                            <span>Listas de empaque</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{listaEmpaqueController.prepareListaEmpaqueCompleta}"
+                                       rendered="#{loginController.gestorLpAdmin}">
+                            <i class="fa fa-list" aria-hidden="true"></i> 
+                            <span>Listas de empaque completa</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="#{dimensionCajaController.prepareList}"
+                                       rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi || loginController.gestorLpVentas}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Lista de dimensiones de cajas</span>
+                        </h:commandLink>
+                    </li>
+                    <li class="active">
+                        <h:commandLink action="#{configImpresoraLabelController.prepareList}"
+                                       rendered="#{loginController.gestorLpAdmin}">
+                            <i class="fa fa-print"></i> 
+                            <span>Lista asignación impresora</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Lista de asignación de impresora</ui:define>   
+        <ui:define name="title2">Lista de asignación de impresora</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="dimensionFormList">
+                <p:outputPanel id="dimensionTablePanel">
+                    <p:dataTable value="#{configImpresoraLabelController.listaConfigImpresora}" var="item"
+                                 rows="50" id="procesoTable" paginator="true"
+                                 style="width: 50% !important"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="50, 100,150">
+                        <f:facet name="header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4 class="colorLetra" style="font-weight: bold" >
+                                            Total impresoras: #{fn:length(configImpresoraLabelController.listaConfigImpresora)}
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p:commandButton icon="ui-icon-folder-open"
+                                                         ajax="false"
+                                                        value="Crear nuevo"
+                                                        style="font-size: 1.2em !important;padding: 5px; right: 0"
+                                                        action="#{configImpresoraLabelController.prepareCreate}"
+                                                        rendered="#{loginController.gestorLpAdmin}">
+                                        </p:commandButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:facet>
+                        <p:column filterBy="#{item.idConfigImpresora}" filterMatchMode="contains" width="110" >
+                            <f:facet name="header">Código</f:facet>
+                            <h:outputText style="font-weight: bold" value="#{item.idConfigImpresora}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.nombreImpresora}" filterMatchMode="contains">
+                            <f:facet name="header">Nombre impresora</f:facet>
+                            <h:outputText value="#{item.nombreImpresora}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.descripcionImpresora}" filterMatchMode="contains">
+                            <f:facet name="header">Descripción impresora</f:facet>
+                            <h:outputText value="#{item.descripcionImpresora}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.nombreEquipo}" filterMatchMode="contains">
+                            <f:facet name="header">Nombre del equipo</f:facet>
+                            <h:outputText value="#{item.nombreEquipo}"/>
+                        </p:column>
+                        <p:column width="80">
+                            <p:commandButton ajax="false" icon="ui-icon-pencil" id="actualizar" action="#{configImpresoraLabelController.prepareEdit}"
+                                             rendered="#{loginController.gestorLpAdmin}">
+                                <f:setPropertyActionListener value="#{item}" target="#{configImpresoraLabelController.configImpresoraActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-botonActualizacion" for="actualizar" value="Actualizar impresora" trackMouse="true" />
+                            <p:commandButton ajax="false" icon="ui-icon-trash" id="eliminar" action="#{configImpresoraLabelController.delete}"
+                                             rendered="#{loginController.gestorLpAdmin}">
+                                <f:setPropertyActionListener value="#{item}" target="#{configImpresoraLabelController.configImpresoraActual}"/>
+                            </p:commandButton>
+                            <p:tooltip id="descripcion-botonEliminar" for="eliminar" value="Eliminar impresora" trackMouse="true" />
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

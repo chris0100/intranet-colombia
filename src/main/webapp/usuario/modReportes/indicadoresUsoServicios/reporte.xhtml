@@ -1,0 +1,284 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/templateUsuario.xhtml">
+        <ui:define name="title">Eureka | Intranet</ui:define>        
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <section class="container container-paginas">
+                <h:form>
+                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > <h:commandLink style="color: #185291" value="Reportes" action="/usuario/modReportes/lista"/> > Nuestros desarrollos
+                </h:form>
+                <header class="header-paginas">
+                    <h3><span class="titulo-paginas">Plataformas y servicios tecnológicos desarrollados por Eka Corporación S.A.</span></h3>
+                </header>
+                <div class="col-md-12" style="margin-top: 10px">
+                    <div class="titulo-moduloAnalisis">
+                        <span> Gestor documental</span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="panel-moduloAnalisis">
+                        <div class="form-group">
+                            <h4 style="margin-top: 0 !important">Descripción del modulo</h4>
+                            <div>
+                                En este modulo se gestionan los documentos y formatos de la compañía, aplicando medidas
+                                de seguridad para el acceso a los documentos confidenciales, los cuales son
+                                administrados y gestionados por un usuario con roles y permisos requeridos para esta función.
+                                <br></br><br></br>
+                                Los usuarios pueden acceder a través de la intranet y consultar los documentos que requieran,
+                                estos documentos no podrán descargarse ni imprimirse debido a que la plataforma solo permite 
+                                su visualización, los usuarios solo podrán ver los documentos si están autenticados ante el sistema.
+                                <br></br><br></br> 
+                                La impresión y descarga de documentos solo son permitidos para los documentos de tipo "formato" o "ficha técnica".
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h4 style="margin-top: 0 !important">Usabilidad:</h4>
+                            <span class="fa fa-line-chart"> </span> <span style="font-weight: bold"> Documentos y formatos creados por día</span>
+                            <p:chart type="line" model="#{reporteAnalisisUso.dateModel1}" responsive="true" style="width: 100%"/>
+                        </div>
+                        <div class="form-group">
+                            <span class="fa fa-table"> </span> <span style="font-weight: bold"> Top de Documentos y formatos más vistos</span>
+                            <p:dataTable class="table-font" id="tablaFuncion" emptyMessage="No se encontraron registros" value="#{reporteAnalisisUso.listaDocumentos}" var="item" rowIndexVar="rowIndex">
+                                <p:column width="50">
+                                    <h:outputText style="font-weight: bold; font-size: 1.2em" value="#{rowIndex+1}"/>
+                                </p:column>
+                                <p:column width="150">
+                                   <f:facet name="header"><span class="titulos-tablas"> Código del Formato </span></f:facet>
+                                   <h:outputText value="#{item.codigo.toUpperCase()}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header"><span class="titulos-tablas">Nombre del documento</span></f:facet>
+                                    <h:outputText value="#{item.nombre.toUpperCase()}"/>
+                                </p:column>
+                                <p:column width="150">
+                                    <f:facet name="header"><span class="titulos-tablas">Fecha ultima descarga o vista</span></f:facet>
+                                    <h:outputText value="#{item.fechaUltimaVista}">
+                                        <f:convertDateTime pattern="MMMM dd, YYYY"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column width="150" >
+                                   <f:facet name="header"><span class="titulos-tablas">Número de descargas o vistas</span></f:facet>
+                                   <h:outputText value="#{item.contarVista}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                        <div class="form-group">
+                            <span class="fa fa-bar-chart"> </span> <span style="font-weight: bold">Número de descargas o vistas</span>
+                            <p:chart  type="bar" model="#{reporteAnalisisUso.barModel1}" responsive="true" style="width: 100%"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-top: 10px">
+                    <div class="titulo-moduloAnalisis">
+                        <span style="padding: 0 !important; color: #4267b2 !important"> Contenidos y noticias</span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="panel-moduloAnalisis">
+                        <div class="form-group">
+                            <h4 style="margin-top: 0 !important">Descripción del modulo</h4>
+                            <div>
+                                Este modulo tiene como objetivo informar a los colaboradores de la compañía 
+                                sobre proyectos, programas, mejoras y actividades corporativas a través de
+                                publicaciones en la intranet.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h4 style="margin-top: 0 !important">Usabilidad:</h4>
+                            <span class="fa fa-line-chart"> </span> <span style="font-weight: bold"> Contenidos creados por día</span>
+                            <p:chart type="line" model="#{reporteAnalisisUso.dateModel2}" responsive="true" style="width: 100%"/>
+                        </div>
+                        <div class="form-group">
+                            <span class="fa fa-dashboard"> </span> <span style="font-weight: bold"> Número de veces que son leídos los contenidos / número de usuarios que tienen acceso a la intranet - mes en curso</span>
+                            <p:chart type="metergauge" model="#{reporteAnalisisUso.meterGaugeModel2}" style="width:400px;height:250px" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-top: 10px">
+                    <div class="titulo-moduloAnalisis">
+                        <span style="padding: 0 !important; color: #4267b2 !important"> TOC</span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="panel-moduloAnalisis">
+                        <div class="form-group">
+                            <h4 style="margin-top: 0 !important">Descripción del modulo</h4>
+                            <div>
+                               Modulo que permite al proceso comercial definir los ítems de estado 1 y estado 2 con las políticas establecidas por Eka Corporación S.A.
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <span class="fa fa-dashboard"> </span> <span style="font-weight: bold"> Número de criterios de clasificación(Grupo - plan 50) evaluados en el mes en curso / número de criterios de clasificación - mes en curso</span>
+                            <p:chart type="metergauge" model="#{reporteAnalisisUso.meterGaugeModel3}" style="width:400px;height:250px" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-top: 10px">
+                    <div class="titulo-moduloAnalisis">
+                        <span style="padding: 0 !important; color: #4267b2 !important"> Entregas de producción KOS</span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="panel-moduloAnalisis">
+                        <div class="form-group">
+                            <h4 style="margin-top: 0 !important">Descripción del modulo</h4>
+                            <div>
+                               Modulo de gestión de cogidos de barras para el cague de las transferencias de producción “EPT” al proceso del CEDI de KOS en el “UnoEE” de forma semiautomática.
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <span class="fa fa-dashboard"> </span> <span style="font-weight: bold"> Número de cargues realizados en el modulo / Número de cargues realizados en el UnoEE - mes en curso</span>
+                            <p:chart type="metergauge" model="#{reporteAnalisisUso.meterGaugeModel4}" style="width:400px;height:250px" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-top: 10px">
+                    <div class="titulo-moduloAnalisis">
+                        <span style="padding: 0 !important; color: #4267b2 !important"> Creación de ítems</span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="panel-moduloAnalisis">
+                        <div class="form-group">
+                            <h4 style="margin-top: 0 !important">Descripción del modulo</h4>
+                            <div>
+                                En este modulo se realiza la creación de los sku’s nuevos, 
+                                ya sea a nivel de ítem o ítem-extensión guardando registro 
+                                de solicitante y tiempos de respuesta a fin de determinar un 
+                                indicador de gestión en este proceso.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <span class="fa fa-dashboard"> </span> <span style="font-weight: bold"> Ítems creados en el modulo / Ítems creados en el UnoEE - mes en curso</span>
+                            <p:chart type="metergauge" model="#{reporteAnalisisUso.meterGaugeModel5}" style="width:400px;height:250px" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-top: 10px">
+                    <div class="titulo-moduloAnalisis">
+                        <span style="padding: 0 !important; color: #4267b2 !important"> Buzón de sugerencias</span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="panel-moduloAnalisis">
+                        <div class="form-group">
+                            <h4 style="margin-top: 0 !important">Descripción del modulo</h4>
+                            <div>
+                                Los colaboradores de la compañía puedan acceder de manera anónima o registrando su usuario y escribir su
+                                opinión acerca de:
+                                <br></br>
+                                - Sugerencias o quejas a Gerencia.
+                                <br></br>
+                                - Sugerencias o quejas a Gestión Humana.
+                                <br></br>
+                                - Sugerencias o quejas relacionado con Planta KOS.
+                                <br></br>
+                                - Sugerencias o quejas a Operaciones.
+                                <br></br>
+                                - Sugerencias o quejas de riesgo y prevención.
+                                <br></br>
+                                - Sugerencias o quejas acerca de: temas varios - Servicios de la compañia.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h4 style="margin-top: 0 !important">Usabilidad:</h4>
+                            <span class="fa fa-line-chart"> </span> <span style="font-weight: bold"> Sugerencias o quejas creadas por mes</span>
+                            <p:chart type="line" model="#{reporteAnalisisUso.dateModel6}" responsive="true" style="width: 100%"/>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-top: 10px">
+                    <div class="titulo-moduloAnalisis">
+                        <span style="padding: 0 !important; color: #4267b2 !important"> Comprobantes de pago</span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="panel-moduloAnalisis">
+                        <div class="form-group">
+                            <h4 style="margin-top: 0 !important">Descripción del modulo</h4>
+                            <div>
+                               En este modulo se realiza la gestión y envío de forma electrónica los comprobantes de pago de los colaboradores de la compañía
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <span class="fa fa-dashboard"> </span> <span style="font-weight: bold"> Comprobantes enviados / Comprobantes creados - mes en curso</span>
+                            <p:chart type="metergauge" model="#{reporteAnalisisUso.meterGaugeModel7}" style="width:400px;height:250px" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-top: 10px; ">
+                    <div class="titulo-moduloAnalisis">
+                        <span style="padding: 0 !important; color: #4267b2 !important"> Portal Web</span>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-bottom: 20px">
+                    <div class="panel-moduloAnalisis">
+                        <div class="form-group">
+                            <h4 style="margin-top: 0 !important">Descripción del modulo</h4>
+                            <div>
+                               Plataforma B2B para registro y gestión de pedidos integrada a nuestro software ERP - Siesa EE.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <span class="fa fa-dashboard"> </span> <span style="font-weight: bold"> Pedidos creados en la plataforma / Pedidos creados en el UnoEE - mes en curso</span>
+                            <p:chart type="metergauge" model="#{reporteAnalisisUso.meterGaugeModel8}" style="width:400px;height:250px" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-top: 10px; ">
+                    <div class="titulo-moduloAnalisis">
+                        <span style="padding: 0 !important; color: #4267b2 !important"> Notificación de despacho</span>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-bottom: 20px">
+                    <div class="panel-moduloAnalisis">
+                        <div class="form-group">
+                            <h4 style="margin-top: 0 !important">Descripción del modulo</h4>
+                            <div>
+                               Este modulo se encarga de enviar de forma automática un correo
+                               electrónico con los datos de cada factura creada en la plataforma ERP
+                               - Siesa EE, esta información es enviada a los correos registrados en
+                               el contacto del cliente y contiene un archivo adjunto en formato txt, 
+                               esto con el fin de que el cliente pueda cargar dicho adjunto que contiene
+                               los datos de la factura a su plataforma ERP de forma ágil.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <span class="fa fa-dashboard"> </span> <span style="font-weight: bold"> Facturas notificadas / Facturas creadas - mes en curso</span>
+                            <p:chart type="metergauge" model="#{reporteAnalisisUso.meterGaugeModel9}" style="width:400px;height:250px" />
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    function customExtender () {
+                       this.cfg.grid = {
+                          background: "#ecf0f5", //Set background to white
+                          drawBorder: true,  
+                          drawGridLines: true,
+                            gridLineColor: '#cccccc', // *Color of the grid lines.
+                            borderColor: '#999999', // CSS color spec for border around grid.
+                            borderWidth: 2.0, // pixel width of border around grid.
+                            shadow: true, // draw a shadow for grid.
+                            shadowAngle: 45, // angle of the shadow. Clockwise from x axis.
+                            shadowOffset: 1.5, // offset from the line of the shadow.
+                            shadowWidth: 3, // width of the stroke for the shadow.
+                            shadowDepth: 3, // Number of strokes to make when drawing shadow.
+                            // Each stroke offset by shadowOffset from the last.
+                            shadowAlpha: 0 // Opacity of the shadow
+                       };
+                     }
+                </script>
+            </section>
+        </ui:define>
+    </ui:composition>    
+</html>

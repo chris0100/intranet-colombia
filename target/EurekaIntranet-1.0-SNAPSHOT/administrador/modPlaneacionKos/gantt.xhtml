@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <ui:composition template="/template/templateAdministrador.xhtml">
+        <ui:define name="menu">
+            <h:form id="menu-principal">
+                <ul class="sidebar-menu">
+                    <li class="active" style="margin-top: 20px">
+                        <h:commandLink action="#{programadorGanttController.prepareList}">
+                                <i class="fa fa-cubes" aria-hidden="true"></i> 
+                            <span>Reporte Gantt</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink rendered="#{loginController.gestorGanttKos}" action="#{centroTrabajoController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Centros de trabajo</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink rendered="#{loginController.gestorGanttKos}" action="#{periodoController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Periodos</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink  rendered="#{loginController.gestorGanttKos}" action="#{configuracionGanttController.prepareList}">
+                            <i class="fa fa-arrows"></i> 
+                            <span>Configuraciones</span>
+                        </h:commandLink>
+                    </li>
+                    <p:separator/>
+                    <li>
+                        <h:commandLink action="/index">
+                            <i class="fa fa-dashboard"></i> 
+                            <span>Vista de usuario estándar</span>
+                        </h:commandLink>
+                    </li>
+                    <li>
+                        <h:commandLink action="/administrador/modulos">
+                            <i class="fa fa-th"></i>
+                            <span>Modulos del sistema</span>
+                        </h:commandLink>
+                    </li>
+                </ul>
+            </h:form>
+        </ui:define>
+        <ui:define name="title">Reporte Gantt</ui:define>   
+        <ui:define name="title2">Reporte Gantt</ui:define>   
+        <ui:define name="body">
+            <p:growl id="growl" showDetail="true" life="2000"/>
+            <h:form id="formulario-crearDocu">
+                <p:growl id="growl" showDetail="true" life="2000"/>
+                <div class="row">
+                    <div class="col-sm-2 form-group">
+                        <div class="form-group">
+                            <button  jsf:action="#{programadorGanttController.prepareSincronizarGantt}"
+                                   type="submit" 
+                                   style=" border: none; background: red !important"
+                                   class="boton-htmlVerde" 
+                                   onclick="onSubmitButton();"
+                                   id="myButton1">
+                                <i class="fa fa-undo"></i> Sincronizar datos
+                                <p:ajax process="@this" update="form-gantt:gantt"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+            <h:form id="form-gantt">
+                <p:outputPanel id="gantt">
+                    <div class="row" style="vertical-align: bottom !important">
+                        <div class="col-md-2">
+                            <p:dataTable id="tbl1" var="result1"
+                                        style="font-size: .7em !important; width: 900px !important; display: inline-block;"
+                                        value="#{programadorGanttController.listaCentroTrabajoProgramado}" 
+                                        rowIndexVar="rowIndex" > 
+                                <f:facet name="header"> <h4>GANTT Período: julio/2019</h4> </f:facet>
+                                <p:column width="30" headerText="#">
+                                    #{rowIndex + 1}
+                                </p:column>
+                                <p:column style="text-align: left !important"> 
+                                    <f:facet name="header"> 
+                                        <h:outputText  value="Operación" /> 
+                                    </f:facet> 
+                                    <p:commandLink value="#{result1}" action="#{programadorGanttController.prepareDetalle}" ajax="false">
+                                        <f:setPropertyActionListener value="#{result1}" target="#{programadorGanttController.centroTrabajo}"/>
+                                    </p:commandLink> 
+                                </p:column> 
+                            </p:dataTable> 
+                        </div>
+                        <div class="col-md-10">
+                            <p:dataTable id="tbl" var="result"
+                                        style="font-size: .7em !important; width: 100% !important; display: inline-block"
+                                        value="#{programadorGanttController.tableData}" 
+                                        rendered="#{not empty programadorGanttController.tableData}" 
+                                        rowIndexVar="rowIndex" > 
+                                <f:facet name="header"> <h4>GANTT</h4></f:facet> 
+                                <p:columns value="#{programadorGanttController.tableHeaderNames}" var="mycolHeader" columnIndexVar="colIndex"> 
+                                    <f:facet name="header"> 
+                                        <h:outputText style="font-size: 1em" value="#{mycolHeader.value}" /> 
+                                    </f:facet> 
+                                    <h:outputText value="#{result[mycolHeader.key].value}" styleClass="#{result[mycolHeader.key].value}"/> 
+                                </p:columns> 
+                           </p:dataTable> 
+                        </div>
+                    </div>
+                </p:outputPanel>
+            </h:form>
+            <div class="load"></div>
+            <script>
+                $('#myButton1').click(function(){
+                  $('#myButton1').hide();
+                  $('.load').addClass('loading');
+                    setTimeout(function () { 
+                    $('.load').removeClass('loading');
+                    $('#myButton1').show();
+
+                  }, 200000000);
+                });
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>
