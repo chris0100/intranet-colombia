@@ -10,16 +10,19 @@ public enum OrderPedidoItem implements Comparator<OrdenesDespachoController> {
 
 
     //CRITERIOS DE ORDENAMIENTO PARA ITEMPEDIDO.
+    //(Item codigo)
     ITEM_SORT{
         public int compare(OrdenesDespachoController ip1, OrdenesDespachoController ip2){
             return ip1.getF_item().compareTo(ip2.getF_item());
         }},
 
+    //(tamaño)
     DESC_EXT1_SORT{
         public int compare(OrdenesDespachoController ip1, OrdenesDespachoController ip2){
             return ip1.getF_desc_ext_detalle_1().compareTo(ip2.getF_desc_ext_detalle_1());
         }},
 
+    //(color)
     DESC_EXT2_SORT{
         public int compare(OrdenesDespachoController ip1, OrdenesDespachoController ip2){
             return ip1.getF_desc_ext_detalle_2().compareTo(ip2.getF_desc_ext_detalle_2());

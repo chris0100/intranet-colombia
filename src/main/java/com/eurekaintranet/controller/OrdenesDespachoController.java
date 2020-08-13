@@ -1178,7 +1178,7 @@ public class OrdenesDespachoController implements Serializable {
 
             //PARTE NUEVA
             //Se raliza ordenamiento de lista
-            listaReporteImpresion.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT, DESC_EXT2_SORT)));
+            listaReporteImpresion.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT)));
 
 
             if(!listaReporteImpresion.isEmpty()){
@@ -1194,7 +1194,8 @@ public class OrdenesDespachoController implements Serializable {
         prepareReporteConsultar();
         return "/administrador/modOrdenesDespacho/reporte";
     }
-    
+
+
     public String prepareImpresionCliente() throws PrinterException, IOException, SQLException, ParseException, Exception{
         listaReporteImpresion = new ArrayList<>();
         reporteActual = new OrdenesDespachoController();
@@ -1217,7 +1218,7 @@ public class OrdenesDespachoController implements Serializable {
 
                 //PARTE NUEVA
                 //Se raliza ordenamiento de lista
-                listaReporteImpresion.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT, DESC_EXT2_SORT)));
+                listaReporteImpresion.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT)));
 
 
                 if(!listaReporteImpresion.isEmpty()){
@@ -1233,6 +1234,8 @@ public class OrdenesDespachoController implements Serializable {
         prepareReporteConsultar();
         return "/administrador/modOrdenesDespacho/reporte";
     }
+
+
     public void generarListaClienteImprimir(){
         listaImpresionCliente = new ArrayList<>();
         for(OrdenesDespachoController item: listaReporte){
