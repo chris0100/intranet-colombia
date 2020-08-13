@@ -5,6 +5,7 @@
  */
 package com.eurekaintranet.controller;
 
+import com.eurekaintranet.controller.util.OrdenesComparator;
 import com.eurekaintranet.entities.T001Usuario;
 import com.eurekaintranet.entities.T045ImpresionOrdenDespacho;
 import com.eurekaintranet.entities.T046ConfigOrdenDespacho;
@@ -1178,7 +1179,8 @@ public class OrdenesDespachoController implements Serializable {
 
             //PARTE NUEVA
             //Se raliza ordenamiento de lista
-            listaReporteImpresion.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT)));
+            //listaReporteImpresion.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT)));
+            Collections.sort(listaReporteImpresion, new OrdenesComparator());
 
 
             if(!listaReporteImpresion.isEmpty()){
@@ -1218,7 +1220,8 @@ public class OrdenesDespachoController implements Serializable {
 
                 //PARTE NUEVA
                 //Se raliza ordenamiento de lista
-                listaReporteImpresion.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT)));
+                //listaReporteImpresion.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT)));
+                Collections.sort(listaReporteImpresion, new OrdenesComparator());
 
 
                 if(!listaReporteImpresion.isEmpty()){
