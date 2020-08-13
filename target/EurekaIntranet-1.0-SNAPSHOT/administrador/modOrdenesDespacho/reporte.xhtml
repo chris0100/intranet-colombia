@@ -199,6 +199,7 @@ and open the template in the editor.
                                         <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{ordenesDespachoController.usuarioActual}"/>
                                     </p:commandButton>
                                 </div>
+
                                 <div class="col-md-12">
                                     <p:commandButton style="margin-top: 10px; width: 100%" 
                                         rendered="#{loginController.admin}"
@@ -211,6 +212,7 @@ and open the template in the editor.
                                         update="@this form-reporte:reporteTable form-reporte:reporteTable2">
                                     </p:commandButton>
                                 </div>
+
                             </div>
                         </div>
                         <div class="col-md-4 card">
@@ -666,7 +668,6 @@ and open the template in the editor.
                     </h:panelGroup>
                 </h:form>
             </p:dialog>
-
             <p:dialog widgetVar="dlgImpCliente" modal="true"  resizable="false" width="400">
                 <h:form id="formImpCliente">    
                     <div class="form-group">

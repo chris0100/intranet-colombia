@@ -42,6 +42,6 @@ public class AutoEnvioOrdenesDespacho {
     @Timeout
     public void execute(Timer timer) throws SQLException, ClassNotFoundException, IOException, ParseException {
         OrdenesDespachoController ordenesDespachoActual = new OrdenesDespachoController();
-        ordenesDespachoActual.enviarXlsOrdenesDespacho();
+        //ordenesDespachoActual.enviarXlsOrdenesDespacho();
     }
 }

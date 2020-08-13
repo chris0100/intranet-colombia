@@ -1467,6 +1467,8 @@ public class OrdenesDespachoController implements Serializable {
         }
         return configActual.getNumerico();
     }
+
+
     public String obtenerCorreoEnvioFoto()
         throws SQLException, ParseException {
         String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=BD_Eureka;user=bd_eureka;password=Desarrollos478#";
