@@ -105,49 +105,62 @@
                                 </div>
                             </div>
                         </f:facet>
+
+
                         <p:column filterBy="#{item.codigoLista}" filterMatchMode="contains">
                             <f:facet name="header">Código</f:facet>
                             <h:outputText style="font-weight: bold" value="#{item.codigoLista.toUpperCase()}"/>
                         </p:column>
+
                         <p:column filterBy="#{item.nit}" filterMatchMode="contains">
                             <f:facet name="header">Nit cliente</f:facet>
                             <h:outputText style="font-weight: bold" value="#{item.nit.toUpperCase()}"/>
                         </p:column>
+
                         <p:column filterBy="#{item.razonSocial}" filterMatchMode="contains">
                             <f:facet name="header">Razón social cliente</f:facet>
                             <h:outputText value="#{item.razonSocial.toUpperCase()}"/>
                         </p:column>
+
                         <p:column>
                              <f:facet name="header">Fecha creación</f:facet>
                              <h:outputText value="#{item.fechaCreacion}">
                                  <f:convertDateTime pattern="MMMM dd, YYYY"/>
                              </h:outputText>
                         </p:column>
+
                         <p:column>
                              <f:facet name="header">Fecha cierre</f:facet>
                              <h:outputText value="#{item.fechaCierre}">
                                  <f:convertDateTime pattern="MMMM dd, YYYY"/>
                              </h:outputText>
                         </p:column>
+
                         <p:column filterBy="#{item.idUsuarioCreacion.toString()}" filterMatchMode="contains">
                             <f:facet name="header">Usuario creación</f:facet>
                             <h:outputText value="#{item.idUsuarioCreacion.toString().toUpperCase()}"/>
                         </p:column>
+
                         <p:column filterBy="#{item.estadoString}" width="100" filterMatchMode="contains">
                             <f:facet name="header">Estado</f:facet>
                             <h:outputText value="#{item.estadoString}"/>
                         </p:column>
+
                         <p:column width="80">
                             <p:commandButton id="boton-ver" ajax="false" icon="ui-icon-search" action="#{listaEmpaqueController.prepareViewListaEmpaque}" >
                                 <f:setPropertyActionListener value="#{item}" target="#{listaEmpaqueController.listaEmpaqueActual}"/>
                             </p:commandButton>
+
                             <p:tooltip id="descripcion-ver" for="boton-ver" value="Ver lista de empaque" trackMouse="true"/>
+
                             <p:commandButton id="boton-actualizar" ajax="false" icon="ui-icon-pencil" action="#{listaEmpaqueController.prepareEditListaEmpaque}" 
                                              rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi}">
                                  <f:setPropertyActionListener value="#{item}" target="#{listaEmpaqueController.listaEmpaqueActual}"/>
                             </p:commandButton>
+
                             <p:tooltip id="descripcion-actualizar" for="boton-actualizar" value="Actualizar lista de empaque" trackMouse="true" />                            
                         </p:column>
+
                     </p:dataTable>
                 </p:outputPanel>
             </h:form>

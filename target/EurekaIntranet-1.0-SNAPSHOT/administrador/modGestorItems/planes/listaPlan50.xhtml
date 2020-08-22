@@ -113,35 +113,47 @@
                          <h:outputText value="#{item.idParamEstadoItem.usuario}">
                          </h:outputText>
                     </p:column>
+
                     <p:column style="text-align: center" filterMatchMode="contains">
                          <f:facet name="header">Fecha de parámetrización</f:facet>
                          <h:outputText value="#{item.idParamEstadoItem.fechaModificacion}">
                              <f:convertDateTime pattern="MMMM dd, YYYY"/>
                          </h:outputText>
                     </p:column>
+
                     <p:column width="100">
                         <p:commandLink update="form-editParametro:panelParametro" onclick="PF('dlg2').show();"  id="parametro" class="btn btn-primary" style="color: white"> 
                             <li class="fa fa-edit"></li> 
                             <f:setPropertyActionListener value="#{item}" target="#{grupoItemController.grupoItemActual}"/>
                         </p:commandLink>
+
                         <p:tooltip for="parametro" value="Cambiar parámetros"/>
+
                         <p:commandLink  ajax="false" update="form-itemEstado:itemsEstado" action="#{grupoItemController.updateEnviarDatosComercial}" id="envio" class="btn btn-success" style="color: white; margin-left: 5px"> 
                             <li class="fa fa-share"></li> 
                             <f:setPropertyActionListener value="#{item}" target="#{grupoItemController.grupoItemActual}"/>
                             <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{grupoItemController.usuarioActual}"/>
                             <p:confirm header="Confirmación" message="¿Esta seguro que desea enviar datos para evaluación de items estado 1 del grupo #{item.descripcion}?" icon="ui-icon-alert" />
                         </p:commandLink>
+
                         <p:tooltip for="envio" value="Enviar datos al proceso comercial"/>
+
                         <p:confirmDialog global="true">
                             <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                             <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                         </p:confirmDialog>
+
                     </p:column>
+
                 </p:dataTable>
-            </h:form> 
+            </h:form>
+
             <h:form id="form-editParametro">
+
                 <p:dialog widgetVar="dlg2" modal="true" header="Elección de parámetros" width="1000">
                     <p:outputPanel id="panelParametro" style="font-size: 1.3em !important">
+
+
                         <div class="form-group">
                             <h:outputLabel value="Nombre del parámetro a utilizar:"/>
                             <h:selectOneMenu value="#{grupoItemController.grupoItemActual.idParamEstadoItem}"
@@ -153,7 +165,10 @@
                                 <f:ajax execute="@this" render="form-editParametro:parametrosTable"/>
                             </h:selectOneMenu> 
                         </div>
-                        
+
+
+
+                        <!--tabla de toc parametros-->
                         <div class="form-group">
                             <p:dataTable  value="#{grupoItemController.listaTocParametros}" var="item" style="font-size: .8em !important; margin-top: 20px"
                                           id="parametrosTable" emptyMessage="No se encontraron documentos con el criterio dado">
@@ -198,6 +213,8 @@
                                 </p:column>
                             </p:dataTable>
                         </div>
+
+
                         <div class="">
                             <p:commandButton styleClass="btn btn-primary btn-block" 
                                              value="Guardar" onclick="dlg2.hide();"
@@ -210,6 +227,7 @@
                                       oncomplete="PF('dlg2').hide();"
                                       process="@this"/>
                         </div>
+
                     </p:outputPanel>
                 </p:dialog>
             </h:form>

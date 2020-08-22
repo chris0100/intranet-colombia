@@ -34,17 +34,23 @@ public class T022ListaEmpaqueHasCajaFacade extends AbstractFacade<T022ListaEmpaq
     public T022ListaEmpaqueHasCajaFacade() {
         super(T022ListaEmpaqueHasCaja.class);
     }
+
+
     public List<T022ListaEmpaqueHasCaja> consultarItemListaEmpaqueCaja(T020ListaEmpaque idListaEmpaque, T021Caja idCaja){
         Query q= getEntityManager().createNamedQuery("T022ListaEmpaqueHasCaja.findByIdListaEmpaqueCaja");
         q.setParameter("idListaEmpaque", idListaEmpaque);
         q.setParameter("idCaja", idCaja);
         return q.getResultList();
     }
+
+
     public List<T022ListaEmpaqueHasCaja> consultarItemListaEmpaque(T020ListaEmpaque idListaEmpaque){
         Query q= getEntityManager().createNamedQuery("T022ListaEmpaqueHasCaja.findByIdListaEmpaque");
         q.setParameter("idListaEmpaque", idListaEmpaque);
         return q.getResultList();
     }
+
+
     public String obtenerDescItemPais (String descPais, int idItem){
         StoredProcedureQuery query = this.em.createNamedStoredProcedureQuery("execObtenerDescItemPais");
         query.setParameter("descPais", descPais);

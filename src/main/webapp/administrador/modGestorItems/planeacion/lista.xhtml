@@ -1,328 +1,477 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-    <ui:composition template="/template/templateAdministrador.xhtml">
-        <ui:define name="menu">
-            <h:form id="menu-principal">
-                <ul class="sidebar-menu">
-                    <li style="margin-top: 20px">
-                        <h:commandLink action="/index">
-                            <i class="fa fa-dashboard"></i> 
-                            <span>Vista de usuario estandar</span>
-                        </h:commandLink>
-                    </li>
-                    <li>
-                        <h:commandLink action="/administrador/modulos">
-                            <i class="fa fa-th"></i>
-                            <span>Modulos del sistema</span>
-                        </h:commandLink>
-                    </li>
-                </ul>
-            </h:form>
-        </ui:define>
-        <ui:define name="title">Gestión de Items - Proceso planeación</ui:define>   
-        <ui:define name="title2">Validación de estados de items </ui:define>   
-        <ui:define name="body">
-            <p:growl id="growl" showDetail="true" life="2000"/>
-            <h:form id="form-itemEstado">
-                <div class="row">
-                    <div class="form-group col-md-8">
-                        <h:outputLabel value="Plan 50 - Grupo:"
-                                       style="font-weight: bold; color: #185291"/>
-                        <br></br>
-                        <p:selectOneMenu id="idCargoSeccion"
-                                        style="width: 100%"
-                                        value="#{estadoItemController.grupoItemActual}"
-                                        filter="true" filterMatchMode="contains" required="true">
-                            <f:selectItem itemLabel="Ninguno" itemValue="#{null}"/>
-                               <f:selectItems value="#{estadoItemController.listaGrupoItemPlaneacion}" var="item" itemValue="#{item}"/>  
-                                <p:ajax listener="#{estadoItemController.consultar}"/>  
-                                <f:ajax execute="@this" render="form-itemEstado:itemsEstado"/>
-                       </p:selectOneMenu>
-                    </div> 
+<ui:composition template="/template/templateAdministrador.xhtml">
+    <ui:define name="menu">
+        <h:form id="menu-principal">
+            <ul class="sidebar-menu">
+                <li style="margin-top: 20px">
+                    <h:commandLink action="/index">
+                        <i class="fa fa-dashboard"></i>
+                        <span>Vista de usuario estandar</span>
+                    </h:commandLink>
+                </li>
+                <li>
+                    <h:commandLink action="/administrador/modulos">
+                        <i class="fa fa-th"></i>
+                        <span>Modulos del sistema</span>
+                    </h:commandLink>
+                </li>
+            </ul>
+        </h:form>
+    </ui:define>
+    <ui:define name="title">Gestión de Items - Proceso planeación</ui:define>
+    <ui:define name="title2">Validación de estados de items </ui:define>
+
+
+    <ui:define name="body">
+
+        <p:growl id="growl" showDetail="true" life="2000"/>
+        <h:form id="form-itemEstado">
+
+            <div class="row">
+
+
+                <!--Se selecciona de la lista de label plan50 - Grupo-->
+                <!--El que se selecciona ahi carga el grupo item actual-->
+                <div class="form-group col-md-8">
+                    <h:outputLabel value="Plan 50 - Grupo:"
+                                   style="font-weight: bold; color: #185291"/>
+                    <br></br>
+                    <p:selectOneMenu id="idCargoSeccion"
+                                     style="width: 100%"
+                                     value="#{estadoItemController.grupoItemActual}"
+                                     filter="true" filterMatchMode="contains" required="true">
+                        <f:selectItem itemLabel="Ninguno" itemValue="#{null}"/>
+                        <f:selectItems value="#{estadoItemController.listaGrupoItemPlaneacion}" var="item"
+                                       itemValue="#{item}"/>
+                        <p:ajax listener="#{estadoItemController.consultar}"/>
+                        <f:ajax execute="@this" render="form-itemEstado:itemsEstado"/>
+                    </p:selectOneMenu>
                 </div>
-                <p:separator></p:separator>
-                <p:dataTable  value="#{estadoItemController.listaEstadoItemPlan50Planeacion}" var="item" style="font-size: .8em !important; margin-top: 20px"
-                              rows="50" paginator="true"  id="itemsEstado"  resizableColumns="true" draggableColumns="true"
-                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                              rowStyleClass="#{item.evaluado eq 'EVALUADO' ? 'color1': item.evaluado eq 'NO EVALUADO' ? 'color2': item.evaluado eq 'PENDIENTE' ? 'color3':null}"
-                              rowsPerPageTemplate="50,100,150" emptyMessage="No se encontraron documentos con el criterio dado">
-                    <f:facet name="header">
-                        <div class="container-fluid">
-                            <div class="row">
-                                 <div class="col-md-5">
-                                    <h4 class="colorLetra" style="font-weight: bold; text-align: left" >
-                                        Numero total de items: #{fn:length(estadoItemController.listaEstadoItemPlan50Planeacion)} <br></br> Total items con (NOI) calculado:  #{fn:length(estadoItemController.listaEstadoItemPlan50PlaneacionEstadoItem)} <br></br> Grupo: #{estadoItemController.plan50}
-                                    </h4>
-                                </div>
-                                <div class="col-md-3" style="margin-top: 1.5em"> 
-                                    <p:commandButton update="form-editEstadoMasivo:panelEstadoMasivo" onclick="PF('dlg3').show();" value="Cambio masivo" class="btn btn-primary" style="color: white; width: 100%; font-size: 1.3em !important"> 
-                                        <f:setPropertyActionListener value="#{item}" target="#{estadoItemController.estadoItemActual}"/>
-                                        <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{estadoItemController.usuarioActual}"/>
-                                    </p:commandButton>
-                                </div>
-                                <div class="col-md-3" style="margin-top: 1.5em">
-                                    <p:commandButton ajax="false" action="#{estadoItemController.updateTerminarEvaluacionPlaneacion}" value="Terminar evaluación" class="btn btn-success" style="color: white; width: 100%; font-size: 1.3em !important"> 
-                                        <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{estadoItemController.usuarioActual}"/>
-                                    </p:commandButton>
-                                </div>
-                                <div class="col-md-1" style="margin-top: 1.5em">
-                                    <h:commandLink id="exportExcel">
-                                        <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
-                                        <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
-                                                target="itemsEstado" fileName="tabla" />
-                                    </h:commandLink>
-                                    <p:tooltip id="descripcion-exportExcel" for="exportExcel" value="Exportar tabla en formato .xls" trackMouse="true"/>
-                                </div>
-                            </div>
-                        </div>
-                    </f:facet>
-                    <p:column filterBy="#{item.referencia}" filterValue="#{estadoItemController.filtroReferencia}" width="90" sortBy="#{item.referencia}" style="text-align: center">
-                         <f:facet class="titulos-tablas" name="header">Referencia</f:facet>
-                         <h:outputText value="#{item.referencia}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.FDescItem}" sortBy="#{item.FDescItem}" width="130" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">Desc. item</f:facet>
-                         <h:outputText value="#{item.FDescItem}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.extension1}"  width="80" sortBy="#{item.extension1}" style="text-align: center">
-                         <f:facet name="header">Ext. 1</f:facet>
-                         <h:outputText value="#{item.extension1}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.extension2}" filterValue="#{estadoItemController.filtroExt2}" sortBy="#{item.extension2}" width="80" style="text-align: center" >
-                         <f:facet name="header">Ext. 2</f:facet>
-                         <h:outputText value="#{item.extension2}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.comprado}" sortBy="#{item.comprado}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">Venta total ítem</f:facet>
-                         <h:outputText value="#{item.comprado}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.maxCantidadComprada}" sortBy="#{item.maxCantidadComprada}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">Máxima venta dia</f:facet>
-                         <h:outputText value="#{item.maxCantidadComprada}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.clientes}" sortBy="#{item.clientes}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">Total de clientes</f:facet>
-                         <h:outputText value="#{item.clientes}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.rotacion}" sortBy="#{item.rotacion}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">%Rotación</f:facet>
-                         <h:outputText value="#{item.rotacion}">
-                             <f:convertNumber pattern="#0.00" />
-                         </h:outputText>
-                    </p:column>
-                    <p:column filterBy="#{item.participacion}" sortBy="#{item.participacion}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">%Participacion</f:facet>
-                         <h:outputText value="#{item.participacion}">
-                             <f:convertNumber pattern="#0.00" />
-                         </h:outputText>
-                    </p:column>
-                    <p:column filterBy="#{item.participacionSumada}" sortBy="#{item.participacionSumada}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">%Pareto x tamaño</f:facet>
-                         <h:outputText value="#{item.participacionSumada}">
-                             <f:convertNumber pattern="#0.00" />
-                         </h:outputText>
-                    </p:column>
-                    <p:column filterBy="#{item.estadoItem}" filterValue="#{estadoItemController.filtroEstado}" sortBy="#{item.estadoItem}" style="text-align: center">
-                         <f:facet name="header">Estado Sugerido</f:facet>
-                         <h:outputText value="#{item.estadoItem}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.seguridad}" sortBy="#{item.seguridad}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">%Seguridad</f:facet>
-                         <h:outputText value="#{item.seguridad}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.tiempoReposicion}" sortBy="#{item.tiempoReposicion}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">Tiempo de reposición</f:facet>
-                         <h:outputText value="#{item.tiempoReposicion}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.noi}" sortBy="#{item.noi}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">Noi</f:facet>
-                         <h:outputText style="font-weight: bold" value="#{item.noi}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.tasaProduccionDia}" sortBy="#{item.tasaProduccionDia}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">Tasa de producción diaria</f:facet>
-                         <h:outputText value="#{item.tasaProduccionDia}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.tamanoLote}" sortBy="#{item.tamanoLote}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">Tamaño del lote</f:facet>
-                         <h:outputText value="#{item.tamanoLote}"/>
-                    </p:column>
-                    <p:column width="50">
-                        <p:commandLink rendered="#{loginController.authenticated}" update="form-editEstado:panelEstado" onclick="PF('dlg2').show();"  id="estado" class="btn btn-primary" style="color: white"> 
-                            <li class="fa fa-edit"></li> 
-                            <f:setPropertyActionListener value="#{item}" target="#{estadoItemController.estadoItemActual}"/>
-                            <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{estadoItemController.usuarioActual}"/>
-                        </p:commandLink>
-                        <p:tooltip for="estado" value="Agregar estado"/>
-                    </p:column>
-                </p:dataTable>
-            </h:form> 
-            <h:form id="form-editEstado">
-                <p:dialog widgetVar="dlg2" modal="true" header="Editar estado" width="500">
-                    <p:outputPanel id="panelEstado" style="font-size: 1.3em !important">
-                        <div class="form-group">
-                            <h:outputLabel value="Referencia:"/> <span style="color: red" > #{estadoItemController.estadoItemActual.referencia}</span> 
-                        </div>
-                        <div class="form-group">
-                            <h:outputLabel value="Descripción:"/> #{estadoItemController.estadoItemActual.FDescItem}
-                        </div>
+            </div>
+
+
+
+            <p:separator></p:separator>
+
+
+            <p:dataTable value="#{estadoItemController.listaEstadoItemPlan50Planeacion}" var="item"
+                         style="font-size: .8em !important; margin-top: 20px"
+                         rows="50" paginator="true" id="itemsEstado" resizableColumns="true" draggableColumns="true"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowStyleClass="#{item.evaluado eq 'EVALUADO' ? 'color1': item.evaluado eq 'NO EVALUADO' ? 'color2': item.evaluado eq 'PENDIENTE' ? 'color3':null}"
+                         rowsPerPageTemplate="50,100,150"
+                         emptyMessage="No se encontraron documentos con el criterio dado">
+
+                <f:facet name="header">
+                    <div class="container-fluid">
                         <div class="row">
-                            <div class="form-group col-md-6">
-                                <h:outputLabel value="% Seguridad:"  />
-                                <p:inputNumber id="seguridadInputText" 
-                                               value="#{estadoItemController.estadoItemActual.seguridad}"
-                                               required="true"
-                                               maxValue="100"
-                                               decimalPlaces="0"
-                                               requiredMessage="Por favor ingrese la versión del archivo">
-                                    <f:ajax execute="@this" render="seguridadMessage"/>
-                                </p:inputNumber>
-                                <p:message id="seguridadMessage" for="seguridadInputText" styleClass="error"/>
-                            </div> 
-                            <div class="form-group col-md-6">
-                                <h:outputLabel value="Tiempo de reposición:"  />
-                                <p:inputNumber id="fabricacionInputText" 
-                                               value="#{estadoItemController.estadoItemActual.tiempoReposicion}"
-                                               required="true"
-                                               decimalPlaces="0"
-                                               requiredMessage="Por favor ingrese la versión del archivo">
-                                    <f:ajax execute="@this" render="fabricacionMessage"/>
-                                </p:inputNumber>
-                                <p:message id="fabricacionMessage" for="fabricacionInputText" styleClass="error"/>
-                            </div> 
-                            <div class="form-group col-md-6">
-                                <h:outputLabel value="Tasa de producción diaria:"  />
-                                <p:inputNumber id="tasaInputText" 
-                                               value="#{estadoItemController.estadoItemActual.tasaProduccionDia}"
-                                               required="true"
-                                               requiredMessage="Por favor ingrese la tasa de produccion">
-                                    <f:ajax execute="@this" render="tasaMessage"/>
-                                </p:inputNumber>
-                                <p:message id="tasaMessage" for="tasaInputText" styleClass="error"/>
+
+                            <div class="col-md-5">
+                                <h4 class="colorLetra" style="font-weight: bold; text-align: left">
+                                    Numero total de items: #{fn:length(estadoItemController.listaEstadoItemPlan50Planeacion)}
+                                    <br></br> Total items con (NOI) calculado:  #{fn:length(estadoItemController.listaEstadoItemPlan50PlaneacionEstadoItem)}
+                                    <br></br> Grupo: #{estadoItemController.plan50}
+                                </h4>
                             </div>
-                             <div class="form-group col-md-6">
-                                <h:outputLabel value="Tamaño del lote:"  />
-                                <p:inputNumber id="loteInputText" 
-                                               value="#{estadoItemController.estadoItemActual.tamanoLote}"
-                                               required="true"
-                                               requiredMessage="Por favor ingrese el tamaño del lote">
-                                    <f:ajax execute="@this" render="loteMessage"/>
-                                </p:inputNumber>
-                                <p:message id="loteMessage" for="loteInputText" styleClass="error"/>
+
+
+                            <!-- BOTON CAMBIO MASIVO-->
+                            <div class="col-md-3" style="margin-top: 1.5em">
+                                <p:commandButton update="form-editEstadoMasivo:panelEstadoMasivo"
+                                                 onclick="PF('dlg3').show();" value="Cambio masivo"
+                                                 class="btn btn-primary"
+                                                 style="color: white; width: 100%; font-size: 1.3em !important">
+                                    <f:setPropertyActionListener value="#{item}"
+                                                                 target="#{estadoItemController.estadoItemActual}"/>
+                                    <f:setPropertyActionListener value="#{loginController.userLogueado}"
+                                                                 target="#{estadoItemController.usuarioActual}"/>
+                                </p:commandButton>
                             </div>
+
+
+                            <!--BOTON DE TERMINAR EVALUACION-->
+                            <div class="col-md-3" style="margin-top: 1.5em">
+                                <p:commandButton ajax="false"
+                                                 action="#{estadoItemController.updateTerminarEvaluacionPlaneacion}"
+                                                 value="Terminar evaluación" class="btn btn-success"
+                                                 style="color: white; width: 100%; font-size: 1.3em !important">
+                                    <f:setPropertyActionListener value="#{loginController.userLogueado}"
+                                                                 target="#{estadoItemController.usuarioActual}"/>
+                                </p:commandButton>
+                            </div>
+
+                            <div class="col-md-1" style="margin-top: 1.5em">
+                                <h:commandLink id="exportExcel">
+                                    <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                                    <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                                    target="itemsEstado" fileName="tabla"/>
+                                </h:commandLink>
+                                <p:tooltip id="descripcion-exportExcel" for="exportExcel"
+                                           value="Exportar tabla en formato .xls" trackMouse="true"/>
+                            </div>
+
                         </div>
-                        <div class="form-group">
-                            <h:outputLabel value="Estado de la evaluación:"/>
-                            <h:selectOneMenu value="#{estadoItemController.evaluado}"
-                                             style="width: 100%"
-                                             class="form-control">
-                                <f:selectItem itemLabel="EVALUADO" itemValue="EVALUADO" />
-                                <f:selectItem itemLabel="PENDIENTE" itemValue="PENDIENTE" />
-                                <f:selectItem itemLabel="NO EVALUADO" itemValue="NO EVALUADO" />
-                            </h:selectOneMenu> 
+                    </div>
+                </f:facet>
+
+
+                <p:column filterBy="#{item.referencia}" filterValue="#{estadoItemController.filtroReferencia}"
+                          width="90" sortBy="#{item.referencia}" style="text-align: center">
+                    <f:facet class="titulos-tablas" name="header">Referencia</f:facet>
+                    <h:outputText value="#{item.referencia}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.FDescItem}" sortBy="#{item.FDescItem}" width="130" style="text-align: center"
+                          filterMatchMode="contains">
+                    <f:facet name="header">Desc. item</f:facet>
+                    <h:outputText value="#{item.FDescItem}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.extension1}" width="80" sortBy="#{item.extension1}"
+                          style="text-align: center">
+                    <f:facet name="header">Ext. 1</f:facet>
+                    <h:outputText value="#{item.extension1}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.extension2}" filterValue="#{estadoItemController.filtroExt2}"
+                          sortBy="#{item.extension2}" width="80" style="text-align: center">
+                    <f:facet name="header">Ext. 2</f:facet>
+                    <h:outputText value="#{item.extension2}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.comprado}" sortBy="#{item.comprado}" style="text-align: center"
+                          filterMatchMode="contains">
+                    <f:facet name="header">Venta total ítem</f:facet>
+                    <h:outputText value="#{item.comprado}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.maxCantidadComprada}" sortBy="#{item.maxCantidadComprada}"
+                          style="text-align: center" filterMatchMode="contains">
+                    <f:facet name="header">Máxima venta dia</f:facet>
+                    <h:outputText value="#{item.maxCantidadComprada}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.clientes}" sortBy="#{item.clientes}" style="text-align: center"
+                          filterMatchMode="contains">
+                    <f:facet name="header">Total de clientes</f:facet>
+                    <h:outputText value="#{item.clientes}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.rotacion}" sortBy="#{item.rotacion}" style="text-align: center"
+                          filterMatchMode="contains">
+                    <f:facet name="header">%Rotación</f:facet>
+                    <h:outputText value="#{item.rotacion}">
+                        <f:convertNumber pattern="#0.00"/>
+                    </h:outputText>
+                </p:column>
+
+
+                <p:column filterBy="#{item.participacion}" sortBy="#{item.participacion}" style="text-align: center"
+                          filterMatchMode="contains">
+                    <f:facet name="header">%Participacion</f:facet>
+                    <h:outputText value="#{item.participacion}">
+                        <f:convertNumber pattern="#0.00"/>
+                    </h:outputText>
+                </p:column>
+
+
+                <p:column filterBy="#{item.participacionSumada}" sortBy="#{item.participacionSumada}"
+                          style="text-align: center" filterMatchMode="contains">
+                    <f:facet name="header">%Pareto x tamaño</f:facet>
+                    <h:outputText value="#{item.participacionSumada}">
+                        <f:convertNumber pattern="#0.00"/>
+                    </h:outputText>
+                </p:column>
+
+
+                <p:column filterBy="#{item.estadoItem}" filterValue="#{estadoItemController.filtroEstado}"
+                          sortBy="#{item.estadoItem}" style="text-align: center">
+                    <f:facet name="header">Estado Sugerido</f:facet>
+                    <h:outputText value="#{item.estadoItem}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.seguridad}" sortBy="#{item.seguridad}" style="text-align: center"
+                          filterMatchMode="contains">
+                    <f:facet name="header">%Seguridad</f:facet>
+                    <h:outputText value="#{item.seguridad}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.tiempoReposicion}" sortBy="#{item.tiempoReposicion}"
+                          style="text-align: center" filterMatchMode="contains">
+                    <f:facet name="header">Tiempo de reposición</f:facet>
+                    <h:outputText value="#{item.tiempoReposicion}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.noi}" sortBy="#{item.noi}" style="text-align: center"
+                          filterMatchMode="contains">
+                    <f:facet name="header">Noi</f:facet>
+                    <h:outputText style="font-weight: bold" value="#{item.noi}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.tasaProduccionDia}" sortBy="#{item.tasaProduccionDia}"
+                          style="text-align: center" filterMatchMode="contains">
+                    <f:facet name="header">Tasa de producción diaria</f:facet>
+                    <h:outputText value="#{item.tasaProduccionDia}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.tamanoLote}" sortBy="#{item.tamanoLote}" style="text-align: center"
+                          filterMatchMode="contains">
+                    <f:facet name="header">Tamaño del lote</f:facet>
+                    <h:outputText value="#{item.tamanoLote}"/>
+                </p:column>
+
+
+                <p:column width="50">
+                    <p:commandLink rendered="#{loginController.authenticated}" update="form-editEstado:panelEstado"
+                                   onclick="PF('dlg2').show();" id="estado" class="btn btn-primary"
+                                   style="color: white">
+                        <li class="fa fa-edit"></li>
+                        <f:setPropertyActionListener value="#{item}" target="#{estadoItemController.estadoItemActual}"/>
+                        <f:setPropertyActionListener value="#{loginController.userLogueado}"
+                                                     target="#{estadoItemController.usuarioActual}"/>
+                    </p:commandLink>
+                    <p:tooltip for="estado" value="Agregar estado"/>
+                </p:column>
+
+
+            </p:dataTable>
+        </h:form>
+
+
+
+        <!-- MODAL PARA EDITAR ESTADO-->
+        <h:form id="form-editEstado">
+            <p:dialog widgetVar="dlg2" modal="true" header="Editar estado" width="500">
+                <p:outputPanel id="panelEstado" style="font-size: 1.3em !important">
+                    <div class="form-group">
+                        <h:outputLabel value="Referencia:"/> <span
+                            style="color: red"> #{estadoItemController.estadoItemActual.referencia}</span>
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Descripción:"/> #{estadoItemController.estadoItemActual.FDescItem}
+                    </div>
+
+                    <div class="row">
+
+                        <div class="form-group col-md-6">
+                            <h:outputLabel value="% Seguridad:"/>
+                            <p:inputNumber id="seguridadInputText"
+                                           value="#{estadoItemController.estadoItemActual.seguridad}"
+                                           required="true"
+                                           maxValue="100"
+                                           decimalPlaces="0"
+                                           requiredMessage="Por favor ingrese la versión del archivo">
+                                <f:ajax execute="@this" render="seguridadMessage"/>
+                            </p:inputNumber>
+                            <p:message id="seguridadMessage" for="seguridadInputText" styleClass="error"/>
                         </div>
-                        <div class="">
-                            <p:commandButton styleClass="btn btn-primary btn-block" 
-                                             value="Guardar" onclick="dlg2.hide();"
-                                             action="#{estadoItemController.updatePlaneacion}"
-                                             ajax="false">
-                                <f:ajax execute="@this" render="form-itemEstado:itemsEstado"/>
-                            </p:commandButton>
-                            <p:commandButton styleClass="btn btn-danger btn-block" 
-                                      value="Cancelar" 
-                                      oncomplete="PF('dlg2').hide();"
-                                      process="@this"/>
+
+                        <div class="form-group col-md-6">
+                            <h:outputLabel value="Tiempo de reposición:"/>
+                            <p:inputNumber id="fabricacionInputText"
+                                           value="#{estadoItemController.estadoItemActual.tiempoReposicion}"
+                                           required="true"
+                                           decimalPlaces="0"
+                                           requiredMessage="Por favor ingrese la versión del archivo">
+                                <f:ajax execute="@this" render="fabricacionMessage"/>
+                            </p:inputNumber>
+                            <p:message id="fabricacionMessage" for="fabricacionInputText" styleClass="error"/>
                         </div>
-                    </p:outputPanel>
-                </p:dialog>
-            </h:form>
-           
-            <h:form id="form-editEstadoMasivo">
-                <p:dialog widgetVar="dlg3" modal="true" header="Editar estado" width="500">
-                    <p:outputPanel id="panelEstadoMasivo" style="font-size: 1.3em !important">
-                        Aplicar Cambio masivo a:
-                        <div class="row" style="margin-top: 1em">
-                            <div class="form-group col-md-6">
-                                <h:outputLabel value="Referencia:"/>
-                                <h:inputText class="form-control" 
-                                       value="#{estadoItemController.filtroReferencia}">
-                                </h:inputText>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <h:outputLabel value="Extensión 2:"/>
-                                <h:inputText class="form-control"
-                                       maxlength="5"
-                                       value="#{estadoItemController.filtroExt2}">
-                                </h:inputText>
-                            </div>
+
+                        <div class="form-group col-md-6">
+                            <h:outputLabel value="Tasa de producción diaria:"/>
+                            <p:inputNumber id="tasaInputText"
+                                           value="#{estadoItemController.estadoItemActual.tasaProduccionDia}"
+                                           required="true"
+                                           requiredMessage="Por favor ingrese la tasa de produccion">
+                                <f:ajax execute="@this" render="tasaMessage"/>
+                            </p:inputNumber>
+                            <p:message id="tasaMessage" for="tasaInputText" styleClass="error"/>
                         </div>
-                        <p:separator></p:separator>
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <h:outputLabel value="% Seguridad:"  />
-                                <p:inputNumber id="seguridadInputText" 
-                                               value="#{estadoItemController.seguridadMasivo}"
-                                               required="true"
-                                               maxValue="100"
-                                               decimalPlaces="0"
-                                               requiredMessage="Por favor ingrese el % de seguridad">
-                                    <f:ajax execute="@this" render="seguridadMessage"/>
-                                </p:inputNumber>
-                                <p:message id="seguridadMessage" for="seguridadInputText" styleClass="error"/>
-                            </div> 
-                            <div class="form-group col-md-6">
-                                <h:outputLabel value="Tiempo de reposición:"  />
-                                <p:inputNumber id="fabricacionInputText" 
-                                               value="#{estadoItemController.tiempoReposicionMasivo}"
-                                               required="true"
-                                               decimalPlaces="0"
-                                               requiredMessage="Por favor ingrese el tiempo de reposición">
-                                    <f:ajax execute="@this" render="fabricacionMessage"/>
-                                </p:inputNumber>
-                                <p:message id="fabricacionMessage" for="fabricacionInputText" styleClass="error"/>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <h:outputLabel value="Tasa de producción diaria:"  />
-                                <p:inputNumber id="tasaInputText" 
-                                               value="#{estadoItemController.tasaProduccionDiaMasivo}"
-                                               required="true"
-                                               requiredMessage="Por favor ingrese la tasa de produccion">
-                                    <f:ajax execute="@this" render="tasaMessage"/>
-                                </p:inputNumber>
-                                <p:message id="tasaMessage" for="tasaInputText" styleClass="error"/>
-                            </div>
-                             <div class="form-group col-md-6">
-                                <h:outputLabel value="Tamaño del lote:"  />
-                                <p:inputNumber id="loteInputText" 
-                                               value="#{estadoItemController.tamanoLoteMasivo}"
-                                               required="true"
-                                               requiredMessage="Por favor ingrese el tamaño del lote">
-                                    <f:ajax execute="@this" render="loteMessage"/>
-                                </p:inputNumber>
-                                <p:message id="loteMessage" for="loteInputText" styleClass="error"/>
-                            </div>
+
+
+
+                        <div class="form-group col-md-6">
+                            <h:outputLabel value="Tamaño del lote:"/>
+                            <p:inputNumber id="loteInputText"
+                                           value="#{estadoItemController.estadoItemActual.tamanoLote}"
+                                           required="true"
+                                           requiredMessage="Por favor ingrese el tamaño del lote">
+                                <f:ajax execute="@this" render="loteMessage"/>
+                            </p:inputNumber>
+                            <p:message id="loteMessage" for="loteInputText" styleClass="error"/>
                         </div>
-                        <div class="">
-                            <p:commandButton styleClass="btn btn-primary btn-block" 
-                                             value="Guardar" 
-                                             onclick="dlg3.hide();"
-                                             action="#{estadoItemController.updateMasivoPlaneacion}">
-                                <p:ajax listener="#{estadoItemController.consultar}"/>  
-                                <f:ajax execute="@this"  render="form-itemEstado:itemsEstado"/>
-                            </p:commandButton>
-                            <p:commandButton styleClass="btn btn-danger btn-block" 
-                                      value="Cancelar" 
-                                      oncomplete="PF('dlg3').hide();"
-                                      process="@this"/>
+
+
+                        <!--PARTE NUEVA-->
+                        <!-- /***************************************-->
+
+                        <div class="form-group col-md-6">
+                            <p:selectOneRadio id="radio" value="#{estadoItemController.estadoCasillaNoi}">
+                                <f:selectItem itemLabel="NOI Auto" itemValue='false' />
+                                <f:selectItem itemLabel="NOI Manual" itemValue="true" />
+                                <p:ajax update="noiInputText" />
+                            </p:selectOneRadio>
                         </div>
-                    </p:outputPanel>
-                </p:dialog>
-            </h:form>
-        </ui:define>
-    </ui:composition>
+
+
+
+                        <div class="form-group col-md-6">
+                            <h:outputLabel value="NOI:"/>
+                            <p:inputNumber id="noiInputText"
+                                           value="#{estadoItemController.estadoItemActual.noi}"
+                                           required="true"
+                                           requiredMessage="Por favor ingrese el NOI"
+                                           disabled="#{estadoItemController.estadoCasillaNoi == 'false'}">
+                                <f:ajax execute="@this" render="noiMessage"/>
+                            </p:inputNumber>
+                            <p:message id="noiMessage" for="noiInputText" styleClass="error"/>
+                        </div>
+                        <!--PARTE NUEVA-->
+                        <!-- /***************************************-->
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <h:outputLabel value="Estado de la evaluación:"/>
+                        <h:selectOneMenu value="#{estadoItemController.evaluado}"
+                                         style="width: 100%"
+                                         class="form-control">
+                            <f:selectItem itemLabel="EVALUADO" itemValue="EVALUADO"/>
+                            <f:selectItem itemLabel="PENDIENTE" itemValue="PENDIENTE"/>
+                            <f:selectItem itemLabel="NO EVALUADO" itemValue="NO EVALUADO"/>
+                        </h:selectOneMenu>
+                    </div>
+                    <div class="">
+                        <p:commandButton styleClass="btn btn-primary btn-block"
+                                         value="Guardar" onclick="dlg2.hide();"
+                                         action="#{estadoItemController.updatePlaneacion}"
+                                         ajax="false">
+                            <f:ajax execute="@this" render="form-itemEstado:itemsEstado"/>
+                        </p:commandButton>
+                        <p:commandButton styleClass="btn btn-danger btn-block"
+                                         value="Cancelar"
+                                         oncomplete="PF('dlg2').hide();"
+                                         process="@this"/>
+                    </div>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+
+
+
+
+        <h:form id="form-editEstadoMasivo">
+
+            <p:dialog widgetVar="dlg3" modal="true" header="Editar estado" width="500">
+
+                <p:outputPanel id="panelEstadoMasivo" style="font-size: 1.3em !important">
+                    Aplicar Cambio masivo a:
+                    <div class="row" style="margin-top: 1em">
+                        <div class="form-group col-md-6">
+                            <h:outputLabel value="Referencia:"/>
+                            <h:inputText class="form-control"
+                                         value="#{estadoItemController.filtroReferencia}">
+                            </h:inputText>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <h:outputLabel value="Extensión 2:"/>
+                            <h:inputText class="form-control"
+                                         maxlength="5"
+                                         value="#{estadoItemController.filtroExt2}">
+                            </h:inputText>
+                        </div>
+                    </div>
+                    <p:separator></p:separator>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <h:outputLabel value="% Seguridad:"/>
+                            <p:inputNumber id="seguridadInputText"
+                                           value="#{estadoItemController.seguridadMasivo}"
+                                           required="true"
+                                           maxValue="100"
+                                           decimalPlaces="0"
+                                           requiredMessage="Por favor ingrese el % de seguridad">
+                                <f:ajax execute="@this" render="seguridadMessage"/>
+                            </p:inputNumber>
+                            <p:message id="seguridadMessage" for="seguridadInputText" styleClass="error"/>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <h:outputLabel value="Tiempo de reposición:"/>
+                            <p:inputNumber id="fabricacionInputText"
+                                           value="#{estadoItemController.tiempoReposicionMasivo}"
+                                           required="true"
+                                           decimalPlaces="0"
+                                           requiredMessage="Por favor ingrese el tiempo de reposición">
+                                <f:ajax execute="@this" render="fabricacionMessage"/>
+                            </p:inputNumber>
+                            <p:message id="fabricacionMessage" for="fabricacionInputText" styleClass="error"/>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <h:outputLabel value="Tasa de producción diaria:"/>
+                            <p:inputNumber id="tasaInputText"
+                                           value="#{estadoItemController.tasaProduccionDiaMasivo}"
+                                           required="true"
+                                           requiredMessage="Por favor ingrese la tasa de produccion">
+                                <f:ajax execute="@this" render="tasaMessage"/>
+                            </p:inputNumber>
+                            <p:message id="tasaMessage" for="tasaInputText" styleClass="error"/>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <h:outputLabel value="Tamaño del lote:"/>
+                            <p:inputNumber id="loteInputText"
+                                           value="#{estadoItemController.tamanoLoteMasivo}"
+                                           required="true"
+                                           requiredMessage="Por favor ingrese el tamaño del lote">
+                                <f:ajax execute="@this" render="loteMessage"/>
+                            </p:inputNumber>
+                            <p:message id="loteMessage" for="loteInputText" styleClass="error"/>
+                        </div>
+                    </div>
+
+                    <!--boton guardar en el modal-->
+                    <div class="">
+                        <p:commandButton styleClass="btn btn-primary btn-block"
+                                         value="Guardar"
+                                         onclick="dlg3.hide();"
+                                         action="#{estadoItemController.updateMasivoPlaneacion}">
+                            <p:ajax listener="#{estadoItemController.consultar}"/>
+                            <f:ajax execute="@this" render="form-itemEstado:itemsEstado"/>
+                        </p:commandButton>
+                        <p:commandButton styleClass="btn btn-danger btn-block"
+                                         value="Cancelar"
+                                         oncomplete="PF('dlg3').hide();"
+                                         process="@this"/>
+                    </div>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+
+
+
 </html>

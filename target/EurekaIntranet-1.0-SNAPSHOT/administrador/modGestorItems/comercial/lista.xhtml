@@ -1,275 +1,385 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-    <ui:composition template="/template/templateAdministrador.xhtml">
-        <ui:define name="menu">
-            <h:form id="menu-principal">
-                <ul class="sidebar-menu">
-                    <li style="margin-top: 20px" class="active">
-                        <h:commandLink action="#{estadoItemController.prepareListComercial}">
-                            <i class="fa fa-check"></i> 
-                            <span>Evaluación de estado 1</span>
-                        </h:commandLink>
-                    </li>
-                    <li>
-                        <h:commandLink action="#{estadoItemController.prepareleListItemsEstadoCambio}">
-                            <i class="fa fa-pencil-square-o"></i>
-                            <span>Log de items modificados</span>
-                        </h:commandLink>
-                    </li>
-                    <li style="margin-top: 20px">
-                        <h:commandLink action="/index">
-                            <i class="fa fa-dashboard"></i> 
-                            <span>Vista de usuario estandar</span>
-                        </h:commandLink>
-                    </li>
-                    <li>
-                        <h:commandLink action="/administrador/modulos">
-                            <i class="fa fa-th"></i>
-                            <span>Modulos del sistema</span>
-                        </h:commandLink>
-                    </li>
-                </ul>
-            </h:form>
-        </ui:define>
-        <ui:define name="title">Gestión de Items - Proceso comercial</ui:define>   
-        <ui:define name="title2">Validación de estados de items </ui:define>   
-        <ui:define name="body">
-            <p:growl id="growl" showDetail="true" life="2000"/>
-            <h:form id="form-itemEstado">
-                <div class="row">
-                    <div class="form-group col-md-8">
-                        <h:outputLabel value="Plan 50 - Grupo:"
-                                       style="font-weight: bold; color: #185291"/>
-                        <br></br>
-                        <p:selectOneMenu id="grupo50"
-                                        style="width: 100%"
-                                        value="#{estadoItemController.grupoItemActual}"
-                                        filter="true" 
-                                        filterMatchMode="contains"
-                                        required="true">
-                            <f:selectItem itemLabel="Ninguno" itemValue="#{null}"/>
-                                <f:selectItems value="#{estadoItemController.listaGrupoItemComercial}" var="item" itemValue="#{item}"/>  
-                                <p:ajax listener="#{estadoItemController.consultar}"/>  
-                                <f:ajax execute="@this" render="form-itemEstado:itemsEstado"/>
-                       </p:selectOneMenu>
-                    </div> 
+
+
+<ui:composition template="/template/templateAdministrador.xhtml">
+    <ui:define name="menu">
+        <h:form id="menu-principal">
+            <ul class="sidebar-menu">
+                <li style="margin-top: 20px" class="active">
+                    <h:commandLink action="#{estadoItemController.prepareListComercial}">
+                        <i class="fa fa-check"></i>
+                        <span>Evaluación de estado 1</span>
+                    </h:commandLink>
+                </li>
+
+                <li>
+                    <h:commandLink action="#{estadoItemController.prepareleListItemsEstadoCambio}">
+                        <i class="fa fa-pencil-square-o"></i>
+                        <span>Log de items modificados</span>
+                    </h:commandLink>
+                </li>
+
+                <li style="margin-top: 20px">
+                    <h:commandLink action="/index">
+                        <i class="fa fa-dashboard"></i>
+                        <span>Vista de usuario estandar</span>
+                    </h:commandLink>
+                </li>
+
+                <li>
+                    <h:commandLink action="/administrador/modulos">
+                        <i class="fa fa-th"></i>
+                        <span>Modulos del sistema</span>
+                    </h:commandLink>
+                </li>
+            </ul>
+        </h:form>
+    </ui:define>
+
+
+    <ui:define name="title">Gestión de Items - Proceso comercial</ui:define>
+    <ui:define name="title2">Validación de estados de items </ui:define>
+    <ui:define name="body">
+        <p:growl id="growl" showDetail="true" life="2000"/>
+
+
+        <h:form id="form-itemEstado">
+
+
+            <div class="row">
+                <div class="form-group col-md-8">
+                    <h:outputLabel value="Plan 50 - Grupo:"
+                                   style="font-weight: bold; color: #185291"/>
+                    <br></br>
+
+                    <p:selectOneMenu id="grupo50"
+                                     style="width: 100%"
+                                     value="#{estadoItemController.grupoItemActual}"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     required="true">
+                        <f:selectItem itemLabel="Ninguno" itemValue="#{null}"/>
+                        <f:selectItems value="#{estadoItemController.listaGrupoItemComercial}" var="item"
+                                       itemValue="#{item}"/>
+                        <p:ajax listener="#{estadoItemController.consultar}"/>
+                        <f:ajax execute="@this" render="form-itemEstado:itemsEstado"/>
+                    </p:selectOneMenu>
                 </div>
-                <p:separator></p:separator>
-                <p:dataTable  value="#{estadoItemController.listaEstadoItemPlan50Comercial}" var="item" style="font-size: .8em !important; margin-top: 20px"
-                              rows="50" paginator="true"  id="itemsEstado"  resizableColumns="true" draggableColumns="true"
-                              rowStyleClass="#{item.evaluado eq 'EVALUADO' ? 'color1': item.evaluado eq 'NO EVALUADO' ? 'color2': item.evaluado eq 'PENDIENTE' ? 'color3':null}"
-                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                              rowsPerPageTemplate="50,100,150" emptyMessage="No se encontraron items con el criterio dado">
-                    <f:facet name="header">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <h4 class="colorLetra" style="font-weight: bold; text-align: left" >
-                                        Numero total de items: #{fn:length(estadoItemController.listaEstadoItemPlan50Comercial)} <br></br> Numero total de items en Estado 1:  #{fn:length(estadoItemController.listaEstadoItemPlan50ComercialEstadoItem)} <br></br> Grupo: #{estadoItemController.grupoItemActual.descripcion}
-                                    </h4>
-                                </div>
-                                <div class="col-md-3" style="margin-top: 1.5em">
-                                    <p:commandButton update="form-editEstadoMasivo:panelEstadoMasivo" onclick="PF('dlg3').show();" value="Cambio masivo" class="btn btn-primary" style="color: white; width: 100%; font-size: 1.3em !important"> 
-                                        <f:setPropertyActionListener value="#{item}" target="#{estadoItemController.estadoItemActual}"/>
-                                        <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{estadoItemController.usuarioActual}"/>
-                                    </p:commandButton>
-                                </div>
-                                <div class="col-md-3" style="margin-top: 1.5em">
-                                    <p:commandButton update="itemsEstado" action="#{estadoItemController.updateTerminarEvaluacionComercial}" value="Terminar evaluación" class="btn btn-success" style="color: white; width: 100%; font-size: 1.3em !important"> 
-                                        <p:confirm header="Confirmación" message="¿Esta seguro que desea terminar la evaluación?" icon="ui-icon-alert" />
-                                        <f:ajax execute="@this" render="form-itemEstado:itemsEstado"/>
-                                        <p:ajax listener="#{estadoItemController.consultar}"/>  
-                                        <f:setPropertyActionListener value="#{item}" target="#{estadoItemController.estadoItemActual}"/>
-                                        <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{estadoItemController.usuarioActual}"/>
-                                    </p:commandButton>
-                                    <p:confirmDialog global="true">
-                                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                                    </p:confirmDialog>
-                                </div>
-                                <div class="col-md-1" style="margin-top: 1.5em">
-                                    <h:commandLink id="exportExcel">
-                                        <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
-                                        <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
-                                                target="itemsEstado" fileName="tabla" />
-                                    </h:commandLink>
-                                    <p:tooltip id="descripcion-exportExcel" for="exportExcel" value="Exportar tabla en formato .xls" trackMouse="true"/>
-                                </div>
+            </div>
+
+
+            <p:separator></p:separator>
+
+
+            <p:dataTable value="#{estadoItemController.listaEstadoItemPlan50Comercial}" var="item"
+                         style="font-size: .8em !important; margin-top: 20px"
+                         rows="50" paginator="true" id="itemsEstado" resizableColumns="true" draggableColumns="true"
+                         rowStyleClass="#{item.evaluado eq 'EVALUADO' ? 'color1': item.evaluado eq 'NO EVALUADO' ? 'color2': item.evaluado eq 'PENDIENTE' ? 'color3':null}"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="50,100,150" emptyMessage="No se encontraron items con el criterio dado">
+                <f:facet name="header">
+                    <div class="container-fluid">
+                        <div class="row">
+
+                            <div class="col-md-5">
+                                <h4 class="colorLetra" style="font-weight: bold; text-align: left">
+                                    Numero total de items: #{fn:length(estadoItemController.listaEstadoItemPlan50Comercial)}
+                                    <br></br> Numero total de items en Estado 1:  #{fn:length(estadoItemController.listaEstadoItemPlan50ComercialEstadoItem)}
+                                    <br></br> Grupo: #{estadoItemController.grupoItemActual.descripcion}
+                                </h4>
                             </div>
+
+                            <div class="col-md-3" style="margin-top: 1.5em">
+
+                                <p:commandButton update="form-editEstadoMasivo:panelEstadoMasivo"
+                                                 onclick="PF('dlg3').show();" value="Cambio masivo"
+                                                 class="btn btn-primary"
+                                                 style="color: white; width: 100%; font-size: 1.3em !important">
+                                    <f:setPropertyActionListener value="#{item}"
+                                                                 target="#{estadoItemController.estadoItemActual}"/>
+                                    <f:setPropertyActionListener value="#{loginController.userLogueado}"
+                                                                 target="#{estadoItemController.usuarioActual}"/>
+                                </p:commandButton>
+                            </div>
+
+
+                            <!--BOTON TERMINAR EVALUACION-->
+                            <div class="col-md-3" style="margin-top: 1.5em">
+                                <p:commandButton update="itemsEstado"
+                                                 action="#{estadoItemController.updateTerminarEvaluacionComercial}"
+                                                 value="Terminar evaluación" class="btn btn-success"
+                                                 style="color: white; width: 100%; font-size: 1.3em !important">
+                                    <p:confirm header="Confirmación"
+                                               message="¿Esta seguro que desea terminar la evaluación?"
+                                               icon="ui-icon-alert"/>
+                                    <f:ajax execute="@this" render="form-itemEstado:itemsEstado"/>
+                                    <p:ajax listener="#{estadoItemController.consultar}"/>
+                                    <f:setPropertyActionListener value="#{item}"
+                                                                 target="#{estadoItemController.estadoItemActual}"/>
+                                    <f:setPropertyActionListener value="#{loginController.userLogueado}"
+                                                                 target="#{estadoItemController.usuarioActual}"/>
+                                </p:commandButton>
+
+
+                                <!--CUADRO DE DIALOGO PARA TERMINAR LA EVALUACION-->
+                                <p:confirmDialog global="true">
+                                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes"
+                                                     icon="ui-icon-check"/>
+                                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no"
+                                                     icon="ui-icon-close"/>
+                                </p:confirmDialog>
+                            </div>
+
+                            <div class="col-md-1" style="margin-top: 1.5em">
+                                <h:commandLink id="exportExcel">
+                                    <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
+                                    <p:dataExporter type="xls" postProcessor="#{exportarTable.postProcessXLS}"
+                                                    target="itemsEstado" fileName="tabla"/>
+                                </h:commandLink>
+                                <p:tooltip id="descripcion-exportExcel" for="exportExcel"
+                                           value="Exportar tabla en formato .xls" trackMouse="true"/>
+                            </div>
+
                         </div>
-                    </f:facet>
-                    <p:column filterBy="#{item.referencia}" filterValue="#{estadoItemController.filtroReferencia}" width="90" sortBy="#{item.referencia}" style="text-align: center">
-                         <f:facet class="titulos-tablas" name="header">Referencia</f:facet>
-                         <h:outputText value="#{item.referencia}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.FDescItem}" sortBy="#{item.FDescItem}" width="180" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">Desc. item</f:facet>
-                         <h:outputText value="#{item.FDescItem}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.extension1}" filterValue="#{estadoItemController.filtroExt1}" width="100" sortBy="#{item.extension1}" style="text-align: center">
-                         <f:facet name="header">Ext. 1</f:facet>
-                         <h:outputText value="#{item.extension1}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.extension2}" sortBy="#{item.extension2}" width="100" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">Ext. 2</f:facet>
-                         <h:outputText value="#{item.extension2}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.comprado}" sortBy="#{item.comprado}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">Venta total ítem</f:facet>
-                         <h:outputText value="#{item.comprado}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.maxCantidadComprada}" sortBy="#{item.maxCantidadComprada}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">Máxima venta dia</f:facet>
-                         <h:outputText value="#{item.maxCantidadComprada}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.clientes}" sortBy="#{item.clientes}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">Total de clientes</f:facet>
-                         <h:outputText value="#{item.clientes}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.rotacion}" sortBy="#{item.rotacion}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">%Rotación</f:facet>
-                         <h:outputText value="#{item.rotacion}">
-                             <f:convertNumber pattern="#0.00" />
-                         </h:outputText>
-                    </p:column>
-                    <p:column filterBy="#{item.participacion}" sortBy="#{item.participacion}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">%Participacion</f:facet>
-                         <h:outputText value="#{item.participacion}">
-                             <f:convertNumber pattern="#0.00" />
-                         </h:outputText>
-                    </p:column>
-                    <p:column filterBy="#{item.participacionSumada}" sortBy="#{item.participacionSumada}" style="text-align: center" filterMatchMode="contains">
-                         <f:facet name="header">%Pareto x tamaño</f:facet>
-                         <h:outputText value="#{item.participacionSumada}">
-                             <f:convertNumber pattern="#0.00" />
-                         </h:outputText>
-                    </p:column>
-                     <p:column filterBy="#{item.estadoUnoee}" sortBy="#{item.estadoItem}" style="text-align: center">
-                         <f:facet name="header">Estado UNOEE</f:facet>
-                         <h:outputText value="#{item.estadoUnoee}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.estadoItem}" filterValue="#{estadoItemController.filtroEstado}" sortBy="#{item.estadoItem}" style="text-align: center">
-                         <f:facet name="header">Estado Sugerido</f:facet>
-                         <h:outputText value="#{item.estadoItem}"/>
-                    </p:column>
-                    <p:column width="50">
-                        <p:commandLink rendered="#{loginController.authenticated}" update="form-editEstado:panelEstado" onclick="PF('dlg2').show();"  id="estado" class="btn btn-primary" style="color: white"> 
-                            <li class="fa fa-edit"></li> 
-                            <f:setPropertyActionListener value="#{item}" target="#{estadoItemController.estadoItemActual}"/>
-                            <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{estadoItemController.usuarioActual}"/>
-                        </p:commandLink>
-                        <p:tooltip for="estado" value="Agregar estado"/>
-                    </p:column>
-                </p:dataTable>
-            </h:form> 
-            <h:form id="form-editEstado">
-                <p:dialog widgetVar="dlg2" header="Editar estado" width="500">
-                    <p:outputPanel id="panelEstado" style="font-size: 1.3em !important">
-                        <div class="form-group">
-                            <h:outputLabel value="Referencia:"/> <span style="color: red" > #{estadoItemController.estadoItemActual.referencia}</span> 
+                    </div>
+                </f:facet>
+
+
+                <p:column filterBy="#{item.referencia}" filterValue="#{estadoItemController.filtroReferencia}"
+                          width="90" sortBy="#{item.referencia}" style="text-align: center">
+                    <f:facet class="titulos-tablas" name="header">Referencia</f:facet>
+                    <h:outputText value="#{item.referencia}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.FDescItem}" sortBy="#{item.FDescItem}" width="180" style="text-align: center"
+                          filterMatchMode="contains">
+                    <f:facet name="header">Desc. item</f:facet>
+                    <h:outputText value="#{item.FDescItem}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.extension1}" filterValue="#{estadoItemController.filtroExt1}" width="100"
+                          sortBy="#{item.extension1}" style="text-align: center">
+                    <f:facet name="header">Ext. 1</f:facet>
+                    <h:outputText value="#{item.extension1}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.extension2}" sortBy="#{item.extension2}" width="100"
+                          style="text-align: center" filterMatchMode="contains">
+                    <f:facet name="header">Ext. 2</f:facet>
+                    <h:outputText value="#{item.extension2}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.comprado}" sortBy="#{item.comprado}" style="text-align: center"
+                          filterMatchMode="contains">
+                    <f:facet name="header">Venta total ítem</f:facet>
+                    <h:outputText value="#{item.comprado}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.maxCantidadComprada}" sortBy="#{item.maxCantidadComprada}"
+                          style="text-align: center" filterMatchMode="contains">
+                    <f:facet name="header">Máxima venta dia</f:facet>
+                    <h:outputText value="#{item.maxCantidadComprada}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.clientes}" sortBy="#{item.clientes}" style="text-align: center"
+                          filterMatchMode="contains">
+                    <f:facet name="header">Total de clientes</f:facet>
+                    <h:outputText value="#{item.clientes}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.rotacion}" sortBy="#{item.rotacion}" style="text-align: center"
+                          filterMatchMode="contains">
+                    <f:facet name="header">%Rotación</f:facet>
+                    <h:outputText value="#{item.rotacion}">
+                        <f:convertNumber pattern="#0.00"/>
+                    </h:outputText>
+                </p:column>
+
+
+                <p:column filterBy="#{item.participacion}" sortBy="#{item.participacion}" style="text-align: center"
+                          filterMatchMode="contains">
+                    <f:facet name="header">%Participacion</f:facet>
+                    <h:outputText value="#{item.participacion}">
+                        <f:convertNumber pattern="#0.00"/>
+                    </h:outputText>
+                </p:column>
+
+
+                <p:column filterBy="#{item.participacionSumada}" sortBy="#{item.participacionSumada}"
+                          style="text-align: center" filterMatchMode="contains">
+                    <f:facet name="header">%Pareto x tamaño</f:facet>
+                    <h:outputText value="#{item.participacionSumada}">
+                        <f:convertNumber pattern="#0.00"/>
+                    </h:outputText>
+                </p:column>
+
+
+                <p:column filterBy="#{item.estadoUnoee}" sortBy="#{item.estadoItem}" style="text-align: center">
+                    <f:facet name="header">Estado UNOEE</f:facet>
+                    <h:outputText value="#{item.estadoUnoee}"/>
+                </p:column>
+
+
+                <p:column filterBy="#{item.estadoItem}" filterValue="#{estadoItemController.filtroEstado}"
+                          sortBy="#{item.estadoItem}" style="text-align: center">
+                    <f:facet name="header">Estado Sugerido</f:facet>
+                    <h:outputText value="#{item.estadoItem}"/>
+                </p:column>
+
+
+                <p:column width="50">
+                    <p:commandLink rendered="#{loginController.authenticated}" update="form-editEstado:panelEstado"
+                                   onclick="PF('dlg2').show();" id="estado" class="btn btn-primary"
+                                   style="color: white">
+                        <li class="fa fa-edit"></li>
+                        <f:setPropertyActionListener value="#{item}" target="#{estadoItemController.estadoItemActual}"/>
+                        <f:setPropertyActionListener value="#{loginController.userLogueado}"
+                                                     target="#{estadoItemController.usuarioActual}"/>
+                    </p:commandLink>
+                    <p:tooltip for="estado" value="Agregar estado"/>
+                </p:column>
+
+
+            </p:dataTable>
+        </h:form>
+
+
+        <h:form id="form-editEstado">
+            <p:dialog widgetVar="dlg2" header="Editar estado" width="500">
+                <p:outputPanel id="panelEstado" style="font-size: 1.3em !important">
+                    <div class="form-group">
+                        <h:outputLabel value="Referencia:"/> <span
+                            style="color: red"> #{estadoItemController.estadoItemActual.referencia}</span>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Descripción:"/> #{estadoItemController.estadoItemActual.FDescItem}
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel
+                                value="Estado de la evaluación:"/> #{estadoItemController.estadoItemActual.evaluado}
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Estado del item:"/>
+                        <h:selectOneMenu value="#{estadoItemController.estadoItemActual.estadoItem}"
+                                         class="form-control"
+                                         style="width: 100%">
+                            <f:selectItem itemLabel="ESTADO 2" itemValue="ESTADO 2"/>
+                            <f:selectItem itemLabel="ESTADO 1" itemValue="ESTADO 1"/>
+                        </h:selectOneMenu>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Estado de la evaluación:"/>
+                        <h:selectOneMenu value="#{estadoItemController.evaluado}"
+                                         style="width: 100%"
+                                         class="form-control">
+                            <f:selectItem itemLabel="EVALUADO" itemValue="EVALUADO"/>
+                            <f:selectItem itemLabel="PENDIENTE" itemValue="PENDIENTE"/>
+                            <f:selectItem itemLabel="NO EVALUADO" itemValue="NO EVALUADO"/>
+                        </h:selectOneMenu>
+                    </div>
+                    <div class="">
+                        <p:commandButton styleClass="btn btn-primary btn-block"
+                                         value="Guardar" onclick="dlg2.hide();"
+                                         action="#{estadoItemController.updateComercial}"
+                                         ajax="false">
+                            <f:ajax execute="@this" render="form-itemEstado:itemsEstado"/>
+                        </p:commandButton>
+                        <p:commandButton styleClass="btn btn-danger btn-block"
+                                         value="Cancelar"
+                                         oncomplete="PF('dlg2').hide();"
+                                         process="@this"/>
+                    </div>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+
+
+        <!--Cuadro de dialogo para aplicar cambio masivo-->
+        <h:form id="form-editEstadoMasivo">
+            <p:dialog widgetVar="dlg3" modal="true" header="Editar estado" width="500">
+                <p:outputPanel id="panelEstadoMasivo" style="font-size: 1.3em !important">
+                    Aplicar Cambio masivo a:
+                    <div class="row" style="margin-top: 1em">
+
+                        <div class="form-group col-md-4">
+                            <h:outputLabel value="Referencia:"/>
+                            <h:inputText class="form-control"
+                                         value="#{estadoItemController.filtroReferencia}">
+                            </h:inputText>
                         </div>
-                        <div class="form-group">
-                            <h:outputLabel value="Descripción:"/> #{estadoItemController.estadoItemActual.FDescItem}
+
+                        <div class="form-group col-md-4">
+                            <h:outputLabel value="Extensión 1:"/>
+                            <h:inputText class="form-control"
+                                         maxlength="3"
+                                         value="#{estadoItemController.filtroExt1}">
+                            </h:inputText>
                         </div>
-                        <div class="form-group">
-                            <h:outputLabel value="Estado de la evaluación:"/> #{estadoItemController.estadoItemActual.evaluado}
-                        </div>
-                        <div class="form-group">
+
+                        <div class="form-group col-md-4">
                             <h:outputLabel value="Estado del item:"/>
-                            <h:selectOneMenu value="#{estadoItemController.estadoItemActual.estadoItem}"
-                                             class="form-control"
-                                             style="width: 100%">
-                                <f:selectItem itemLabel="ESTADO 2" itemValue="ESTADO 2" />
-                                <f:selectItem itemLabel="ESTADO 1" itemValue="ESTADO 1" />
-                            </h:selectOneMenu> 
-                        </div>
-                        <div class="form-group">
-                            <h:outputLabel value="Estado de la evaluación:"/>
-                            <h:selectOneMenu value="#{estadoItemController.evaluado}"
+                            <h:selectOneMenu class="form-control"
+                                             value="#{estadoItemController.filtroEstado}"
                                              style="width: 100%"
-                                             class="form-control">
-                                <f:selectItem itemLabel="EVALUADO" itemValue="EVALUADO" />
-                                <f:selectItem itemLabel="PENDIENTE" itemValue="PENDIENTE" />
-                                <f:selectItem itemLabel="NO EVALUADO" itemValue="NO EVALUADO" />
-                            </h:selectOneMenu> 
+                                             id="estado1">
+                                <f:selectItem itemLabel="" itemValue=" "/>
+                                <f:selectItem itemLabel="ESTADO 2" itemValue="ESTADO 2"/>
+                                <f:selectItem itemLabel="ESTADO 1" itemValue="ESTADO 1"/>
+                            </h:selectOneMenu>
                         </div>
-                        <div class="">
-                            <p:commandButton styleClass="btn btn-primary btn-block" 
-                                             value="Guardar" onclick="dlg2.hide();"
-                                             action="#{estadoItemController.updateComercial}"
-                                             ajax="false">
-                                <f:ajax execute="@this" render="form-itemEstado:itemsEstado"/>
-                            </p:commandButton>
-                            <p:commandButton styleClass="btn btn-danger btn-block" 
-                                      value="Cancelar" 
-                                      oncomplete="PF('dlg2').hide();"
-                                      process="@this"/>
-                        </div>
-                    </p:outputPanel>
-                </p:dialog>
-            </h:form>
-            <h:form id="form-editEstadoMasivo">
-                <p:dialog widgetVar="dlg3" modal="true" header="Editar estado" width="500">
-                    <p:outputPanel id="panelEstadoMasivo" style="font-size: 1.3em !important">
-                        Aplicar Cambio masivo a:
-                        <div class="row" style="margin-top: 1em">
-                            <div class="form-group col-md-4">
-                                <h:outputLabel value="Referencia:"/>
-                                <h:inputText class="form-control" 
-                                       value="#{estadoItemController.filtroReferencia}">
-                                </h:inputText>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <h:outputLabel value="Extensión 1:"/>
-                                <h:inputText class="form-control"
-                                       maxlength="3"
-                                       value="#{estadoItemController.filtroExt1}">
-                                </h:inputText>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <h:outputLabel value="Estado del item:"/>
-                                <h:selectOneMenu class="form-control"
-                                                  value="#{estadoItemController.filtroEstado}"
-                                                  style="width: 100%"
-                                                  id="estado1">
-                                    <f:selectItem itemLabel="" itemValue=" " />
-                                    <f:selectItem itemLabel="ESTADO 2" itemValue="ESTADO 2" />
-                                    <f:selectItem itemLabel="ESTADO 1" itemValue="ESTADO 1" />
-                                </h:selectOneMenu> 
-                            </div>
-                        </div>
-                        <p:separator></p:separator>
-                        <div class="form-group">
-                            <h:outputLabel value="Estado del item:"/>
-                            <h:selectOneMenu class="form-control" 
-                                             value="#{estadoItemController.estadoItemMasivo}"
-                                             style="width: 100%">
-                                <f:selectItem itemLabel="ESTADO 2" itemValue="ESTADO 2" />
-                                <f:selectItem itemLabel="ESTADO 1" itemValue="ESTADO 1" />
-                            </h:selectOneMenu> 
-                        </div>
-                        <div class="">
-                            <p:commandButton styleClass="btn btn-primary btn-block" 
-                                             value="Guardar" 
-                                             onclick="dlg3.hide();"
-                                             action="#{estadoItemController.updateMasivoComercial}">
-                                <p:ajax listener="#{estadoItemController.consultar}"/>  
-                                <f:ajax execute="@this"  render="form-itemEstado:itemsEstado"/>
-                            </p:commandButton>
-                            <p:commandButton styleClass="btn btn-danger btn-block" 
-                                      value="Cancelar" 
-                                      oncomplete="PF('dlg3').hide();"
-                                      process="@this"/>
-                        </div>
-                    </p:outputPanel>
-                </p:dialog>
-            </h:form>
-        </ui:define>
-    </ui:composition>
+
+                    </div>
+
+                    <p:separator></p:separator>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Estado del item:"/>
+                        <h:selectOneMenu class="form-control"
+                                         value="#{estadoItemController.estadoItemMasivo}"
+                                         style="width: 100%">
+                            <f:selectItem itemLabel="ESTADO 2" itemValue="ESTADO 2"/>
+                            <f:selectItem itemLabel="ESTADO 1" itemValue="ESTADO 1"/>
+                        </h:selectOneMenu>
+                    </div>
+
+                    <div class="">
+
+                        <!--boton guardar-->
+                        <p:commandButton styleClass="btn btn-primary btn-block"
+                                         value="Guardar"
+                                         onclick="dlg3.hide();"
+                                         action="#{estadoItemController.updateMasivoComercial}">
+                            <p:ajax listener="#{estadoItemController.consultar}"/>
+                            <f:ajax execute="@this" render="form-itemEstado:itemsEstado"/>
+                        </p:commandButton>
+
+                        <!--boton cancelar-->
+                        <p:commandButton styleClass="btn btn-danger btn-block"
+                                         value="Cancelar"
+                                         oncomplete="PF('dlg3').hide();"
+                                         process="@this"/>
+                    </div>
+
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+
+
+    </ui:define>
+</ui:composition>
 </html>

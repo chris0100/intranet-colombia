@@ -7,6 +7,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:fn="http://java.sun.com/jsp/jstl/functions">
     <ui:composition template="/template/templateAdministrador.xhtml">
+
         <ui:define name="menu">
             <h:form id="menu-principal">
                 <ul class="sidebar-menu">
@@ -43,30 +44,38 @@
                 </ul>
             </h:form>
         </ui:define>
-        <ui:define name="title">Gestión de Items - Grupos y parámetros</ui:define>   
-        <ui:define name="title2">Validación de parámetros </ui:define>   
+
+        <ui:define name="title">Gestión de Items - Grupos y parámetros</ui:define>
+
+        <ui:define name="title2">Validación de parámetros </ui:define>
+
         <ui:define name="body">
             <p:growl id="growl" showDetail="true" life="2000"/>
+
             <h:form id="form-itemEstado">
                 <p:dataTable value="#{tocParetoVentasController.listaTocParametros}" var="item" style="font-size: .8em !important; margin-top: 20px"
                             rows="50" paginator="true"  id="documentosTable" class="table table-striped table-bordered dt-responsive nowrap"
                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                             rowStyleClass="#{item.estado eq 'VIGENTE' ? 'color1': item.estado eq 'NO VIGENTE' ? 'color2': null}"
                             rowsPerPageTemplate="50,100,150" emptyMessage="No se encontraron documentos con el criterio dado">
+
                     <f:facet name="header">
                         <div class="container-fluid">
                             <div class="row">
+
                                 <div class="col-md-4">
                                     <p:button icon="ui-icon-arrowthick-1-w"
                                             value="Volver" 
                                             style="font-size: 1.2em !important; padding: 5px; left: 0"
                                             outcome="listaPlan50.xhtml"/>
                                 </div>
+
                                 <div class="col-md-4">
                                     <h4 class="colorLetra" style="font-weight: bold" >
                                         Parámetros creados: #{fn:length(tocParetoVentasController.listaTocParametros)}
                                     </h4>
                                 </div>
+
                                 <div class="col-md-3">
                                     <p:commandButton icon="ui-icon-folder-open"
                                                      ajax="false"
@@ -76,6 +85,7 @@
                                         <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{tocParetoVentasController.usuarioActual}"/>
                                     </p:commandButton>
                                 </div>
+
                                 <div class="col-md-1">
                                     <h:commandLink id="exportExcel">
                                         <p:graphicImage library="images" name="/icons/logoExcel.png" width="40"/>
@@ -83,6 +93,7 @@
                                                 target="documentosTable" fileName="inventario" />
                                     </h:commandLink>
                                 </div>
+
                             </div>
                         </div>
                     </f:facet>
@@ -134,13 +145,17 @@
                        <f:facet class="titulos-tablas" name="header"><span class="titulos-tablas">Estado</span></f:facet>
                        <h:outputText value="#{item.estado}"/>
                     </p:column>
+
                     <p:column width="50">
+
                         <p:commandLink ajax="false" action="#{tocParetoVentasController.prepareEdit}" id="parametro" class="btn btn-primary" style="color: white"> 
                             <li class="fa fa-edit"></li> 
                             <f:setPropertyActionListener value="#{item}" target="#{tocParetoVentasController.tocParametrosActual}"/>
                             <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{tocParetoVentasController.usuarioActual}"/>
                         </p:commandLink>
+
                         <p:tooltip for="parametro" value="Editar parámetro"/>
+
                     </p:column>
                </p:dataTable>
             </h:form> 

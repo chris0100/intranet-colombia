@@ -58,6 +58,7 @@ public class TocParetoVentasController implements Serializable {
         this.tocParametrosActual = tocParametrosActual;
     }
 
+
     public List<T009ParamEstadoItem> getListaTocParametros() {
         return listaTocParametros = getTocParametrosFacade().parametrosTotalesOrdenados();
     }
@@ -113,6 +114,8 @@ public class TocParetoVentasController implements Serializable {
         recargarLista();
         return "listaParametro";
     }
+
+
     public String add() {
         try { 
             tocParametrosActual.setUsuario(usuarioActual.toString());
@@ -128,6 +131,8 @@ public class TocParetoVentasController implements Serializable {
             return null;
         }
     }
+
+
     public String update() {
         try {
             tocParametrosActual.setUsuario(usuarioActual.toString());

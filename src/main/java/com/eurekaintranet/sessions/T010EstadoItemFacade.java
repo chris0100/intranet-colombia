@@ -42,12 +42,16 @@ public class T010EstadoItemFacade extends AbstractFacade<T010EstadoItem> {
         q.setParameter("estadoItemCambio",(short)1);
         return q.getResultList();
     }
+
+
     public List<T010EstadoItem> estadoItemPlan50Comercial(String plan50) {
         Query q= getEntityManager().createNamedQuery("T010EstadoItem.findByFiltroPlanEstado");
         q.setParameter("plan50",plan50);
         q.setParameter("estado",(short)1);
         return q.getResultList();
     }
+
+
     public List<T010EstadoItem> estadoItemPlan50ComercialEstadoItem(String plan50,String estadoItem) {
         Query q= getEntityManager().createNamedQuery("T010EstadoItem.findByFiltroPlanEstadoItem");
         q.setParameter("plan50",plan50);
@@ -55,12 +59,17 @@ public class T010EstadoItemFacade extends AbstractFacade<T010EstadoItem> {
         q.setParameter("estadoItem",estadoItem);
         return q.getResultList();
     }
+
+
+
     public List<T010EstadoItem> estadoItemPlan50Planeacion(String plan50) {
         Query q= getEntityManager().createNamedQuery("T010EstadoItem.findByFiltroPlanEstado");
         q.setParameter("plan50",plan50);
         q.setParameter("estado",(short)2);
         return q.getResultList();
     }
+
+
     public List<T010EstadoItem> estadoItemPlan50PlaneacionEstadoItem(String plan50,String estadoItem) {
         Query q= getEntityManager().createNamedQuery("T010EstadoItem.findByFiltroPlanNoiItem");
         q.setParameter("plan50",plan50);

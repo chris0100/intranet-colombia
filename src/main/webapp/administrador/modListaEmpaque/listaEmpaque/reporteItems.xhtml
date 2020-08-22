@@ -59,6 +59,8 @@
         <ui:define name="title2">Administración de listas de empaque</ui:define>   
         <ui:define name="body">
             <p:growl id="growl" showDetail="true" life="2000"/>
+
+
             <h:form id="form-list">
                 <p:outputPanel id="ListaEmpaqueTablePanel">
                     <p:dataTable value="#{listaEmpaqueController.listaEmpaqueHasCaja}" var="item"
@@ -138,6 +140,9 @@
                                 </div>
                             </div>
                         </f:facet>
+
+
+
                         <p:column width="50" filterBy="#{item.idCaja.numeroCaja}" filterMatchMode="contains">
                             <f:facet name="header">Caja</f:facet>
                             <h:outputText style="font-weight: bold; font-size: 1.2em" value="#{item.idCaja.numeroCaja}"/>
@@ -202,14 +207,17 @@
                                                 maxFractionDigits="2"/>
                             </h:outputText>
                         </p:column>
+
                         <p:column>
                             <f:facet name="header">Cantidad leída</f:facet>
                             <h:outputText style="color: red" value="#{item.cantCodBarraCaja}"/>
                         </p:column>
+
                         <p:column>
                             <f:facet name="header">Cant. Paquetes</f:facet>
                             <h:outputText value="#{item.cantPaquete}"/>
                         </p:column>
+
                         <p:column  filterBy="#{item.precioNeto}" filterMatchMode="contains">
                             <f:facet name="header">Precio neto $(USD)</f:facet>
                             <h:outputText value="#{item.precioNeto}">

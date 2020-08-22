@@ -268,6 +268,7 @@ public class T010EstadoItem implements Serializable {
     public String getEstadoItem() {
         return estadoItem;
     }
+
     public String getEstadoItemCambioString() {
         if(estadoItem.equals("ESTADO 1")){
             return "ESTADO 2";

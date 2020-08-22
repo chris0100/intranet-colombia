@@ -12,6 +12,7 @@ import com.eurekaintranet.entities.T011GruposItems;
 import com.eurekaintranet.sessions.T009ParamEstadoItemFacade;
 import com.eurekaintranet.sessions.T010EstadoItemFacade;
 import com.eurekaintranet.sessions.T011GruposItemsFacade;
+
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -23,10 +24,10 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+
 import org.primefaces.context.RequestContext;
 
 /**
- *
  * @author Lccabalr
  */
 @Named(value = "grupoItemController")
@@ -43,10 +44,10 @@ public class GrupoItemController implements Serializable {
     @EJB
     private T010EstadoItemFacade estadoItemFacade;
     private List<T010EstadoItem> listaEstadoItem = null;
-    
+
     private T001Usuario usuarioActual;
     private String plan50;
-    
+
     public GrupoItemController() {
     }
 
@@ -81,7 +82,7 @@ public class GrupoItemController implements Serializable {
     public void setUsuarioActual(T001Usuario usuarioActual) {
         this.usuarioActual = usuarioActual;
     }
-    
+
 
     public T009ParamEstadoItemFacade getTocParametrosFacade() {
         return tocParametrosFacade;
@@ -114,12 +115,12 @@ public class GrupoItemController implements Serializable {
     public void setListaEstadoItem(List<T010EstadoItem> listaEstadoItem) {
         this.listaEstadoItem = listaEstadoItem;
     }
-    
-    
+
+
     public List<T010EstadoItem> getListaEstadoItemComercial() {
-        if(listaEstadoItem == null){
+        if (listaEstadoItem == null) {
             return listaEstadoItem = new ArrayList<>();
-        }else{
+        } else {
             return listaEstadoItem = getEstadoItemFacade().estadoItemPlan50Comercial(plan50);
         }
     }
@@ -131,21 +132,23 @@ public class GrupoItemController implements Serializable {
     public void setPlan50(String plan50) {
         this.plan50 = plan50;
     }
-    
-     //Navigation
-    
-     public void consultarTocParametros(){
-        listaTocParametros = getTocParametrosFacade().parametrosSelect(grupoItemActual.getIdParamEstadoItem().getIdParamEstadoItem(),"VIGENTE");
-    } 
-     
-     public void recargarLista(){
-        plan50 = "";
-        listaGrupoItem=null;
+
+    //Navigation
+
+    public void consultarTocParametros() {
+        listaTocParametros = getTocParametrosFacade().parametrosSelect(grupoItemActual.getIdParamEstadoItem().getIdParamEstadoItem(), "VIGENTE");
     }
-     public String prepareEdit() {
+
+    public void recargarLista() {
+        plan50 = "";
+        listaGrupoItem = null;
+    }
+
+    public String prepareEdit() {
         return "editar";
     }
-      public String prepareCreate() {
+
+    public String prepareCreate() {
         grupoItemActual = new T011GruposItems();
         return "crear";
     }
@@ -158,8 +161,9 @@ public class GrupoItemController implements Serializable {
         recargarLista();
         return "/administrador/modGestorItems/planes/listaPlan50";
     }
+
     public String add() {
-        try { 
+        try {
             getGrupoItemFacade().create(grupoItemActual);
             addSuccessMessage("Tipo de archivo creado correctamente", "Tipo de archivo creado correctamente");
             recargarLista();
@@ -169,8 +173,10 @@ public class GrupoItemController implements Serializable {
             return null;
         }
     }
+
     public String update() {
         try {
+            System.out.println(grupoItemActual.getDescripcion() + " : " + grupoItemActual.getIdParamEstadoItem() + " : " + grupoItemActual.getGrupoPendiente());
             getGrupoItemFacade().edit(grupoItemActual);
             addSuccessMessage("Tipo de archivo editado correctamente", "Tipo de archivo editado correctamente");
             recargarLista();
@@ -180,25 +186,31 @@ public class GrupoItemController implements Serializable {
             return null;
         }
     }
-     public String updateEnviarDatosComercial() {
-         try {
-            if(grupoItemActual.getIdParamEstadoItem()==null){
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Items no enviados", "Los items del grupo "+ grupoItemActual.getDescripcion() +" no fueron enviados debido a que no tienen parámetros asignados");
+
+
+    public String updateEnviarDatosComercial() {
+
+        try {
+            if (grupoItemActual.getIdParamEstadoItem() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Items no enviados", "Los items del grupo " + grupoItemActual.getDescripcion() + " no fueron enviados debido a que no tienen parámetros asignados");
                 RequestContext.getCurrentInstance().showMessageInDialog(message);
                 return "listaPlan50";
-            }else{
+            }
+
+            else {
                 getGrupoItemFacade().envioDatosSp(grupoItemActual.getDescripcion(),
-                    usuarioActual.toString(),
-                    grupoItemActual.getIdParamEstadoItem().getFechaInicial(),
-                    grupoItemActual.getIdParamEstadoItem().getFechaFinal(),
-                    grupoItemActual.getIdParamEstadoItem().getCantidadClientes(),
-                    grupoItemActual.getIdParamEstadoItem().getRotacion(),
-                    grupoItemActual.getIdParamEstadoItem().getPartSumada(),
-                    grupoItemActual.getIdParamEstadoItem().getDiasHabiles());
+                        usuarioActual.toString(),
+                        grupoItemActual.getIdParamEstadoItem().getFechaInicial(),
+                        grupoItemActual.getIdParamEstadoItem().getFechaFinal(),
+                        grupoItemActual.getIdParamEstadoItem().getCantidadClientes(),
+                        grupoItemActual.getIdParamEstadoItem().getRotacion(),
+                        grupoItemActual.getIdParamEstadoItem().getPartSumada(),
+                        grupoItemActual.getIdParamEstadoItem().getDiasHabiles());
                 plan50 = grupoItemActual.getDescripcion();
-                grupoItemActual.setGrupoPendiente((short)1);
+                grupoItemActual.setGrupoPendiente((short) 1);
+                //guarda en BD
                 grupoItemFacade.edit(grupoItemActual);
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Items enviados", "Los items del grupo "+ grupoItemActual.getDescripcion() +" fueron enviados al proceso comercial para su respectiva evaluación de estado 1");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Items enviados", "Los items del grupo " + grupoItemActual.getDescripcion() + " fueron enviados al proceso comercial para su respectiva evaluación de estado 1");
                 RequestContext.getCurrentInstance().showMessageInDialog(message);
                 return "listaItemsEnviados";
             }
@@ -206,24 +218,27 @@ public class GrupoItemController implements Serializable {
             addErrorMessage("Error closing resource " + e.getClass().getName(), "Message: " + e.getMessage());
             return null;
         }
-       
+
     }
+
     // Messages
     private void addErrorMessage(String title, String msg) {
         FacesMessage facesMsg
                 = new FacesMessage(FacesMessage.SEVERITY_ERROR, title, msg);
         FacesContext.getCurrentInstance().addMessage(null, facesMsg);
     }
+
     private void addSuccessMessage(String title, String msg) {
         FacesMessage facesMsg
                 = new FacesMessage(FacesMessage.SEVERITY_INFO, title, msg);
         FacesContext.getCurrentInstance().addMessage("successInfo", facesMsg);
     }
-    
-      // Converter
+
+    // Converter
     public T011GruposItems getGruposItems(java.lang.Integer id) {
         return grupoItemFacade.find(id);
     }
+
     @FacesConverter(forClass = T011GruposItems.class)
     public static class TipoGrupoItemConverter implements Converter {
 
@@ -262,12 +277,13 @@ public class GrupoItemController implements Serializable {
             }
         }
     }
-    public void doSomething() {  
-            try {  
-                // simulate a long running request  
-                Thread.sleep(100000);  
-            } catch (Exception e) {  
-                // ignore  
-            }  
-        }  
+
+    public void doSomething() {
+        try {
+            // simulate a long running request
+            Thread.sleep(100000);
+        } catch (Exception e) {
+            // ignore
+        }
+    }
 }

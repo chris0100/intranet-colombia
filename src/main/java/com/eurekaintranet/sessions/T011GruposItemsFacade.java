@@ -44,12 +44,16 @@ public class T011GruposItemsFacade extends AbstractFacade<T011GruposItems> {
         query.setParameter("PartSumada",PartSumada);
         query.setParameter("diasHabiles",diasHabiles);
         query.execute();
-    } 
+    }
+
+
     public List<T011GruposItems> grupoPendienteComercial() {
         Query q= getEntityManager().createNamedQuery("T011GruposItems.findByGrupoPendiente");
         q.setParameter("grupoPendiente",(short)1);
         return q.getResultList();
     }
+
+
     public List<T011GruposItems> grupoPendientePlaneacion() {
         Query q= getEntityManager().createNamedQuery("T011GruposItems.findByGrupoPendiente");
         q.setParameter("grupoPendiente",(short)2);
