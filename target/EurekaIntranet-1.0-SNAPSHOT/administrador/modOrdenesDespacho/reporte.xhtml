@@ -201,7 +201,7 @@ and open the template in the editor.
                                 </div>
 
                                 <div class="col-md-12">
-                                    <p:commandButton style="margin-top: 10px; width: 100%" 
+                                    <p:commandButton style="margin-top: 10px; width: 100%"
                                         rendered="#{loginController.admin}"
                                         action="#{ordenesDespachoController.enviarXlsOrdenesDespacho}"
                                         type="submit" 
@@ -212,6 +212,19 @@ and open the template in the editor.
                                         update="@this form-reporte:reporteTable form-reporte:reporteTable2">
                                     </p:commandButton>
                                 </div>
+
+
+                                <!--PARTE NUEVA PARA DESCARGAR ARCHIVO PDF.-->
+                                <div class="col-md-12">
+                                    <h:commandButton styleClass="boton-prime"
+                                                     style="margin-top: 10px; width: 100%"
+                                                     value="Descargar PDF"
+                                                     icon="ui-icon-document"
+                                                     action="#{ordenesDespachoController.DescargaPDF}"
+                                    />
+                                </div>
+
+
 
                             </div>
                         </div>

@@ -12,6 +12,7 @@ import com.eurekaintranet.entities.T046ConfigOrdenDespacho;
 import com.eurekaintranet.sessions.T045ImpresionOrdenDespachoFacade;
 import com.eurekaintranet.sessions.T046ConfigOrdenDespachoFacade;
 import com.lowagie.text.DocumentException;
+
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
@@ -47,7 +48,12 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.printing.PDFPageable;
 import org.apache.poi.ss.usermodel.Cell;
@@ -67,7 +73,6 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import static com.eurekaintranet.controller.util.OrderPedidoItem.*;
 
 /**
- *
  * @author LUIS CARLOS CABAL
  */
 @Named(value = "ordenesDespachoController")
@@ -81,7 +86,7 @@ public class OrdenesDespachoController implements Serializable {
     public void setTotal_cant_comprom_base(BigDecimal total_cant_comprom_base) {
         this.total_cant_comprom_base = total_cant_comprom_base;
     }
-    
+
     private String f_cliente_desp_razon_soc;
     private String f_desc_item;
     private String f_estado_docto;
@@ -133,54 +138,54 @@ public class OrdenesDespachoController implements Serializable {
     private String f_02_003;
     private String f_02_005;
     private String f_20_00000014_M121;
-    
+
     private String evaluacionItem;
     private String estadoImpresion;
-    private String generarImpresion; 
- 
+    private String generarImpresion;
+
     private String razonSocial;
     private OrdenesDespachoController reporteActual;
-    
+
     private Date fechaParametro1;
     private Date fechaParametro2;
     private String[] estado;
-    
+
     private List<OrdenesDespachoController> listaReporte;
     private List<OrdenesDespachoController> listaReporteImpresion;
     private BigDecimal contarValoNeto;
-    
+
     private Date fechaImpresion;
     private int consImpresion;
-    
+
     private List<String> listaImpresionCliente;
     private String clienteImprimir;
-    
+
     @EJB
     private T045ImpresionOrdenDespachoFacade impresionFacade;
     private T045ImpresionOrdenDespacho impresionActual;
     private List<T045ImpresionOrdenDespacho> listaImpresion;
-    
+
     private String estadoImpresionHabilitar;
     private String opcionImprimirCliente;
     private String opcionImprimirCondicion;
-    
+
     private T001Usuario usuarioActual;
-    
+
     @EJB
     private T046ConfigOrdenDespachoFacade configFacade;
     private T046ConfigOrdenDespacho configActual;
     private List<T046ConfigOrdenDespacho> listaConfig;
-    
+
     private int contItemComp;
     private int contItemCompParcial;
-    
+
     private BigDecimal total_cant_comprom_base;
     private BigDecimal total_valor_neto_pente;
-    
+
     private String opcionFechaReporte;
-    private static String[] columns = {"CLIENTE CUMPLE CONDICIÓN","LANZABLE","GENERA IMPRESIÓN","CLIENTE","ITEM","DESC. ÍTEM","DESC. TAMAÑO","DESC. COLOR","FECHA ENTREGA","PEDIDO","ESTADO MOVIMIENTO","ESTADO DOCUMENTO","CANT. PEDIDO","CANT. COMPROMETIDA","CANT. COMPROMETIDA PARCIAL","VALOR NETO PENDIENTE","VALOR NETO DOCTO.","ESTADO ITEM","BODEGA","FAMILIA","FECHA CREACIÓN","U.M.","CANT. PENDIENTE","CANT. EXISTENCIA","CANT. OC/OP (INS)","NRO. OP","PUNTO ENVIO","DESC. PUNTO DE ENVIO","CIUDAD","DIRECCIÓN","NOTAS DOCUMENTO","SEGMENTO","OC","FECHA FACTURA","SUBGRUPO","SERVICIO AL CLIENTE","CÓDIGO BARRA","DÍA MAX. FACTURACIÓN","BACKORDER","GRUPO","TAMAÑO","COLOR","REFERENCIA","FECHA MODIFICACIÓN MOVTO.","ESTADO","ORDEN INTERNO"};
+    private static String[] columns = {"CLIENTE CUMPLE CONDICIÓN", "LANZABLE", "GENERA IMPRESIÓN", "CLIENTE", "ITEM", "DESC. ÍTEM", "DESC. TAMAÑO", "DESC. COLOR", "FECHA ENTREGA", "PEDIDO", "ESTADO MOVIMIENTO", "ESTADO DOCUMENTO", "CANT. PEDIDO", "CANT. COMPROMETIDA", "CANT. COMPROMETIDA PARCIAL", "VALOR NETO PENDIENTE", "VALOR NETO DOCTO.", "ESTADO ITEM", "BODEGA", "FAMILIA", "FECHA CREACIÓN", "U.M.", "CANT. PENDIENTE", "CANT. EXISTENCIA", "CANT. OC/OP (INS)", "NRO. OP", "PUNTO ENVIO", "DESC. PUNTO DE ENVIO", "CIUDAD", "DIRECCIÓN", "NOTAS DOCUMENTO", "SEGMENTO", "OC", "FECHA FACTURA", "SUBGRUPO", "SERVICIO AL CLIENTE", "CÓDIGO BARRA", "DÍA MAX. FACTURACIÓN", "BACKORDER", "GRUPO", "TAMAÑO", "COLOR", "REFERENCIA", "FECHA MODIFICACIÓN MOVTO.", "ESTADO", "ORDEN INTERNO"};
     private EmailController emailController;
-    
+
     public OrdenesDespachoController() {
     }
 
@@ -744,7 +749,6 @@ public class OrdenesDespachoController implements Serializable {
         this.opcionImprimirCondicion = opcionImprimirCondicion;
     }
 
-    
 
     public String getEstadoImpresionHabilitar() {
         return estadoImpresionHabilitar;
@@ -809,9 +813,9 @@ public class OrdenesDespachoController implements Serializable {
     public void setOpcionFechaReporte(String opcionFechaReporte) {
         this.opcionFechaReporte = opcionFechaReporte;
     }
-    
+
     //navegacion
-    public void recargarLista(){   
+    public void recargarLista() {
         opcionFechaReporte = "1";
         estado = null;
         fechaParametro1 = null;
@@ -820,10 +824,12 @@ public class OrdenesDespachoController implements Serializable {
         contItemComp = 0;
         contItemCompParcial = 0;
     }
-    public String prepareList() throws SQLException{
+
+    public String prepareList() throws SQLException {
         recargarLista();
-        return  "/administrador/modOrdenesDespacho/reporte";
+        return "/administrador/modOrdenesDespacho/reporte";
     }
+
     private void addErrorMessage(String title, String msg) {
         FacesMessage facesMsg
                 = new FacesMessage(FacesMessage.SEVERITY_ERROR, title, msg);
@@ -835,8 +841,9 @@ public class OrdenesDespachoController implements Serializable {
                 = new FacesMessage(FacesMessage.SEVERITY_INFO, title, msg);
         FacesContext.getCurrentInstance().addMessage("successInfo", facesMsg);
     }
-    public void opcionFechaReporteGenerar() throws SQLException, ParseException{
-        switch(opcionFechaReporte){
+
+    public void opcionFechaReporteGenerar() throws SQLException, ParseException {
+        switch (opcionFechaReporte) {
             case "1":
                 recargarConsultarItemsPedidosUnoee();
                 //ordenarListaReporte();
@@ -857,12 +864,12 @@ public class OrdenesDespachoController implements Serializable {
 
     //PARTE NUEVA PARA PROBAR
     //Metodo para ordenar lista de reporte
-    public void ordenarListaReporte(){
+    public void ordenarListaReporte() {
         //Se raliza ordenamiento de lista
         listaReporte.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT, DESC_EXT2_SORT)));
     }
-    
-    public String prepareReporteConsultar() throws SQLException, ParseException{
+
+    public String prepareReporteConsultar() throws SQLException, ParseException {
         listaReporte = new ArrayList<>();
         configActual = new T046ConfigOrdenDespacho();
         configActual = getConfigFacade().findByTope("Tope maximo");
@@ -872,19 +879,20 @@ public class OrdenesDespachoController implements Serializable {
         opcionFechaReporteGenerar();
         return "reporte";
     }
+
     //Obtener reporte Unoee
     public void recargarConsultarItemsPedidosUnoee()
-        throws SQLException, ParseException {
-        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+            throws SQLException, ParseException {
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
         Connection con = DriverManager.getConnection(connectionUrl);
         Statement stmt = null;
-        DateFormat dateFormat1 = new SimpleDateFormat("yyyyMMdd");  
-        String fecha1 = dateFormat1.format(fechaParametro1); 
-        DateFormat dateFormat2 = new SimpleDateFormat("yyyyMMdd");  
-        String fecha2 = dateFormat2.format(fechaParametro2); 
-        for (T046ConfigOrdenDespacho tipoDoc: listaConfig){
-            for (int i = 0; i < estado.length; i++){
-                String query = "exec sp_pv_cons_pedido_item 1,'001','"+tipoDoc.getValor()+"','          ','   ','001',0,0,'20190529','20190529',1,'"+fecha1+"','"+fecha2+"',"+estado[i]+",1,10097,'EUREKA_ORDENESDESPACHO_CEDI','          ',0,4300,0,0,1,NULL,NULL,0,0,0";
+        DateFormat dateFormat1 = new SimpleDateFormat("yyyyMMdd");
+        String fecha1 = dateFormat1.format(fechaParametro1);
+        DateFormat dateFormat2 = new SimpleDateFormat("yyyyMMdd");
+        String fecha2 = dateFormat2.format(fechaParametro2);
+        for (T046ConfigOrdenDespacho tipoDoc : listaConfig) {
+            for (int i = 0; i < estado.length; i++) {
+                String query = "exec sp_pv_cons_pedido_item 1,'001','" + tipoDoc.getValor() + "','          ','   ','001',0,0,'20190529','20190529',1,'" + fecha1 + "','" + fecha2 + "'," + estado[i] + ",1,10097,'EUREKA_ORDENESDESPACHO_CEDI','          ',0,4300,0,0,1,NULL,NULL,0,0,0";
                 try {
                     stmt = con.createStatement();
                     ResultSet rs = stmt.executeQuery(query);
@@ -893,95 +901,97 @@ public class OrdenesDespachoController implements Serializable {
                         reporteActual = new OrdenesDespachoController();
                         reporteActual.setF_cliente_desp_razon_soc(rs.getString("f_cliente_desp_razon_soc")); //Cliente
                         reporteActual.setF_desc_item(rs.getString("f_desc_item")); //Item
-                            reporteActual.setF_estado_docto(rs.getString("f_estado_docto")); //Estado documento
-                            reporteActual.setF_item(rs.getString("f_item")); //ID ITEM
-                            reporteActual.setF_desc_ext_detalle_1(rs.getString("f_desc_ext_detalle_1"));
-                            reporteActual.setF_desc_ext_detalle_2(rs.getString("f_desc_ext_detalle_2"));
-                            reporteActual.setF_fecha_entrega(rs.getString("f_fecha_entrega").substring(0,10)); //Fecha entrega
-                            reporteActual.setF_nrodocto(rs.getString("f_nrodocto")); //Pedido
-                            reporteActual.setF_rowid_movto_431(rs.getInt("f_rowid_movto_431"));
-                            reporteActual.setF_estado_movto(rs.getString("f_estado_movto")); //Estado movimiento
-                            reporteActual.setF_bodega(rs.getString("f_bodega"));//bodega
-                            reporteActual.setF_cant_pedida_base(rs.getBigDecimal("f_cant_pedida_base")); //Cant. pedido
-                            reporteActual.setF_cant_comp_parc_base(rs.getBigDecimal("f_cant_comp_parc_base")); //Cant. comprometida parcial
-                            reporteActual.setF_cant_comprom_base(rs.getBigDecimal("f_cant_comprom_base")); //Cant. comprometida 
-                            reporteActual.setF_fecha_creacion_docto(rs.getString("f_fecha_creacion_docto").substring(0,10));//fecha creacion docto
-                            reporteActual.setF_um_base(rs.getString("f_um_base"));//unidad medida              
-                            reporteActual.setF_cant_pendiente_base(rs.getBigDecimal("f_cant_pendiente_base")); //cant_pendiente
-                            reporteActual.setF_cant_existencia(rs.getBigDecimal("f_cant_existencia")); //Existencia
-                            reporteActual.setF_cant_oc_op_ins(rs.getBigDecimal("f_cant_oc_op_ins"));
-                            if(rs.getString("f_ops").equals("")){
-                                reporteActual.setF_ops("NO TIENE");
-                            }else{
-                                reporteActual.setF_ops(rs.getString("f_ops"));
-                            }
-                            reporteActual.setF_desc_ciudad(rs.getString("f_desc_ciudad")); //Ciudad
-                            reporteActual.setF_direccion1(rs.getString("f_direccion1")); //Ciudad
-                            reporteActual.setF_desc_punto_envio(rs.getString("f_desc_punto_envio")); //desc. punto envio
-                            reporteActual.setF_punto_envio(rs.getString("f_punto_envio")+" - "+rs.getString("f_cliente_desp_razon_soc")); //punto envio
-                            reporteActual.setF_notas_docto(rs.getString("f_notas_docto")); //Notas documento
-                            reporteActual.setF_orden_compra(rs.getString("f_orden_compra"));//orden compra
-                            reporteActual.setF_fecha_factura(rs.getDate("f_fecha_factura"));//fecha factura
-                            reporteActual.setF_codigo_barras_principal(rs.getString("f_codigo_barras_principal"));//Codigo barras
-                            reporteActual.setF_dia_maximo_factura(rs.getInt("f_dia_maximo_factura"));//dia maximo factura
-                            reporteActual.setF_valor_neto_docto(rs.getBigDecimal("f_valor_neto_docto"));//valor neto documento
-                            reporteActual.setF_backorder(rs.getString("f_backorder"));
-                            reporteActual.setF_ext_detalle_1(rs.getString("f_ext_detalle_1")); //Tamaño
-                            reporteActual.setF_ext_detalle_2(rs.getString("f_ext_detalle_2")); //Color
-                            reporteActual.setF_referencia(rs.getString("f_referencia")); //Referencia
-                            reporteActual.setF_fecha_modificacion_movto(rs.getDate("f_fecha_modificacion_movto"));//Fecha modificacion movimiento
-                            reporteActual.setF_rowid_pv_docto(rs.getInt("f_rowid_pv_docto"));
-                            reporteActual.setF_divisor_margen_est(rs.getBigDecimal("f_divisor_margen_est"));
-                            //reporteActual.setF_divisor_margen_prom(rs.getBigDecimal("f_divisor_margen_prom"));
-                            //reporteActual.setF_utilidad_prom_f(rs.getBigDecimal("f_utilidad_prom_f"));
-                            //reporteActual.setF_rowid_movto(rs.getInt("f_rowid_movto_"));
-                            //reporteActual.setF_id_clase_docto(rs.getInt("f_id_clase_docto"));
-                            //reporteActual.setF_numero(rs.getInt("f_numero"));
-                            //reporteActual.setF_rowid(rs.getInt("f_rowid"));
-                            reporteActual.setF_01_010(rs.getString("f_01_010"));//Familia
-                            reporteActual.setF_01_050(rs.getString("f_01_050"));//Grupo
-                            reporteActual.setF_02_005(rs.getString("f_02_005"));//Asesor 
-                            reporteActual.setF_02_002(rs.getString("f_02_002"));//Segmetos
-                            reporteActual.setF_02_003(rs.getString("f_02_003"));//Subgrupo 
-                            if(rs.getString("f_20_00000014_M121").length()>8){
-                                reporteActual.setF_20_00000014_M121(rs.getString("f_20_00000014_M121").substring(0,8));//ESTADO os 
+                        reporteActual.setF_estado_docto(rs.getString("f_estado_docto")); //Estado documento
+                        reporteActual.setF_item(rs.getString("f_item")); //ID ITEM
+                        reporteActual.setF_desc_ext_detalle_1(rs.getString("f_desc_ext_detalle_1"));
+                        reporteActual.setF_desc_ext_detalle_2(rs.getString("f_desc_ext_detalle_2"));
+                        reporteActual.setF_fecha_entrega(rs.getString("f_fecha_entrega").substring(0, 10)); //Fecha entrega
+                        reporteActual.setF_nrodocto(rs.getString("f_nrodocto")); //Pedido
+                        reporteActual.setF_rowid_movto_431(rs.getInt("f_rowid_movto_431"));
+                        reporteActual.setF_estado_movto(rs.getString("f_estado_movto")); //Estado movimiento
+                        reporteActual.setF_bodega(rs.getString("f_bodega"));//bodega
+                        reporteActual.setF_cant_pedida_base(rs.getBigDecimal("f_cant_pedida_base")); //Cant. pedido
+                        reporteActual.setF_cant_comp_parc_base(rs.getBigDecimal("f_cant_comp_parc_base")); //Cant. comprometida parcial
+                        reporteActual.setF_cant_comprom_base(rs.getBigDecimal("f_cant_comprom_base")); //Cant. comprometida
+                        reporteActual.setF_fecha_creacion_docto(rs.getString("f_fecha_creacion_docto").substring(0, 10));//fecha creacion docto
+                        reporteActual.setF_um_base(rs.getString("f_um_base"));//unidad medida
+                        reporteActual.setF_cant_pendiente_base(rs.getBigDecimal("f_cant_pendiente_base")); //cant_pendiente
+                        reporteActual.setF_cant_existencia(rs.getBigDecimal("f_cant_existencia")); //Existencia
+                        reporteActual.setF_cant_oc_op_ins(rs.getBigDecimal("f_cant_oc_op_ins"));
+                        if (rs.getString("f_ops").equals("")) {
+                            reporteActual.setF_ops("NO TIENE");
+                        } else {
+                            reporteActual.setF_ops(rs.getString("f_ops"));
+                        }
+                        reporteActual.setF_desc_ciudad(rs.getString("f_desc_ciudad")); //Ciudad
+                        reporteActual.setF_direccion1(rs.getString("f_direccion1")); //Ciudad
+                        reporteActual.setF_desc_punto_envio(rs.getString("f_desc_punto_envio")); //desc. punto envio
+                        reporteActual.setF_punto_envio(rs.getString("f_punto_envio") + " - " + rs.getString("f_cliente_desp_razon_soc")); //punto envio
+                        reporteActual.setF_notas_docto(rs.getString("f_notas_docto")); //Notas documento
+                        reporteActual.setF_orden_compra(rs.getString("f_orden_compra"));//orden compra
+                        reporteActual.setF_fecha_factura(rs.getDate("f_fecha_factura"));//fecha factura
+                        reporteActual.setF_codigo_barras_principal(rs.getString("f_codigo_barras_principal"));//Codigo barras
+                        reporteActual.setF_dia_maximo_factura(rs.getInt("f_dia_maximo_factura"));//dia maximo factura
+                        reporteActual.setF_valor_neto_docto(rs.getBigDecimal("f_valor_neto_docto"));//valor neto documento
+                        reporteActual.setF_backorder(rs.getString("f_backorder"));
+                        reporteActual.setF_ext_detalle_1(rs.getString("f_ext_detalle_1")); //Tamaño
+                        reporteActual.setF_ext_detalle_2(rs.getString("f_ext_detalle_2")); //Color
+                        reporteActual.setF_referencia(rs.getString("f_referencia")); //Referencia
+                        reporteActual.setF_fecha_modificacion_movto(rs.getDate("f_fecha_modificacion_movto"));//Fecha modificacion movimiento
+                        reporteActual.setF_rowid_pv_docto(rs.getInt("f_rowid_pv_docto"));
+                        reporteActual.setF_divisor_margen_est(rs.getBigDecimal("f_divisor_margen_est"));
+                        //reporteActual.setF_divisor_margen_prom(rs.getBigDecimal("f_divisor_margen_prom"));
+                        //reporteActual.setF_utilidad_prom_f(rs.getBigDecimal("f_utilidad_prom_f"));
+                        //reporteActual.setF_rowid_movto(rs.getInt("f_rowid_movto_"));
+                        //reporteActual.setF_id_clase_docto(rs.getInt("f_id_clase_docto"));
+                        //reporteActual.setF_numero(rs.getInt("f_numero"));
+                        //reporteActual.setF_rowid(rs.getInt("f_rowid"));
+                        reporteActual.setF_01_010(rs.getString("f_01_010"));//Familia
+                        reporteActual.setF_01_050(rs.getString("f_01_050"));//Grupo
+                        reporteActual.setF_02_005(rs.getString("f_02_005"));//Asesor
+                        reporteActual.setF_02_002(rs.getString("f_02_002"));//Segmetos
+                        reporteActual.setF_02_003(rs.getString("f_02_003"));//Subgrupo
+                        if (rs.getString("f_20_00000014_M121").length() > 8) {
+                            reporteActual.setF_20_00000014_M121(rs.getString("f_20_00000014_M121").substring(0, 8));//ESTADO os
 
-                            }
+                        }
 
-                            reporteActual.setGenerarImpresion("NO");
-                            try {
-                                reporteActual.setF_valor_neto_pendiente((((reporteActual.getF_valor_neto_docto().divide(reporteActual.getF_cant_pedida_base(),2, RoundingMode.HALF_UP)).multiply(reporteActual.getF_cant_comp_parc_base())).add(((((reporteActual.getF_valor_neto_docto()).divide(reporteActual.getF_cant_pedida_base(),2, RoundingMode.HALF_UP)).multiply(reporteActual.getF_cant_comprom_base()))))).setScale(2, BigDecimal.ROUND_HALF_EVEN));
-                            } catch (Exception e) {
-                                reporteActual.setF_valor_neto_pendiente(new BigDecimal(0));
-                            }
-                            contarValoNeto = new BigDecimal(0);
-                            evaluarItem();
-                            if(!reporteActual.getF_cliente_desp_razon_soc().equals("CORPORACION EKAZIPPER DEL ECUADOR S A")){
-                                listaReporte.add(reporteActual); 
-                            }
+                        reporteActual.setGenerarImpresion("NO");
+                        try {
+                            reporteActual.setF_valor_neto_pendiente((((reporteActual.getF_valor_neto_docto().divide(reporteActual.getF_cant_pedida_base(), 2, RoundingMode.HALF_UP)).multiply(reporteActual.getF_cant_comp_parc_base())).add(((((reporteActual.getF_valor_neto_docto()).divide(reporteActual.getF_cant_pedida_base(), 2, RoundingMode.HALF_UP)).multiply(reporteActual.getF_cant_comprom_base()))))).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+                        } catch (Exception e) {
+                            reporteActual.setF_valor_neto_pendiente(new BigDecimal(0));
+                        }
+                        contarValoNeto = new BigDecimal(0);
+                        evaluarItem();
+                        if (!reporteActual.getF_cliente_desp_razon_soc().equals("CORPORACION EKAZIPPER DEL ECUADOR S A")) {
+                            listaReporte.add(reporteActual);
+                        }
                     }
-                } catch (SQLException e ) {
-                    System.out.println("error "+e);
+                } catch (SQLException e) {
+                    System.out.println("error " + e);
                 } finally {
-                    if (stmt != null) { stmt.close(); }
+                    if (stmt != null) {
+                        stmt.close();
+                    }
                 }
             }
         }
         evaluarBloqueoImpresion();
         evaluarImpresionCliente();
     }
-    
+
     //Obtener reporte Unoee
     public void recargarConsultarItemsPedidosUnoee31Dic()
-        throws SQLException, ParseException {
-        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+            throws SQLException, ParseException {
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
         Connection con = DriverManager.getConnection(connectionUrl);
         Statement stmt = null;
-        Calendar cal= Calendar.getInstance();
-        String fechaAnioFin= String.valueOf(cal.get(Calendar.YEAR))+"1231";
-        for (T046ConfigOrdenDespacho tipoDoc: listaConfig){
-            for (int i = 0; i < estado.length; i++){
-                String query = "exec sp_pv_cons_pedido_item 1,'001','"+tipoDoc.getValor()+"','          ','   ','001',0,0,'20190529','20190529',1,'"+fechaAnioFin+"','"+fechaAnioFin+"',"+estado[i]+",1,10097,'EUREKA_ORDENESDESPACHO_CEDI','          ',0,4300,0,0,1,NULL,NULL,0,0,0";
+        Calendar cal = Calendar.getInstance();
+        String fechaAnioFin = String.valueOf(cal.get(Calendar.YEAR)) + "1231";
+        for (T046ConfigOrdenDespacho tipoDoc : listaConfig) {
+            for (int i = 0; i < estado.length; i++) {
+                String query = "exec sp_pv_cons_pedido_item 1,'001','" + tipoDoc.getValor() + "','          ','   ','001',0,0,'20190529','20190529',1,'" + fechaAnioFin + "','" + fechaAnioFin + "'," + estado[i] + ",1,10097,'EUREKA_ORDENESDESPACHO_CEDI','          ',0,4300,0,0,1,NULL,NULL,0,0,0";
                 try {
                     stmt = con.createStatement();
                     ResultSet rs = stmt.executeQuery(query);
@@ -990,128 +1000,132 @@ public class OrdenesDespachoController implements Serializable {
                         reporteActual = new OrdenesDespachoController();
                         reporteActual.setF_cliente_desp_razon_soc(rs.getString("f_cliente_desp_razon_soc")); //Cliente
                         reporteActual.setF_desc_item(rs.getString("f_desc_item")); //Item
-                            reporteActual.setF_estado_docto(rs.getString("f_estado_docto")); //Estado documento
-                            reporteActual.setF_item(rs.getString("f_item")); //ID ITEM
-                            reporteActual.setF_desc_ext_detalle_1(rs.getString("f_desc_ext_detalle_1"));
-                            reporteActual.setF_desc_ext_detalle_2(rs.getString("f_desc_ext_detalle_2"));
-                            reporteActual.setF_fecha_entrega(rs.getString("f_fecha_entrega").substring(0,10)); //Fecha entrega
-                            reporteActual.setF_nrodocto(rs.getString("f_nrodocto")); //Pedido
-                            reporteActual.setF_rowid_movto_431(rs.getInt("f_rowid_movto_431"));
-                            reporteActual.setF_estado_movto(rs.getString("f_estado_movto")); //Estado movimiento
-                            reporteActual.setF_bodega(rs.getString("f_bodega"));//bodega
-                            reporteActual.setF_cant_pedida_base(rs.getBigDecimal("f_cant_pedida_base")); //Cant. pedido
-                            reporteActual.setF_cant_comp_parc_base(rs.getBigDecimal("f_cant_comp_parc_base")); //Cant. comprometida parcial
-                            reporteActual.setF_cant_comprom_base(rs.getBigDecimal("f_cant_comprom_base")); //Cant. comprometida 
-                            reporteActual.setF_fecha_creacion_docto(rs.getString("f_fecha_creacion_docto").substring(0,10));//fecha creacion docto
-                            reporteActual.setF_um_base(rs.getString("f_um_base"));//unidad medida              
-                            reporteActual.setF_cant_pendiente_base(rs.getBigDecimal("f_cant_pendiente_base")); //cant_pendiente
-                            reporteActual.setF_cant_existencia(rs.getBigDecimal("f_cant_existencia")); //Existencia
-                            reporteActual.setF_cant_oc_op_ins(rs.getBigDecimal("f_cant_oc_op_ins"));
-                            if(rs.getString("f_ops").equals("")){
-                                reporteActual.setF_ops("NO TIENE");
-                            }else{
-                                reporteActual.setF_ops(rs.getString("f_ops"));
-                            }
-                            reporteActual.setF_desc_ciudad(rs.getString("f_desc_ciudad")); //Ciudad
-                            reporteActual.setF_direccion1(rs.getString("f_direccion1")); //Ciudad
-                            reporteActual.setF_desc_punto_envio(rs.getString("f_desc_punto_envio")); //desc. punto envio
-                            reporteActual.setF_punto_envio(rs.getString("f_punto_envio")+" - "+rs.getString("f_cliente_desp_razon_soc")); //punto envio
-                            reporteActual.setF_notas_docto(rs.getString("f_notas_docto")); //Notas documento
-                            reporteActual.setF_orden_compra(rs.getString("f_orden_compra"));//orden compra
-                            reporteActual.setF_fecha_factura(rs.getDate("f_fecha_factura"));//fecha factura
-                            reporteActual.setF_codigo_barras_principal(rs.getString("f_codigo_barras_principal"));//Codigo barras
-                            reporteActual.setF_dia_maximo_factura(rs.getInt("f_dia_maximo_factura"));//dia maximo factura
-                            reporteActual.setF_valor_neto_docto(rs.getBigDecimal("f_valor_neto_docto"));//valor neto documento
-                            reporteActual.setF_backorder(rs.getString("f_backorder"));
-                            reporteActual.setF_ext_detalle_1(rs.getString("f_ext_detalle_1")); //Tamaño
-                            reporteActual.setF_ext_detalle_2(rs.getString("f_ext_detalle_2")); //Color
-                            reporteActual.setF_referencia(rs.getString("f_referencia")); //Referencia
-                            reporteActual.setF_fecha_modificacion_movto(rs.getDate("f_fecha_modificacion_movto"));//Fecha modificacion movimiento
-                            reporteActual.setF_rowid_pv_docto(rs.getInt("f_rowid_pv_docto"));
-                            reporteActual.setF_divisor_margen_est(rs.getBigDecimal("f_divisor_margen_est"));
-                            //reporteActual.setF_divisor_margen_prom(rs.getBigDecimal("f_divisor_margen_prom"));
-                            //reporteActual.setF_utilidad_prom_f(rs.getBigDecimal("f_utilidad_prom_f"));
-                            //reporteActual.setF_rowid_movto(rs.getInt("f_rowid_movto_"));
-                            //reporteActual.setF_id_clase_docto(rs.getInt("f_id_clase_docto"));
-                            //reporteActual.setF_numero(rs.getInt("f_numero"));
-                            //reporteActual.setF_rowid(rs.getInt("f_rowid"));
-                            reporteActual.setF_01_010(rs.getString("f_01_010"));//Familia
-                            reporteActual.setF_01_050(rs.getString("f_01_050"));//Grupo
-                            reporteActual.setF_02_005(rs.getString("f_02_005"));//Asesor 
-                            reporteActual.setF_02_002(rs.getString("f_02_002"));//Segmetos
-                            reporteActual.setF_02_003(rs.getString("f_02_003"));//Subgrupo 
-                            if(rs.getString("f_20_00000014_M121").length()>8){
-                                reporteActual.setF_20_00000014_M121(rs.getString("f_20_00000014_M121").substring(0,8));//ESTADO os 
+                        reporteActual.setF_estado_docto(rs.getString("f_estado_docto")); //Estado documento
+                        reporteActual.setF_item(rs.getString("f_item")); //ID ITEM
+                        reporteActual.setF_desc_ext_detalle_1(rs.getString("f_desc_ext_detalle_1"));
+                        reporteActual.setF_desc_ext_detalle_2(rs.getString("f_desc_ext_detalle_2"));
+                        reporteActual.setF_fecha_entrega(rs.getString("f_fecha_entrega").substring(0, 10)); //Fecha entrega
+                        reporteActual.setF_nrodocto(rs.getString("f_nrodocto")); //Pedido
+                        reporteActual.setF_rowid_movto_431(rs.getInt("f_rowid_movto_431"));
+                        reporteActual.setF_estado_movto(rs.getString("f_estado_movto")); //Estado movimiento
+                        reporteActual.setF_bodega(rs.getString("f_bodega"));//bodega
+                        reporteActual.setF_cant_pedida_base(rs.getBigDecimal("f_cant_pedida_base")); //Cant. pedido
+                        reporteActual.setF_cant_comp_parc_base(rs.getBigDecimal("f_cant_comp_parc_base")); //Cant. comprometida parcial
+                        reporteActual.setF_cant_comprom_base(rs.getBigDecimal("f_cant_comprom_base")); //Cant. comprometida
+                        reporteActual.setF_fecha_creacion_docto(rs.getString("f_fecha_creacion_docto").substring(0, 10));//fecha creacion docto
+                        reporteActual.setF_um_base(rs.getString("f_um_base"));//unidad medida
+                        reporteActual.setF_cant_pendiente_base(rs.getBigDecimal("f_cant_pendiente_base")); //cant_pendiente
+                        reporteActual.setF_cant_existencia(rs.getBigDecimal("f_cant_existencia")); //Existencia
+                        reporteActual.setF_cant_oc_op_ins(rs.getBigDecimal("f_cant_oc_op_ins"));
+                        if (rs.getString("f_ops").equals("")) {
+                            reporteActual.setF_ops("NO TIENE");
+                        } else {
+                            reporteActual.setF_ops(rs.getString("f_ops"));
+                        }
+                        reporteActual.setF_desc_ciudad(rs.getString("f_desc_ciudad")); //Ciudad
+                        reporteActual.setF_direccion1(rs.getString("f_direccion1")); //Ciudad
+                        reporteActual.setF_desc_punto_envio(rs.getString("f_desc_punto_envio")); //desc. punto envio
+                        reporteActual.setF_punto_envio(rs.getString("f_punto_envio") + " - " + rs.getString("f_cliente_desp_razon_soc")); //punto envio
+                        reporteActual.setF_notas_docto(rs.getString("f_notas_docto")); //Notas documento
+                        reporteActual.setF_orden_compra(rs.getString("f_orden_compra"));//orden compra
+                        reporteActual.setF_fecha_factura(rs.getDate("f_fecha_factura"));//fecha factura
+                        reporteActual.setF_codigo_barras_principal(rs.getString("f_codigo_barras_principal"));//Codigo barras
+                        reporteActual.setF_dia_maximo_factura(rs.getInt("f_dia_maximo_factura"));//dia maximo factura
+                        reporteActual.setF_valor_neto_docto(rs.getBigDecimal("f_valor_neto_docto"));//valor neto documento
+                        reporteActual.setF_backorder(rs.getString("f_backorder"));
+                        reporteActual.setF_ext_detalle_1(rs.getString("f_ext_detalle_1")); //Tamaño
+                        reporteActual.setF_ext_detalle_2(rs.getString("f_ext_detalle_2")); //Color
+                        reporteActual.setF_referencia(rs.getString("f_referencia")); //Referencia
+                        reporteActual.setF_fecha_modificacion_movto(rs.getDate("f_fecha_modificacion_movto"));//Fecha modificacion movimiento
+                        reporteActual.setF_rowid_pv_docto(rs.getInt("f_rowid_pv_docto"));
+                        reporteActual.setF_divisor_margen_est(rs.getBigDecimal("f_divisor_margen_est"));
+                        //reporteActual.setF_divisor_margen_prom(rs.getBigDecimal("f_divisor_margen_prom"));
+                        //reporteActual.setF_utilidad_prom_f(rs.getBigDecimal("f_utilidad_prom_f"));
+                        //reporteActual.setF_rowid_movto(rs.getInt("f_rowid_movto_"));
+                        //reporteActual.setF_id_clase_docto(rs.getInt("f_id_clase_docto"));
+                        //reporteActual.setF_numero(rs.getInt("f_numero"));
+                        //reporteActual.setF_rowid(rs.getInt("f_rowid"));
+                        reporteActual.setF_01_010(rs.getString("f_01_010"));//Familia
+                        reporteActual.setF_01_050(rs.getString("f_01_050"));//Grupo
+                        reporteActual.setF_02_005(rs.getString("f_02_005"));//Asesor
+                        reporteActual.setF_02_002(rs.getString("f_02_002"));//Segmetos
+                        reporteActual.setF_02_003(rs.getString("f_02_003"));//Subgrupo
+                        if (rs.getString("f_20_00000014_M121").length() > 8) {
+                            reporteActual.setF_20_00000014_M121(rs.getString("f_20_00000014_M121").substring(0, 8));//ESTADO os
 
-                            }
+                        }
 
-                            reporteActual.setGenerarImpresion("NO");
-                            try {
-                                reporteActual.setF_valor_neto_pendiente((((reporteActual.getF_valor_neto_docto().divide(reporteActual.getF_cant_pedida_base(),2, RoundingMode.HALF_UP)).multiply(reporteActual.getF_cant_comp_parc_base())).add(((((reporteActual.getF_valor_neto_docto()).divide(reporteActual.getF_cant_pedida_base(),2, RoundingMode.HALF_UP)).multiply(reporteActual.getF_cant_comprom_base()))))).setScale(2, BigDecimal.ROUND_HALF_EVEN));
-                            } catch (Exception e) {
-                                reporteActual.setF_valor_neto_pendiente(new BigDecimal(0));
-                            }
-                            contarValoNeto = new BigDecimal(0);
-                            evaluarItem();
-                            if(!reporteActual.getF_cliente_desp_razon_soc().equals("CORPORACION EKAZIPPER DEL ECUADOR S A")){
-                                listaReporte.add(reporteActual); 
-                            }
+                        reporteActual.setGenerarImpresion("NO");
+                        try {
+                            reporteActual.setF_valor_neto_pendiente((((reporteActual.getF_valor_neto_docto().divide(reporteActual.getF_cant_pedida_base(), 2, RoundingMode.HALF_UP)).multiply(reporteActual.getF_cant_comp_parc_base())).add(((((reporteActual.getF_valor_neto_docto()).divide(reporteActual.getF_cant_pedida_base(), 2, RoundingMode.HALF_UP)).multiply(reporteActual.getF_cant_comprom_base()))))).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+                        } catch (Exception e) {
+                            reporteActual.setF_valor_neto_pendiente(new BigDecimal(0));
+                        }
+                        contarValoNeto = new BigDecimal(0);
+                        evaluarItem();
+                        if (!reporteActual.getF_cliente_desp_razon_soc().equals("CORPORACION EKAZIPPER DEL ECUADOR S A")) {
+                            listaReporte.add(reporteActual);
+                        }
                     }
-                } catch (SQLException e ) {
-                    System.out.println("error "+e);
+                } catch (SQLException e) {
+                    System.out.println("error " + e);
                 } finally {
-                    if (stmt != null) { stmt.close(); }
+                    if (stmt != null) {
+                        stmt.close();
+                    }
                 }
             }
         }
         evaluarBloqueoImpresion();
         evaluarImpresionCliente();
     }
-    
-    
-    public void evaluarItem(){
-        if(reporteActual.getF_estado_movto().equals("Comprometido") && !reporteActual.getF_backorder().contains("pedido completo")){
+
+
+    public void evaluarItem() {
+        if (reporteActual.getF_estado_movto().equals("Comprometido") && !reporteActual.getF_backorder().contains("pedido completo")) {
             reporteActual.setEvaluacionItem("SI");
             contItemComp++;
-        }else if(reporteActual.getF_estado_movto().equals("Comprometido parcial") && !reporteActual.getF_backorder().equals("%pedido completo%")){
+        } else if (reporteActual.getF_estado_movto().equals("Comprometido parcial") && !reporteActual.getF_backorder().equals("%pedido completo%")) {
             reporteActual.setEvaluacionItem("PARCIAL");
             contItemCompParcial++;
-        }else{
+        } else {
             reporteActual.setEvaluacionItem("NO");
         }
-    } 
-    public void evaluarBloqueoImpresion(){
+    }
+
+    public void evaluarBloqueoImpresion() {
         List<OrdenesDespachoController> lista = listaReporte;
         String estado;
         contarValoNeto = new BigDecimal(0);
-        for(OrdenesDespachoController item: listaReporte){
-            estado= "NO";
-            for(OrdenesDespachoController item2: lista){
-                if(item.getF_cliente_desp_razon_soc().equals(item2.getF_cliente_desp_razon_soc()) && (item.getEvaluacionItem().equals("NO")) && item.getF_desc_ciudad().equals(item2.getF_desc_ciudad())){
+        for (OrdenesDespachoController item : listaReporte) {
+            estado = "NO";
+            for (OrdenesDespachoController item2 : lista) {
+                if (item.getF_cliente_desp_razon_soc().equals(item2.getF_cliente_desp_razon_soc()) && (item.getEvaluacionItem().equals("NO")) && item.getF_desc_ciudad().equals(item2.getF_desc_ciudad())) {
                     contarValoNeto = contarValoNeto.add(item2.getF_valor_neto_docto());
-                    if(contarValoNeto.compareTo(new BigDecimal(configActual.getNumerico()))<=0){
+                    if (contarValoNeto.compareTo(new BigDecimal(configActual.getNumerico())) <= 0) {
                         estado = "BLOQUEADO";
-                    }else{
-                        estado = "NO"; 
+                    } else {
+                        estado = "NO";
                     }
                 }
             }/*
             if((item.getF_desc_ciudad().contains("MEDELLIN") || item.getF_desc_ciudad().contains("BOGOTA")) && (item.getEvaluacionItem().equals("SI") || item.getEvaluacionItem().equals("PARCIAL"))){
                 estado = "SI";
-            }   */ 
+            }   */
             item.setEstadoImpresion(estado);
             contarValoNeto = new BigDecimal(0);
         }
     }
-    public void evaluarImpresionCliente() throws SQLException, ParseException{
+
+    public void evaluarImpresionCliente() throws SQLException, ParseException {
         List<OrdenesDespachoController> lista = listaReporte;
         String estado;
         contarValoNeto = new BigDecimal(0);
-        for(OrdenesDespachoController item: listaReporte){
-            for(OrdenesDespachoController item2: lista){
-                if(item.getF_cliente_desp_razon_soc().equals(item2.getF_cliente_desp_razon_soc()) && (item.getEvaluacionItem().equals("SI") || item.getEvaluacionItem().equals("PARCIAL")) && item.getF_desc_ciudad().equals(item2.getF_desc_ciudad()) && !item.getEstadoImpresion().equals("BLOQUEADO")){
+        for (OrdenesDespachoController item : listaReporte) {
+            for (OrdenesDespachoController item2 : lista) {
+                if (item.getF_cliente_desp_razon_soc().equals(item2.getF_cliente_desp_razon_soc()) && (item.getEvaluacionItem().equals("SI") || item.getEvaluacionItem().equals("PARCIAL")) && item.getF_desc_ciudad().equals(item2.getF_desc_ciudad()) && !item.getEstadoImpresion().equals("BLOQUEADO")) {
                     contarValoNeto = contarValoNeto.add(item2.getF_valor_neto_pendiente());
-                    if(contarValoNeto.compareTo(new BigDecimal(configActual.getNumerico()))>0){
+                    if (contarValoNeto.compareTo(new BigDecimal(configActual.getNumerico())) > 0) {
                         item.setEstadoImpresion("SI");
                         break;
                     }
@@ -1119,77 +1133,78 @@ public class OrdenesDespachoController implements Serializable {
             }/*
             if((item.getF_desc_ciudad().contains("MEDELLIN") || item.getF_desc_ciudad().contains("BOGOTA")) && (item.getEvaluacionItem().equals("SI") || item.getEvaluacionItem().equals("PARCIAL"))){
                 estado = "SI";
-            }   */ 
-            
-            if((obtenerImpresion(item.getF_rowid_movto_431())==null)){
-                if(item.getEstadoImpresion().equals("SI")){
-                    if(item.getEvaluacionItem().equals("PARCIAL")){
+            }   */
+
+            if ((obtenerImpresion(item.getF_rowid_movto_431()) == null)) {
+                if (item.getEstadoImpresion().equals("SI")) {
+                    if (item.getEvaluacionItem().equals("PARCIAL")) {
                         item.setGenerarImpresion("PARCIAL");
-                    }else{
+                    } else {
                         item.setGenerarImpresion("SI");
                     }
                 }
-            }else if((obtenerImpresion(item.getF_rowid_movto_431()).getEstado().equals("PARCIAL"))){
-                if(item.getEstadoImpresion().equals("SI")){
-                    if(obtenerImpresion(item.getF_rowid_movto_431()).getCantComp().compareTo(item.getF_cant_comprom_base())<0){
-                       if(item.getEvaluacionItem().equals("PARCIAL")){
+            } else if ((obtenerImpresion(item.getF_rowid_movto_431()).getEstado().equals("PARCIAL"))) {
+                if (item.getEstadoImpresion().equals("SI")) {
+                    if (obtenerImpresion(item.getF_rowid_movto_431()).getCantComp().compareTo(item.getF_cant_comprom_base()) < 0) {
+                        if (item.getEvaluacionItem().equals("PARCIAL")) {
                             item.setGenerarImpresion("PARCIAL");
-                        }else{
+                        } else {
                             item.setGenerarImpresion("IMPRESO");
-                        } 
-                    }else{
+                        }
+                    } else {
                         item.setGenerarImpresion("IMPRESO");
                     }
                 }
-            }else{
-                if(item.getEstadoImpresion().equals("SI")){
-                    if((obtenerImpresion(item.getF_rowid_movto_431()).getCantComp().compareTo(item.getF_cant_comprom_base())<0)){
-                        if(item.getEvaluacionItem().equals("SI")){
+            } else {
+                if (item.getEstadoImpresion().equals("SI")) {
+                    if ((obtenerImpresion(item.getF_rowid_movto_431()).getCantComp().compareTo(item.getF_cant_comprom_base()) < 0)) {
+                        if (item.getEvaluacionItem().equals("SI")) {
                             item.setGenerarImpresion("SI");
-                        }else{
+                        } else {
                             item.setGenerarImpresion("IMPRESO");
                         }
-                    }else{
+                    } else {
                         item.setGenerarImpresion("IMPRESO");
                     }
                 }
             }
             contarValoNeto = new BigDecimal(0);
         }
-    } 
+    }
+
+
     //GENERAR IMPRESIÓN
-    public String prepareImpresionCompleta() throws PrinterException, IOException, SQLException, ParseException, Exception{
+    public String prepareImpresionCompleta() throws PrinterException, IOException, SQLException, ParseException, Exception {
         listaReporteImpresion = new ArrayList<>();
         reporteActual = new OrdenesDespachoController();
         consImpresion = 1;
         fechaImpresion = new Date();
-        for(String item: quitarDuplicados() ){
+        for (String item : quitarDuplicados()) {
             total_cant_comprom_base = new BigDecimal(0);
             total_valor_neto_pente = new BigDecimal(0);
-            for(OrdenesDespachoController item2: listaReporte){
-                if(item.equals(item2.getF_punto_envio()+item2.getF_nrodocto()) && (item2.getGenerarImpresion().equals("SI") || item2.getGenerarImpresion().equals("PARCIAL")) && item2.getEstadoImpresion().equals("SI")){
+            for (OrdenesDespachoController item2 : listaReporte) {
+                if (item.equals(item2.getF_punto_envio() + item2.getF_nrodocto()) && (item2.getGenerarImpresion().equals("SI") || item2.getGenerarImpresion().equals("PARCIAL")) && item2.getEstadoImpresion().equals("SI")) {
                     total_cant_comprom_base = item2.getF_cant_comprom_base().add(total_cant_comprom_base);
                     total_valor_neto_pente = item2.getF_valor_neto_pendiente().add(total_valor_neto_pente);
                     listaReporteImpresion.add(item2);
                     reporteActual = item2;
-                    crearHistorialImpresion(item2.getF_rowid_movto_431(),item2.getF_cant_comprom_base(),item2.getGenerarImpresion());
-                    }
+                    crearHistorialImpresion(item2.getF_rowid_movto_431(), item2.getF_cant_comprom_base(), item2.getGenerarImpresion());
+                }
             }
 
 
             //PARTE NUEVA
             //Se raliza ordenamiento de lista
             //listaReporteImpresion.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT)));
-            Collections.sort(listaReporteImpresion, new OrdenesComparator());
+            listaReporteImpresion.sort(new OrdenesComparator());
 
 
-            if(!listaReporteImpresion.isEmpty()){
-                //System.out.println("PRUEBA CLIENTE "+item+ "  cont "+consImpresion+" pedido "+reporteActual.getF_nrodocto());
+            if (!listaReporteImpresion.isEmpty()) {
                 createPDF();
-                consImpresion ++;
+                consImpresion++;
                 listaReporteImpresion = new ArrayList<>();
-                reporteActual = new OrdenesDespachoController(); 
-                imprimir(); 
+                reporteActual = new OrdenesDespachoController();
+                imprimir();
             }
         }
         clearAllFilters();
@@ -1198,22 +1213,105 @@ public class OrdenesDespachoController implements Serializable {
     }
 
 
-    public String prepareImpresionCliente() throws PrinterException, IOException, SQLException, ParseException, Exception{
+
+    /////////////////////////////////////////////
+    //PARTE NUEVA 24 / 08 / 2020
+    ///////////////////////////////////////////
+    public String DescargaPDF() throws PrinterException, IOException, SQLException, ParseException, Exception {
         listaReporteImpresion = new ArrayList<>();
         reporteActual = new OrdenesDespachoController();
         consImpresion = 1;
         fechaImpresion = new Date();
-        for(String item: quitarDuplicados() ){
+        for (String item : quitarDuplicados()) {
             total_cant_comprom_base = new BigDecimal(0);
             total_valor_neto_pente = new BigDecimal(0);
-            if(item.contains(clienteImprimir)){
-                for(OrdenesDespachoController item2: listaReporte){
-                    if(item.equals(item2.getF_punto_envio()+item2.getF_nrodocto()) && (item2.getGenerarImpresion().equals("SI") || item2.getGenerarImpresion().equals("PARCIAL"))){
+            for (OrdenesDespachoController item2 : listaReporte) {
+                if (item.equals(item2.getF_punto_envio() + item2.getF_nrodocto()) && (item2.getGenerarImpresion().equals("SI") || item2.getGenerarImpresion().equals("PARCIAL")) && item2.getEstadoImpresion().equals("SI")) {
+                    total_cant_comprom_base = item2.getF_cant_comprom_base().add(total_cant_comprom_base);
+                    total_valor_neto_pente = item2.getF_valor_neto_pendiente().add(total_valor_neto_pente);
+                    listaReporteImpresion.add(item2);
+                    reporteActual = item2;
+                    crearHistorialImpresion(item2.getF_rowid_movto_431(), item2.getF_cant_comprom_base(), item2.getGenerarImpresion());
+                }
+            }
+
+            //PARTE NUEVA
+            //Se realiza ordenamiento de lista
+            listaReporteImpresion.sort(new OrdenesComparator());
+
+            if (!listaReporteImpresion.isEmpty()) {
+                createPDF();
+                consImpresion++;
+                listaReporteImpresion = new ArrayList<>();
+                reporteActual = new OrdenesDespachoController();
+
+                //Descarga de documento PDF.
+                File file = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf"));
+                downloadFile(file);
+            }
+        }
+        clearAllFilters();
+        prepareReporteConsultar();
+        return "/administrador/modOrdenesDespacho/reporte";
+    }
+
+
+    //Metodo que permite realizar la descarga de un documento PDF.
+    public void downloadFile(File file) {
+
+        //File file = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf"));
+        HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+
+        response.setHeader("Content-Disposition", "attachment;filename=text1.pdf");
+        response.setContentLength((int) file.length());
+        ServletOutputStream out = null;
+        try {
+            FileInputStream input = new FileInputStream(file);
+            byte[] buffer = new byte[1024];
+            out = response.getOutputStream();
+            int i = 0;
+            while ((i = input.read(buffer)) != -1) {
+                out.write(buffer);
+                out.flush();
+            }
+            FacesContext.getCurrentInstance().getResponseComplete();
+        } catch (IOException err) {
+            err.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException err) {
+                err.printStackTrace();
+            }
+        }
+    }
+    /////////////////////////////////////////////
+    //PARTE NUEVA 24 / 08 / 2020
+    ///////////////////////////////////////////
+
+
+
+
+
+
+    public String prepareImpresionCliente() throws PrinterException, IOException, SQLException, ParseException, Exception {
+        listaReporteImpresion = new ArrayList<>();
+        reporteActual = new OrdenesDespachoController();
+        consImpresion = 1;
+        fechaImpresion = new Date();
+        for (String item : quitarDuplicados()) {
+            total_cant_comprom_base = new BigDecimal(0);
+            total_valor_neto_pente = new BigDecimal(0);
+            if (item.contains(clienteImprimir)) {
+                for (OrdenesDespachoController item2 : listaReporte) {
+                    if (item.equals(item2.getF_punto_envio() + item2.getF_nrodocto()) && (item2.getGenerarImpresion().equals("SI") || item2.getGenerarImpresion().equals("PARCIAL"))) {
                         total_cant_comprom_base = item2.getF_cant_comprom_base().add(total_cant_comprom_base);
                         total_valor_neto_pente = item2.getF_valor_neto_pendiente().add(total_valor_neto_pente);
                         listaReporteImpresion.add(item2);
                         reporteActual = item2;
-                        crearHistorialImpresion(item2.getF_rowid_movto_431(),item2.getF_cant_comprom_base(),item2.getGenerarImpresion());
+                        crearHistorialImpresion(item2.getF_rowid_movto_431(), item2.getF_cant_comprom_base(), item2.getGenerarImpresion());
                         //System.out.println("   PRUEBA ITEM "+item2.getF_item()+" - "+item2.getF_desc_ext_detalle_1()+" - "+item2.getF_desc_ext_detalle_2()+" - "+item2.getF_valor_neto_pendiente()+" - "+item2.getEstadoImpresion());
                     }
                 }
@@ -1221,17 +1319,17 @@ public class OrdenesDespachoController implements Serializable {
                 //PARTE NUEVA
                 //Se raliza ordenamiento de lista
                 //listaReporteImpresion.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT)));
-                Collections.sort(listaReporteImpresion, new OrdenesComparator());
+                listaReporteImpresion.sort(new OrdenesComparator());
 
 
-                if(!listaReporteImpresion.isEmpty()){
+                if (!listaReporteImpresion.isEmpty()) {
                     //System.out.println("PRUEBA CLIENTE "+item+ "  cont "+consImpresion);
                     createPDF();
-                    consImpresion ++;
+                    consImpresion++;
                     listaReporteImpresion = new ArrayList<>();
-                    imprimir(); 
+                    imprimir();
                 }
-            } 
+            }
         }
         clearAllFilters();
         prepareReporteConsultar();
@@ -1239,39 +1337,42 @@ public class OrdenesDespachoController implements Serializable {
     }
 
 
-    public void generarListaClienteImprimir(){
+    public void generarListaClienteImprimir() {
         listaImpresionCliente = new ArrayList<>();
-        for(OrdenesDespachoController item: listaReporte){
+        for (OrdenesDespachoController item : listaReporte) {
             listaImpresionCliente.add(item.getF_punto_envio());
         }
         List<String> lista = new ArrayList<>();
         listaImpresionCliente = new ArrayList<>(new HashSet<>(listaImpresionCliente));
     }
-     public List<String> quitarDuplicadosPuntoEnvio(){
+
+    public List<String> quitarDuplicadosPuntoEnvio() {
         List<String> listaCliente = new ArrayList<>();
-        for(OrdenesDespachoController item: listaReporte){
+        for (OrdenesDespachoController item : listaReporte) {
             listaCliente.add(item.getF_punto_envio());
         }
         List<String> lista = new ArrayList<>();
         lista = new ArrayList<>(new HashSet<>(listaCliente));
         return lista;
     }
-    public List<String> quitarDuplicados(){
+
+    public List<String> quitarDuplicados() {
         List<String> listaCliente = new ArrayList<>();
         Collections.sort(listaReporte, (OrdenesDespachoController p1, OrdenesDespachoController p2) -> (p2.getF_cliente_desp_razon_soc()).compareTo(p1.getF_cliente_desp_razon_soc())
         );
-        for(OrdenesDespachoController item: listaReporte){
-            listaCliente.add(item.getF_punto_envio()+item.getF_nrodocto());
+        for (OrdenesDespachoController item : listaReporte) {
+            listaCliente.add(item.getF_punto_envio() + item.getF_nrodocto());
         }
         List<String> lista = new ArrayList<>();
         lista = new ArrayList<>(new HashSet<>(listaCliente));
         Collections.sort(lista);
         return lista;
     }
-    public List<String> quitarDuplicadosPuntoEnvioHabilitado(){
+
+    public List<String> quitarDuplicadosPuntoEnvioHabilitado() {
         List<String> listaCliente = new ArrayList<>();
-        for(OrdenesDespachoController item: listaReporte){
-            if(item.getGenerarImpresion().equals("SI")){
+        for (OrdenesDespachoController item : listaReporte) {
+            if (item.getGenerarImpresion().equals("SI")) {
                 listaCliente.add(item.getF_punto_envio());
             }
         }
@@ -1279,10 +1380,11 @@ public class OrdenesDespachoController implements Serializable {
         lista = new ArrayList<>(new HashSet<>(listaCliente));
         return lista;
     }
-    public List<String> quitarDuplicadosPedidoHabilitado(){
+
+    public List<String> quitarDuplicadosPedidoHabilitado() {
         List<String> pedido = new ArrayList<>();
-        for(OrdenesDespachoController item: listaReporte){
-            if(item.getGenerarImpresion().equals("SI")){
+        for (OrdenesDespachoController item : listaReporte) {
+            if (item.getGenerarImpresion().equals("SI")) {
                 pedido.add(item.getF_nrodocto());
             }
         }
@@ -1290,17 +1392,18 @@ public class OrdenesDespachoController implements Serializable {
         lista = new ArrayList<>(new HashSet<>(pedido));
         return lista;
     }
-    public void createPDF(){
+
+    public void createPDF() {
         try {
-            FacesContext facesContext= FacesContext.getCurrentInstance();
+            FacesContext facesContext = FacesContext.getCurrentInstance();
             ExternalContext externalContext = facesContext.getExternalContext();
-            HttpSession session= (HttpSession) externalContext.getSession(true);
-            String url ="http" + "://" + "192.168.160.154" + ":" + "8080" + "/intranet"+"/faces/administrador/modOrdenesDespacho/formato.xhtml;jsessionid=" + session.getId()+"?pdf=true";
+            HttpSession session = (HttpSession) externalContext.getSession(true);
+            String url = "http" + "://" + "192.168.160.154" + ":" + "8080" + "/intranet" + "/faces/administrador/modOrdenesDespacho/formato.xhtml;jsessionid=" + session.getId() + "?pdf=true";
             OutputStream out = new FileOutputStream(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf"));
             ITextRenderer renderer = new ITextRenderer();
             renderer.setDocument(url);
             renderer.layout();
-            renderer.createPDF(out);            
+            renderer.createPDF(out);
             out.close();
         } catch (DocumentException | IOException e) {
             // TODO Auto-generated catch block
@@ -1310,7 +1413,12 @@ public class OrdenesDespachoController implements Serializable {
 
 
     public void imprimir() throws PrinterException, IOException, Exception {
-        PDDocument document = PDDocument.load(new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf")));
+        File file = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf"));
+        PDDocument document = PDDocument.load(file);
+
+        // Hace una descarga del documento antes de realizar la impresion.
+        downloadFile(file);
+
         //PrintService myPrintService = findPrintService("Impresión ordenes de despacho");
         //job.setPrintService(myPrintService);
         PrinterJob job = PrinterJob.getPrinterJob();
@@ -1328,15 +1436,17 @@ public class OrdenesDespachoController implements Serializable {
         }
         return null;
     }
-    public T045ImpresionOrdenDespacho obtenerImpresion2(int idMoviento){
-           return getImpresionFacade().consultaUltimaImpresion(idMoviento);
+
+    public T045ImpresionOrdenDespacho obtenerImpresion2(int idMoviento) {
+        return getImpresionFacade().consultaUltimaImpresion(idMoviento);
     }
+
     //obtener historial de impresion
     public T045ImpresionOrdenDespacho obtenerImpresion(int idMovimiento)
-    throws SQLException, ParseException {
-        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=BD_Eureka;user=bd_eureka;password=Desarrollos478#";
+            throws SQLException, ParseException {
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=BD_Eureka;user=bd_eureka;password=Desarrollos478#";
         Connection con = DriverManager.getConnection(connectionUrl);
-        String query ="SELECT TOP 1 id_impresion, cant_comp ,cant_comp_parcial ,estado ,id_movimiento FROM t045_impresion_orden_despacho WHERE id_movimiento = "+idMovimiento+" ORDER BY id_impresion ASC";
+        String query = "SELECT TOP 1 id_impresion, cant_comp ,cant_comp_parcial ,estado ,id_movimiento FROM t045_impresion_orden_despacho WHERE id_movimiento = " + idMovimiento + " ORDER BY id_impresion ASC";
         Statement stmt = null;
         int valor = 0;
         try {
@@ -1344,29 +1454,31 @@ public class OrdenesDespachoController implements Serializable {
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
                 valor = 1;
-                impresionActual= new T045ImpresionOrdenDespacho();  
+                impresionActual = new T045ImpresionOrdenDespacho();
                 impresionActual.setIdImpresion(rs.getInt("id_impresion"));
                 impresionActual.setCantComp(rs.getBigDecimal("cant_comp"));
                 impresionActual.setCantCompParcial(rs.getBigDecimal("cant_comp_parcial"));
                 impresionActual.setEstado(rs.getString("estado"));
                 impresionActual.setIdMovimiento(rs.getInt("id_movimiento"));
-                System.out.println("prueba "+impresionActual);
+                //System.out.println("prueba "+impresionActual);
                 break;
             }
-        } catch (SQLException e ) {
-            System.out.println("error "+e);
+        } catch (SQLException e) {
+            System.out.println("error " + e);
         } finally {
-            if (stmt != null) { stmt.close(); }
+            if (stmt != null) {
+                stmt.close();
+            }
         }
-        
-        if(valor==0){
-            impresionActual=null;
-            System.out.println("prueba sin "+impresionActual);
+
+        if (valor == 0) {
+            impresionActual = null;
+            //System.out.println("prueba sin "+impresionActual);
         }
         return impresionActual;
     }
-    
-    public void crearHistorialImpresion(int idMovimiento, BigDecimal cantComp, String estado ){
+
+    public void crearHistorialImpresion(int idMovimiento, BigDecimal cantComp, String estado) {
         impresionActual = new T045ImpresionOrdenDespacho();
         impresionActual.setIdMovimiento(idMovimiento);
         impresionActual.setCantComp(cantComp);
@@ -1375,59 +1487,61 @@ public class OrdenesDespachoController implements Serializable {
         impresionActual.setUsuario(usuarioActual.getUsername());
         impresionFacade.create(impresionActual);
     }
+
     //cargar detalle
-    public void llenarHistorialImpresion(SelectEvent event){
+    public void llenarHistorialImpresion(SelectEvent event) {
         estadoImpresionHabilitar = reporteActual.getGenerarImpresion();
         opcionImprimirCliente = "i";
         opcionImprimirCondicion = reporteActual.getEstadoImpresion();
         listaImpresion = getImpresionFacade().consultaHistorialImpresion(reporteActual.getF_rowid_movto_431());
     }
+
     //Cambiar estado impresion
-    public void cambiarEstadoImpresion(){
-        if(opcionImprimirCondicion.equals("t")){
-            if(opcionImprimirCliente.equals("i")){
+    public void cambiarEstadoImpresion() {
+        if (opcionImprimirCondicion.equals("t")) {
+            if (opcionImprimirCliente.equals("i")) {
                 reporteActual.setGenerarImpresion(estadoImpresionHabilitar);
-            }else if(opcionImprimirCliente.equals("c")){
-                for(OrdenesDespachoController item: listaReporte){
-                    if(item.getF_punto_envio().equals(reporteActual.getF_punto_envio())){
+            } else if (opcionImprimirCliente.equals("c")) {
+                for (OrdenesDespachoController item : listaReporte) {
+                    if (item.getF_punto_envio().equals(reporteActual.getF_punto_envio())) {
                         item.setGenerarImpresion(estadoImpresionHabilitar);
                     }
                 }
-            }else if(opcionImprimirCliente.equals("t")){
-                for(OrdenesDespachoController item: listaReporte){
+            } else if (opcionImprimirCliente.equals("t")) {
+                for (OrdenesDespachoController item : listaReporte) {
                     item.setGenerarImpresion(estadoImpresionHabilitar);
                 }
-            }  
-        }else{
-            if(opcionImprimirCliente.equals("i") && reporteActual.getEstadoImpresion().equals(opcionImprimirCondicion)){
+            }
+        } else {
+            if (opcionImprimirCliente.equals("i") && reporteActual.getEstadoImpresion().equals(opcionImprimirCondicion)) {
                 reporteActual.setGenerarImpresion(estadoImpresionHabilitar);
-            }else if(opcionImprimirCliente.equals("c")){
-                for(OrdenesDespachoController item: listaReporte){
-                    if(item.getF_punto_envio().equals(reporteActual.getF_punto_envio()) && reporteActual.getEstadoImpresion().equals(opcionImprimirCondicion)){
+            } else if (opcionImprimirCliente.equals("c")) {
+                for (OrdenesDespachoController item : listaReporte) {
+                    if (item.getF_punto_envio().equals(reporteActual.getF_punto_envio()) && reporteActual.getEstadoImpresion().equals(opcionImprimirCondicion)) {
                         item.setGenerarImpresion(estadoImpresionHabilitar);
                     }
                 }
-            }else if(opcionImprimirCliente.equals("t")){
-                for(OrdenesDespachoController item: listaReporte){
-                    if(reporteActual.getEstadoImpresion().equals(opcionImprimirCondicion)){
+            } else if (opcionImprimirCliente.equals("t")) {
+                for (OrdenesDespachoController item : listaReporte) {
+                    if (reporteActual.getEstadoImpresion().equals(opcionImprimirCondicion)) {
                         item.setGenerarImpresion(estadoImpresionHabilitar);
                     }
                 }
             }
         }
     }
-    
-    public String obtenerAnioActual(){
-        Calendar cal= Calendar.getInstance();
-        String fechaAnioFin= String.valueOf(cal.get(Calendar.YEAR))+"1231";
+
+    public String obtenerAnioActual() {
+        Calendar cal = Calendar.getInstance();
+        String fechaAnioFin = String.valueOf(cal.get(Calendar.YEAR)) + "1231";
         return fechaAnioFin;
     }
-    
+
     public void clearAllFilters() {
         DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("form-reporte:reporteItemTable");
     }
-    
-    public void enviarXlsOrdenesDespacho(){
+
+    public void enviarXlsOrdenesDespacho() {
         try {
             recargarLista();
             listaReporte = new ArrayList<>();
@@ -1448,13 +1562,14 @@ public class OrdenesDespachoController implements Serializable {
             Logger.getLogger(OrdenesDespachoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     public int obtenerTopeMaximoFoto()
-        throws SQLException, ParseException {
-        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=BD_Eureka;user=bd_eureka;password=Desarrollos478#";
+            throws SQLException, ParseException {
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=BD_Eureka;user=bd_eureka;password=Desarrollos478#";
         Connection con = DriverManager.getConnection(connectionUrl);
-        String query ="SELECT id_configuracion, numerico FROM t046_config_orden_despacho WHERE tipo = 'Tope maximo'";
+        String query = "SELECT id_configuracion, numerico FROM t046_config_orden_despacho WHERE tipo = 'Tope maximo'";
         Statement stmt = null;
-        int valor =0 ;
+        int valor = 0;
         try {
             stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
@@ -1463,69 +1578,76 @@ public class OrdenesDespachoController implements Serializable {
                 configActual.setIdConfiguracion(rs.getInt("id_configuracion"));
                 configActual.setNumerico(rs.getInt("numerico"));
             }
-        } catch (SQLException e ) {
-            System.out.println("error "+e);
+        } catch (SQLException e) {
+            System.out.println("error " + e);
         } finally {
-            if (stmt != null) { stmt.close(); }
+            if (stmt != null) {
+                stmt.close();
+            }
         }
         return configActual.getNumerico();
     }
 
 
     public String obtenerCorreoEnvioFoto()
-        throws SQLException, ParseException {
-        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=BD_Eureka;user=bd_eureka;password=Desarrollos478#";
+            throws SQLException, ParseException {
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=BD_Eureka;user=bd_eureka;password=Desarrollos478#";
         Connection con = DriverManager.getConnection(connectionUrl);
-        String query ="SELECT id_configuracion, valor FROM t046_config_orden_despacho WHERE tipo = 'Correo envio reporte'";
+        String query = "SELECT id_configuracion, valor FROM t046_config_orden_despacho WHERE tipo = 'Correo envio reporte'";
         Statement stmt = null;
-        String correo ="";
+        String correo = "";
         try {
             stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
                 correo = rs.getString("valor");
             }
-        } catch (SQLException e ) {
-            System.out.println("error "+e);
+        } catch (SQLException e) {
+            System.out.println("error " + e);
         } finally {
-            if (stmt != null) { stmt.close(); }
+            if (stmt != null) {
+                stmt.close();
+            }
         }
         return correo;
     }
-     
-     public void obtenerTipoDocumentoFoto()
-        throws SQLException, ParseException {
-        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=BD_Eureka;user=bd_eureka;password=Desarrollos478#";
+
+    public void obtenerTipoDocumentoFoto()
+            throws SQLException, ParseException {
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=BD_Eureka;user=bd_eureka;password=Desarrollos478#";
         Connection con = DriverManager.getConnection(connectionUrl);
-        String query ="SELECT id_configuracion, valor FROM t046_config_orden_despacho WHERE tipo = 'Tipo documento'";
+        String query = "SELECT id_configuracion, valor FROM t046_config_orden_despacho WHERE tipo = 'Tipo documento'";
         Statement stmt = null;
         listaConfig = new ArrayList<>();
         try {
             stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
-                T046ConfigOrdenDespacho config= new T046ConfigOrdenDespacho();
+                T046ConfigOrdenDespacho config = new T046ConfigOrdenDespacho();
                 config.setIdConfiguracion(rs.getInt("id_configuracion"));
                 config.setValor(rs.getString("valor"));
                 listaConfig.add(config);
             }
-        } catch (SQLException e ) {
-            System.out.println("error "+e);
+        } catch (SQLException e) {
+            System.out.println("error " + e);
         } finally {
-            if (stmt != null) { stmt.close(); }
+            if (stmt != null) {
+                stmt.close();
+            }
         }
     }
+
     public void recargarConsultarItemsPedidosUnoeeFoto()
-        throws SQLException, ParseException {
-        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+            throws SQLException, ParseException {
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
         Connection con = DriverManager.getConnection(connectionUrl);
         Statement stmt = null;
-        DateFormat dateFormat2 = new SimpleDateFormat("yyyyMMdd");  
-        String fecha2 = dateFormat2.format(new Date()); 
-        String[] estado={"8", "12"};
-        for (T046ConfigOrdenDespacho tipoDoc: listaConfig){
-            for (int i = 0; i < estado.length; i++){
-                String query = "exec sp_pv_cons_pedido_item 1,'001','"+tipoDoc.getValor()+"','          ','   ','001',0,0,'20190529','20190529',1,'20110101','"+fecha2+"',"+estado[i]+",1,10097,'EUREKA_ORDENESDESPACHO_CEDI','          ',0,4300,0,0,1,NULL,NULL,0,0,0";
+        DateFormat dateFormat2 = new SimpleDateFormat("yyyyMMdd");
+        String fecha2 = dateFormat2.format(new Date());
+        String[] estado = {"8", "12"};
+        for (T046ConfigOrdenDespacho tipoDoc : listaConfig) {
+            for (int i = 0; i < estado.length; i++) {
+                String query = "exec sp_pv_cons_pedido_item 1,'001','" + tipoDoc.getValor() + "','          ','   ','001',0,0,'20190529','20190529',1,'20110101','" + fecha2 + "'," + estado[i] + ",1,10097,'EUREKA_ORDENESDESPACHO_CEDI','          ',0,4300,0,0,1,NULL,NULL,0,0,0";
                 try {
                     stmt = con.createStatement();
                     ResultSet rs = stmt.executeQuery(query);
@@ -1534,113 +1656,117 @@ public class OrdenesDespachoController implements Serializable {
                         reporteActual = new OrdenesDespachoController();
                         reporteActual.setF_cliente_desp_razon_soc(rs.getString("f_cliente_desp_razon_soc")); //Cliente
                         reporteActual.setF_desc_item(rs.getString("f_desc_item")); //Item
-                            reporteActual.setF_estado_docto(rs.getString("f_estado_docto")); //Estado documento
-                            reporteActual.setF_item(rs.getString("f_item")); //ID ITEM
-                            reporteActual.setF_desc_ext_detalle_1(rs.getString("f_desc_ext_detalle_1"));
-                            reporteActual.setF_desc_ext_detalle_2(rs.getString("f_desc_ext_detalle_2"));
-                            reporteActual.setF_fecha_entrega(rs.getString("f_fecha_entrega").substring(0,10)); //Fecha entrega
-                            reporteActual.setF_nrodocto(rs.getString("f_nrodocto")); //Pedido
-                            reporteActual.setF_rowid_movto_431(rs.getInt("f_rowid_movto_431"));
-                            reporteActual.setF_estado_movto(rs.getString("f_estado_movto")); //Estado movimiento
-                            reporteActual.setF_bodega(rs.getString("f_bodega"));//bodega
-                            reporteActual.setF_cant_pedida_base(rs.getBigDecimal("f_cant_pedida_base")); //Cant. pedido
-                            reporteActual.setF_cant_comp_parc_base(rs.getBigDecimal("f_cant_comp_parc_base")); //Cant. comprometida parcial
-                            reporteActual.setF_cant_comprom_base(rs.getBigDecimal("f_cant_comprom_base")); //Cant. comprometida 
-                            reporteActual.setF_fecha_creacion_docto(rs.getString("f_fecha_creacion_docto").substring(0,10));//fecha creacion docto
-                            reporteActual.setF_um_base(rs.getString("f_um_base"));//unidad medida              
-                            reporteActual.setF_cant_pendiente_base(rs.getBigDecimal("f_cant_pendiente_base")); //cant_pendiente
-                            reporteActual.setF_cant_existencia(rs.getBigDecimal("f_cant_existencia")); //Existencia
-                            reporteActual.setF_cant_oc_op_ins(rs.getBigDecimal("f_cant_oc_op_ins"));
-                            if(rs.getString("f_ops").equals("")){
-                                reporteActual.setF_ops("NO TIENE");
-                            }else{
-                                reporteActual.setF_ops(rs.getString("f_ops"));
-                            }
-                            reporteActual.setF_desc_ciudad(rs.getString("f_desc_ciudad")); //Ciudad
-                            reporteActual.setF_direccion1(rs.getString("f_direccion1")); //Ciudad
-                            reporteActual.setF_desc_punto_envio(rs.getString("f_desc_punto_envio")); //desc. punto envio
-                            reporteActual.setF_punto_envio(rs.getString("f_punto_envio")+" - "+rs.getString("f_cliente_desp_razon_soc")); //punto envio
-                            reporteActual.setF_notas_docto(rs.getString("f_notas_docto")); //Notas documento
-                            reporteActual.setF_orden_compra(rs.getString("f_orden_compra"));//orden compra
-                            reporteActual.setF_fecha_factura(rs.getDate("f_fecha_factura"));//fecha factura
-                            reporteActual.setF_codigo_barras_principal(rs.getString("f_codigo_barras_principal"));//Codigo barras
-                            reporteActual.setF_dia_maximo_factura(rs.getInt("f_dia_maximo_factura"));//dia maximo factura
-                            reporteActual.setF_valor_neto_docto(rs.getBigDecimal("f_valor_neto_docto"));//valor neto documento
-                            reporteActual.setF_backorder(rs.getString("f_backorder"));
-                            reporteActual.setF_ext_detalle_1(rs.getString("f_ext_detalle_1")); //Tamaño
-                            reporteActual.setF_ext_detalle_2(rs.getString("f_ext_detalle_2")); //Color
-                            reporteActual.setF_referencia(rs.getString("f_referencia")); //Referencia
-                            reporteActual.setF_fecha_modificacion_movto(rs.getDate("f_fecha_modificacion_movto"));//Fecha modificacion movimiento
-                            reporteActual.setF_rowid_pv_docto(rs.getInt("f_rowid_pv_docto"));
-                            reporteActual.setF_divisor_margen_est(rs.getBigDecimal("f_divisor_margen_est"));
-                            //reporteActual.setF_divisor_margen_prom(rs.getBigDecimal("f_divisor_margen_prom"));
-                            //reporteActual.setF_utilidad_prom_f(rs.getBigDecimal("f_utilidad_prom_f"));
-                            //reporteActual.setF_rowid_movto(rs.getInt("f_rowid_movto_"));
-                            //reporteActual.setF_id_clase_docto(rs.getInt("f_id_clase_docto"));
-                            //reporteActual.setF_numero(rs.getInt("f_numero"));
-                            //reporteActual.setF_rowid(rs.getInt("f_rowid"));
-                            reporteActual.setF_01_010(rs.getString("f_01_010"));//Familia
-                            reporteActual.setF_01_050(rs.getString("f_01_050"));//Grupo
-                            reporteActual.setF_02_005(rs.getString("f_02_005"));//Asesor 
-                            reporteActual.setF_02_002(rs.getString("f_02_002"));//Segmetos
-                            reporteActual.setF_02_003(rs.getString("f_02_003"));//Subgrupo 
-                            if(rs.getString("f_20_00000014_M121").length()>8){
-                                reporteActual.setF_20_00000014_M121(rs.getString("f_20_00000014_M121").substring(0,8));//ESTADO os 
+                        reporteActual.setF_estado_docto(rs.getString("f_estado_docto")); //Estado documento
+                        reporteActual.setF_item(rs.getString("f_item")); //ID ITEM
+                        reporteActual.setF_desc_ext_detalle_1(rs.getString("f_desc_ext_detalle_1"));
+                        reporteActual.setF_desc_ext_detalle_2(rs.getString("f_desc_ext_detalle_2"));
+                        reporteActual.setF_fecha_entrega(rs.getString("f_fecha_entrega").substring(0, 10)); //Fecha entrega
+                        reporteActual.setF_nrodocto(rs.getString("f_nrodocto")); //Pedido
+                        reporteActual.setF_rowid_movto_431(rs.getInt("f_rowid_movto_431"));
+                        reporteActual.setF_estado_movto(rs.getString("f_estado_movto")); //Estado movimiento
+                        reporteActual.setF_bodega(rs.getString("f_bodega"));//bodega
+                        reporteActual.setF_cant_pedida_base(rs.getBigDecimal("f_cant_pedida_base")); //Cant. pedido
+                        reporteActual.setF_cant_comp_parc_base(rs.getBigDecimal("f_cant_comp_parc_base")); //Cant. comprometida parcial
+                        reporteActual.setF_cant_comprom_base(rs.getBigDecimal("f_cant_comprom_base")); //Cant. comprometida
+                        reporteActual.setF_fecha_creacion_docto(rs.getString("f_fecha_creacion_docto").substring(0, 10));//fecha creacion docto
+                        reporteActual.setF_um_base(rs.getString("f_um_base"));//unidad medida
+                        reporteActual.setF_cant_pendiente_base(rs.getBigDecimal("f_cant_pendiente_base")); //cant_pendiente
+                        reporteActual.setF_cant_existencia(rs.getBigDecimal("f_cant_existencia")); //Existencia
+                        reporteActual.setF_cant_oc_op_ins(rs.getBigDecimal("f_cant_oc_op_ins"));
+                        if (rs.getString("f_ops").equals("")) {
+                            reporteActual.setF_ops("NO TIENE");
+                        } else {
+                            reporteActual.setF_ops(rs.getString("f_ops"));
+                        }
+                        reporteActual.setF_desc_ciudad(rs.getString("f_desc_ciudad")); //Ciudad
+                        reporteActual.setF_direccion1(rs.getString("f_direccion1")); //Ciudad
+                        reporteActual.setF_desc_punto_envio(rs.getString("f_desc_punto_envio")); //desc. punto envio
+                        reporteActual.setF_punto_envio(rs.getString("f_punto_envio") + " - " + rs.getString("f_cliente_desp_razon_soc")); //punto envio
+                        reporteActual.setF_notas_docto(rs.getString("f_notas_docto")); //Notas documento
+                        reporteActual.setF_orden_compra(rs.getString("f_orden_compra"));//orden compra
+                        reporteActual.setF_fecha_factura(rs.getDate("f_fecha_factura"));//fecha factura
+                        reporteActual.setF_codigo_barras_principal(rs.getString("f_codigo_barras_principal"));//Codigo barras
+                        reporteActual.setF_dia_maximo_factura(rs.getInt("f_dia_maximo_factura"));//dia maximo factura
+                        reporteActual.setF_valor_neto_docto(rs.getBigDecimal("f_valor_neto_docto"));//valor neto documento
+                        reporteActual.setF_backorder(rs.getString("f_backorder"));
+                        reporteActual.setF_ext_detalle_1(rs.getString("f_ext_detalle_1")); //Tamaño
+                        reporteActual.setF_ext_detalle_2(rs.getString("f_ext_detalle_2")); //Color
+                        reporteActual.setF_referencia(rs.getString("f_referencia")); //Referencia
+                        reporteActual.setF_fecha_modificacion_movto(rs.getDate("f_fecha_modificacion_movto"));//Fecha modificacion movimiento
+                        reporteActual.setF_rowid_pv_docto(rs.getInt("f_rowid_pv_docto"));
+                        reporteActual.setF_divisor_margen_est(rs.getBigDecimal("f_divisor_margen_est"));
+                        //reporteActual.setF_divisor_margen_prom(rs.getBigDecimal("f_divisor_margen_prom"));
+                        //reporteActual.setF_utilidad_prom_f(rs.getBigDecimal("f_utilidad_prom_f"));
+                        //reporteActual.setF_rowid_movto(rs.getInt("f_rowid_movto_"));
+                        //reporteActual.setF_id_clase_docto(rs.getInt("f_id_clase_docto"));
+                        //reporteActual.setF_numero(rs.getInt("f_numero"));
+                        //reporteActual.setF_rowid(rs.getInt("f_rowid"));
+                        reporteActual.setF_01_010(rs.getString("f_01_010"));//Familia
+                        reporteActual.setF_01_050(rs.getString("f_01_050"));//Grupo
+                        reporteActual.setF_02_005(rs.getString("f_02_005"));//Asesor
+                        reporteActual.setF_02_002(rs.getString("f_02_002"));//Segmetos
+                        reporteActual.setF_02_003(rs.getString("f_02_003"));//Subgrupo
+                        if (rs.getString("f_20_00000014_M121").length() > 8) {
+                            reporteActual.setF_20_00000014_M121(rs.getString("f_20_00000014_M121").substring(0, 8));//ESTADO os
 
-                            }
+                        }
 
-                            reporteActual.setGenerarImpresion("NO");
-                            try {
-                                reporteActual.setF_valor_neto_pendiente((((reporteActual.getF_valor_neto_docto().divide(reporteActual.getF_cant_pedida_base(),2, RoundingMode.HALF_UP)).multiply(reporteActual.getF_cant_comp_parc_base())).add(((((reporteActual.getF_valor_neto_docto()).divide(reporteActual.getF_cant_pedida_base(),2, RoundingMode.HALF_UP)).multiply(reporteActual.getF_cant_comprom_base()))))).setScale(2, BigDecimal.ROUND_HALF_EVEN));
-                            } catch (Exception e) {
-                                reporteActual.setF_valor_neto_pendiente(new BigDecimal(0));
-                            }
-                            contarValoNeto = new BigDecimal(0);
-                            evaluarItem();
-                            if(!reporteActual.getF_cliente_desp_razon_soc().equals("CORPORACION EKAZIPPER DEL ECUADOR S A")){
-                                listaReporte.add(reporteActual); 
-                            }
+                        reporteActual.setGenerarImpresion("NO");
+                        try {
+                            reporteActual.setF_valor_neto_pendiente((((reporteActual.getF_valor_neto_docto().divide(reporteActual.getF_cant_pedida_base(), 2, RoundingMode.HALF_UP)).multiply(reporteActual.getF_cant_comp_parc_base())).add(((((reporteActual.getF_valor_neto_docto()).divide(reporteActual.getF_cant_pedida_base(), 2, RoundingMode.HALF_UP)).multiply(reporteActual.getF_cant_comprom_base()))))).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+                        } catch (Exception e) {
+                            reporteActual.setF_valor_neto_pendiente(new BigDecimal(0));
+                        }
+                        contarValoNeto = new BigDecimal(0);
+                        evaluarItem();
+                        if (!reporteActual.getF_cliente_desp_razon_soc().equals("CORPORACION EKAZIPPER DEL ECUADOR S A")) {
+                            listaReporte.add(reporteActual);
+                        }
                     }
-                } catch (SQLException e ) {
-                    System.out.println("error "+e);
+                } catch (SQLException e) {
+                    System.out.println("error " + e);
                 } finally {
-                    if (stmt != null) { stmt.close(); }
+                    if (stmt != null) {
+                        stmt.close();
+                    }
                 }
             }
         }
         evaluarBloqueoImpresion();
         evaluarImpresionCliente();
     }
-    public void sendMailReporte() throws FileNotFoundException{
+
+    public void sendMailReporte() throws FileNotFoundException {
         try {
             emailController = new EmailController();
             String asunto = "Reporte de ordenes de despacho CEDI.";
             String cuerpo = "Se adjunta el reporte de ordenes de despacho con los siguientes datos:" +
-                            "\n" +
-                            "\n" +
-                            "Total registros:" + listaReporte.size()+"\n" +
-                            "Total clientes/Punto envio: "+ quitarDuplicadosPuntoEnvio().size()+"\n" +
-                            "Total clientes habilitados impresión: " +quitarDuplicadosPuntoEnvioHabilitado().size() +" \n" +
-                            "Total pedidos habilitados impresion: " +quitarDuplicadosPedidoHabilitado().size() + "\n" +
-                            "Total ítems comprometidos: " +contItemComp +" \n" +
-                            "Total ítems comprometidos parcial: " +contItemCompParcial+" "+
-                            "\n" +
-                            "\n" +
-                            "Nota: Este es un mensaje automático, por favor no responder." +
-                            "\n" +
-                            "\n" +
-                            "Departamento de TI"+
-                            "\n" +
-                            "\n";
+                    "\n" +
+                    "\n" +
+                    "Total registros:" + listaReporte.size() + "\n" +
+                    "Total clientes/Punto envio: " + quitarDuplicadosPuntoEnvio().size() + "\n" +
+                    "Total clientes habilitados impresión: " + quitarDuplicadosPuntoEnvioHabilitado().size() + " \n" +
+                    "Total pedidos habilitados impresion: " + quitarDuplicadosPedidoHabilitado().size() + "\n" +
+                    "Total ítems comprometidos: " + contItemComp + " \n" +
+                    "Total ítems comprometidos parcial: " + contItemCompParcial + " " +
+                    "\n" +
+                    "\n" +
+                    "Nota: Este es un mensaje automático, por favor no responder." +
+                    "\n" +
+                    "\n" +
+                    "Departamento de TI" +
+                    "\n" +
+                    "\n";
             String adjunto = new File("text1.xlsx").getAbsolutePath();
             String nombreAdjunto = "reporte.xlsx";
             emailController.sendMailAdjunto(obtenerCorreoEnvioFoto(), asunto, cuerpo, adjunto, nombreAdjunto);
         } catch (Exception e) {
         }
-            
-          
-     }
-    public void escribirXlsInvDisponible(String nombre) throws FileNotFoundException, IOException,Exception{
+
+
+    }
+
+    public void escribirXlsInvDisponible(String nombre) throws FileNotFoundException, IOException, Exception {
         try {
             String rutaArchivoExcel = nombre;
             FileInputStream inputStream = new FileInputStream(new File(rutaArchivoExcel));
@@ -1661,7 +1787,7 @@ public class OrdenesDespachoController implements Serializable {
 
             CellStyle alinearPrecio = workbook.createCellStyle();
             alinearPrecio.setAlignment((short) 3);
-            
+
             CellStyle cellStyleDate = workbook.createCellStyle();
 
             cellStyleDate.setDataFormat(createHelper.createDataFormat().getFormat("m/d/yy h:mm"));
@@ -1670,18 +1796,18 @@ public class OrdenesDespachoController implements Serializable {
             Cell cellTitulo = titulo.createCell(0);
             cellTitulo.setCellValue("Eka Corporación S.A - FOTO ORDENES DE DESPACHOS");
             cellTitulo.setCellStyle(headerCellStyle);
-            sheet.addMergedRegion(new CellRangeAddress(0,0,0,3));
+            sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 3));
             Row headerRow = sheet.createRow(1);
 
             // Create cells
-            for(int i = 0; i < columns.length; i++) {
+            for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columns[i]);
                 cell.setCellStyle(headerCellStyle);
             }
             // Create Other rows and cells with employees data
             int rowNum = 2;
-            for(OrdenesDespachoController item: listaReporte) {
+            for (OrdenesDespachoController item : listaReporte) {
                 Row row = sheet.createRow(rowNum++);
                 row.createCell(0).setCellValue(item.getEstadoImpresion());
                 row.createCell(1).setCellValue(item.getEvaluacionItem());
@@ -1697,27 +1823,27 @@ public class OrdenesDespachoController implements Serializable {
                 row.createCell(11).setCellValue(item.getF_estado_docto());
                 try {
                     row.createCell(12).setCellValue(item.getF_cant_pedida_base().doubleValue());
-                }catch (Exception e) {
+                } catch (Exception e) {
                     row.createCell(12).setCellValue(0);
                 }
                 try {
                     row.createCell(13).setCellValue(item.getF_cant_comprom_base().doubleValue());
-                }catch (Exception e) {
+                } catch (Exception e) {
                     row.createCell(13).setCellValue(0);
                 }
                 try {
                     row.createCell(14).setCellValue(item.getF_cant_comp_parc_base().doubleValue());
-                }catch (Exception e) {
+                } catch (Exception e) {
                     row.createCell(14).setCellValue(0);
                 }
                 try {
                     row.createCell(15).setCellValue(item.getF_valor_neto_pendiente().doubleValue());
-                }catch (Exception e) {
+                } catch (Exception e) {
                     row.createCell(15).setCellValue(0);
                 }
                 try {
                     row.createCell(16).setCellValue(item.getF_valor_neto_docto().doubleValue());
-                }catch (Exception e) {
+                } catch (Exception e) {
                     row.createCell(16).setCellValue(0);
                 }
                 row.createCell(17).setCellValue(item.getF_20_00000014_M121());
@@ -1748,11 +1874,11 @@ public class OrdenesDespachoController implements Serializable {
                 row.createCell(30).setCellValue(item.getF_notas_docto());
                 row.createCell(31).setCellValue(item.getF_02_002());
                 row.createCell(32).setCellValue(item.getF_orden_compra());
-                if(item.getF_fecha_factura() == null){
+                if (item.getF_fecha_factura() == null) {
                     row.createCell(33).setCellValue("");
-                }else{
-                    DateFormat fechaFacturaFormat = new SimpleDateFormat("yyyy-MM-dd");  
-                    String fecha1 = fechaFacturaFormat.format(item.getF_fecha_factura()); 
+                } else {
+                    DateFormat fechaFacturaFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String fecha1 = fechaFacturaFormat.format(item.getF_fecha_factura());
                     row.createCell(33).setCellValue(fecha1);
                 }
                 row.createCell(34).setCellValue(item.getF_02_003());
@@ -1764,25 +1890,25 @@ public class OrdenesDespachoController implements Serializable {
                 row.createCell(40).setCellValue(item.getF_ext_detalle_1());
                 row.createCell(41).setCellValue(item.getF_ext_detalle_2());
                 row.createCell(42).setCellValue(item.getF_referencia());
-                if(item.getF_fecha_modificacion_movto() == null){
+                if (item.getF_fecha_modificacion_movto() == null) {
                     row.createCell(43).setCellValue("");
-                }else{
-                    DateFormat fechaFacturaFormat = new SimpleDateFormat("yyyy-MM-dd");  
-                    String fecha2 = fechaFacturaFormat.format(item.getF_fecha_modificacion_movto()); 
+                } else {
+                    DateFormat fechaFacturaFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String fecha2 = fechaFacturaFormat.format(item.getF_fecha_modificacion_movto());
                     row.createCell(43).setCellValue(fecha2);
                 }
                 row.createCell(44).setCellValue(item.getF_20_00000014_M121());
                 row.createCell(45).setCellValue(item.getF_rowid_movto_431());
             }
             // Resize all columns to fit the content size
-            for(int i = 0; i < columns.length; i++) {
+            for (int i = 0; i < columns.length; i++) {
                 sheet.autoSizeColumn(i);
             }
             try (FileOutputStream fileOut = new FileOutputStream(rutaArchivoExcel)) {
                 workbook.write(fileOut);
             }
-        }  catch (FileNotFoundException ex) {
-            System.out.println("error "+ex);
-        } 
+        } catch (FileNotFoundException ex) {
+            System.out.println("error " + ex);
+        }
     }
 }
