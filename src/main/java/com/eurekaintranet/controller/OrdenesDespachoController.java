@@ -1179,6 +1179,7 @@ public class OrdenesDespachoController implements Serializable {
         reporteActual = new OrdenesDespachoController();
         consImpresion = 1;
         fechaImpresion = new Date();
+
         for (String item : quitarDuplicados()) {
             total_cant_comprom_base = new BigDecimal(0);
             total_valor_neto_pente = new BigDecimal(0);
@@ -1196,7 +1197,8 @@ public class OrdenesDespachoController implements Serializable {
             //PARTE NUEVA
             //Se raliza ordenamiento de lista
             //listaReporteImpresion.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT)));
-            listaReporteImpresion.sort(new OrdenesComparator());
+            //listaReporteImpresion.sort(new OrdenesComparator());
+            Collections.sort(listaReporteImpresion,new OrdenesComparator());
 
 
             if (!listaReporteImpresion.isEmpty()) {
@@ -1209,6 +1211,9 @@ public class OrdenesDespachoController implements Serializable {
         }
         clearAllFilters();
         prepareReporteConsultar();
+
+        downloadFile(new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf")));
+
         return "/administrador/modOrdenesDespacho/reporte";
     }
 
@@ -1217,7 +1222,7 @@ public class OrdenesDespachoController implements Serializable {
     /////////////////////////////////////////////
     //PARTE NUEVA 24 / 08 / 2020
     ///////////////////////////////////////////
-    public String DescargaPDF() throws PrinterException, IOException, SQLException, ParseException, Exception {
+    /*public String DescargaPDF() throws PrinterException, IOException, SQLException, ParseException, Exception {
         listaReporteImpresion = new ArrayList<>();
         reporteActual = new OrdenesDespachoController();
         consImpresion = 1;
@@ -1237,7 +1242,8 @@ public class OrdenesDespachoController implements Serializable {
 
             //PARTE NUEVA
             //Se realiza ordenamiento de lista
-            listaReporteImpresion.sort(new OrdenesComparator());
+            //listaReporteImpresion.sort(new OrdenesComparator());
+            Collections.sort(listaReporteImpresion,new OrdenesComparator());
 
             if (!listaReporteImpresion.isEmpty()) {
                 createPDF();
@@ -1254,7 +1260,7 @@ public class OrdenesDespachoController implements Serializable {
         prepareReporteConsultar();
         return "/administrador/modOrdenesDespacho/reporte";
     }
-
+*/
 
     //Metodo que permite realizar la descarga de un documento PDF.
     public void downloadFile(File file) {
@@ -1293,9 +1299,6 @@ public class OrdenesDespachoController implements Serializable {
 
 
 
-
-
-
     public String prepareImpresionCliente() throws PrinterException, IOException, SQLException, ParseException, Exception {
         listaReporteImpresion = new ArrayList<>();
         reporteActual = new OrdenesDespachoController();
@@ -1317,13 +1320,12 @@ public class OrdenesDespachoController implements Serializable {
                 }
 
                 //PARTE NUEVA
-                //Se raliza ordenamiento de lista
+                //Se realiza ordenamiento de lista
                 //listaReporteImpresion.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT)));
-                listaReporteImpresion.sort(new OrdenesComparator());
+                Collections.sort(listaReporteImpresion,new OrdenesComparator());
 
 
                 if (!listaReporteImpresion.isEmpty()) {
-                    //System.out.println("PRUEBA CLIENTE "+item+ "  cont "+consImpresion);
                     createPDF();
                     consImpresion++;
                     listaReporteImpresion = new ArrayList<>();
@@ -1333,6 +1335,9 @@ public class OrdenesDespachoController implements Serializable {
         }
         clearAllFilters();
         prepareReporteConsultar();
+
+        downloadFile(new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf")));
+
         return "/administrador/modOrdenesDespacho/reporte";
     }
 
@@ -1405,6 +1410,7 @@ public class OrdenesDespachoController implements Serializable {
             renderer.layout();
             renderer.createPDF(out);
             out.close();
+
         } catch (DocumentException | IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -1413,14 +1419,11 @@ public class OrdenesDespachoController implements Serializable {
 
 
     public void imprimir() throws PrinterException, IOException, Exception {
-        File file = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf"));
-        PDDocument document = PDDocument.load(file);
-
-        // Hace una descarga del documento antes de realizar la impresion.
-        downloadFile(file);
+        PDDocument document = PDDocument.load(new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf")));
 
         //PrintService myPrintService = findPrintService("Impresión ordenes de despacho");
         //job.setPrintService(myPrintService);
+
         PrinterJob job = PrinterJob.getPrinterJob();
         job.setPageable(new PDFPageable(document));
         job.print();
