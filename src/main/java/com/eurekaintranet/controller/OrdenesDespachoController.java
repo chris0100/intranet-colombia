@@ -1168,6 +1168,8 @@ public class OrdenesDespachoController implements Serializable {
     }
 
 
+
+
     //GENERAR IMPRESIÓN
     public String prepareImpresionCompleta() throws PrinterException, IOException, SQLException, ParseException, Exception {
         listaReporteImpresion = new ArrayList<>();
@@ -1215,7 +1217,11 @@ public class OrdenesDespachoController implements Serializable {
         clearAllFilters();
         prepareReporteConsultar();
 
+
         downloadFile(new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text12.pdf")));
+
+        //Limpiar archivo PDF Completo
+        limpiarPlantillaCompleta();
 
         return "/administrador/modOrdenesDespacho/reporte";
     }
@@ -1270,7 +1276,7 @@ public class OrdenesDespachoController implements Serializable {
         //File file = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf"));
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 
-        response.setHeader("Content-Disposition", "attachment;filename=text1.pdf");
+        response.setHeader("Content-Disposition", "attachment;filename=OrdenDespachos-"+new Date()+".pdf");
         response.setContentLength((int) file.length());
         ServletOutputStream out = null;
         try {
@@ -1336,7 +1342,11 @@ public class OrdenesDespachoController implements Serializable {
         clearAllFilters();
         prepareReporteConsultar();
 
+
         downloadFile(new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf")));
+
+        //Limpiar archivo PDF Completo
+        limpiarPlantillaCompleta();
 
         return "/administrador/modOrdenesDespacho/reporte";
     }
@@ -1411,6 +1421,7 @@ public class OrdenesDespachoController implements Serializable {
 
             //ahora tengo que realizar, para que asi se solucione la union
             renderer.setDocument(url);
+
             renderer.layout();
             renderer.createPDF(out);
 
@@ -1425,6 +1436,29 @@ public class OrdenesDespachoController implements Serializable {
             ut.mergeDocuments();
             //FIN PARTE NUEVA UNIR PDFS
             //Fin Union de PDF'S
+
+            // Cierra el archivo.
+            out.close();
+
+        } catch (DocumentException | IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+
+    public void limpiarPlantillaCompleta(){
+        try {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ExternalContext externalContext = facesContext.getExternalContext();
+            HttpSession session = (HttpSession) externalContext.getSession(true);
+            String url = "http" + "://" + "192.168.160.154" + ":" + "8080" + "/intranet" + "/faces/administrador/modOrdenesDespacho/formatoCompleto.xhtml;jsessionid=" + session.getId() + "?pdf=true";
+            OutputStream out = new FileOutputStream(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text12.pdf"));
+
+            ITextRenderer renderer = new ITextRenderer();
+            renderer.setDocument(url);
+            renderer.layout();
+            renderer.createPDF(out);
 
             // Cierra el archivo.
             out.close();

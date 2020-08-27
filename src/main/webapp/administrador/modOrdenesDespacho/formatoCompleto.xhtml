@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Lista de empaque - EKA Corporación S.A.</title>
+    <style>
+        @page {
+            border-top: 0px solid #d9d9d9;
+            size: A4 landscape !important;
+            border-bottom: 1px solid #d9d9d9;
+            size: 9in 11in;
+        tr{page-break-inside:avoid;}
+        @bottom-left { content: "Eka corporación S.A | Orden de despachos "  }
+        @bottom-right { content: "Página " counter(page) " de " counter(pages); } }
+        #header { width: 600px;top: 0; left: 0; right: 0; }
+        #footer { position: fixed; width: 650px; bottom: 0; left: 0; right: 0; page-break-after: always; } /* Fix overflow of headers and content */
+        body { padding-top: 0px; } .custom-page-start { margin-top: 0px; }
+        .custom-footer-page-number:after {
+            content: counter(page);
+        }
+        @page :first {
+            border-top: none;
+        }
+        body{
+            font-size: 1em;
+        }
+        th{
+            border-bottom: 1px solid black;
+        }
+        .tamanoDes{
+            width: 330px !important;
+        }
+        .direccion{
+            margin-left: 5px;
+        }
+        .direccion2{
+            float:right !important;
+        }
+        .tamano{
+            width: 100px !important
+        }
+        .yourTableClass {
+            border-collapse: separate;
+            border-spacing: 2px !important;
+            *border-collapse: expression('separate', cellSpacing = '2px') !important;
+        }
+        .ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td, .ui-datatable tfoot th{
+            padding: 0px !important;
+            padding-left: 3px !important;
+            padding-right: 2px !important;
+            min-height: 30px !important;
+        }
+        .borderSubTable{
+            border: 0 !important;
+            padding: 0 !important;
+            margin: 3px !important;
+        }
+        .ui-datatable thead th, .ui-datatable tfoot td{
+            text-align: left !important;
+        }
+        .titulo-tabla{
+            text-align: left !important;
+        }
+        .borderSubTableCodigo{
+            border-left: 0 !important
+        }
+    </style>
+</h:head>
+<h:body>
+    <h:form>
+        <div style="margin-bottom: 1em; display: block;">
+            <div style="width: 820px; display:inline-block; vertical-align: top; text-align: left;">
+                <div style="width: 600px; display: inline-block;padding: 0px; vertical-align: top; text-align: left;">
+                    <span style="font-weight: bold; font-size: 1.1em !important">EKA CORPORACIÓN S.A. - ORDEN DE DESPACHOS FINAL EN BLANCO</span>
+                </div>
+            </div>
+        </div>
+    </h:form>
+</h:body>
+</html>
+
