@@ -15,15 +15,9 @@ import com.lowagie.text.DocumentException;
 
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Connection;
@@ -54,6 +48,7 @@ import javax.servlet.http.HttpSession;
 
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.printing.PDFPageable;
 import org.apache.poi.ss.usermodel.Cell;
@@ -1180,11 +1175,18 @@ public class OrdenesDespachoController implements Serializable {
         consImpresion = 1;
         fechaImpresion = new Date();
 
+        //Inicio Bucle que se ejecuta para quitar duplicados y para ir generando gradualmente un PDF.
         for (String item : quitarDuplicados()) {
             total_cant_comprom_base = new BigDecimal(0);
             total_valor_neto_pente = new BigDecimal(0);
+
+
+            // Crea bucle para historial de impresion
             for (OrdenesDespachoController item2 : listaReporte) {
-                if (item.equals(item2.getF_punto_envio() + item2.getF_nrodocto()) && (item2.getGenerarImpresion().equals("SI") || item2.getGenerarImpresion().equals("PARCIAL")) && item2.getEstadoImpresion().equals("SI")) {
+
+                if (item.equals(item2.getF_punto_envio() + item2.getF_nrodocto()) && (item2.getGenerarImpresion().equals("SI")
+                        || item2.getGenerarImpresion().equals("PARCIAL")) && item2.getEstadoImpresion().equals("SI")) {
+
                     total_cant_comprom_base = item2.getF_cant_comprom_base().add(total_cant_comprom_base);
                     total_valor_neto_pente = item2.getF_valor_neto_pendiente().add(total_valor_neto_pente);
                     listaReporteImpresion.add(item2);
@@ -1192,13 +1194,12 @@ public class OrdenesDespachoController implements Serializable {
                     crearHistorialImpresion(item2.getF_rowid_movto_431(), item2.getF_cant_comprom_base(), item2.getGenerarImpresion());
                 }
             }
+            // Cierra bucle para historial de impresion
 
 
-            //PARTE NUEVA
-            //Se raliza ordenamiento de lista
+            //Se realiza ordenamiento de lista
             //listaReporteImpresion.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT)));
-            //listaReporteImpresion.sort(new OrdenesComparator());
-            Collections.sort(listaReporteImpresion,new OrdenesComparator());
+            listaReporteImpresion.sort(new OrdenesComparator());
 
 
             if (!listaReporteImpresion.isEmpty()) {
@@ -1209,14 +1210,15 @@ public class OrdenesDespachoController implements Serializable {
                 imprimir();
             }
         }
+        //Cierre Bucle que se ejecuta para quitar duplicados y para ir generando gradualmente un PDF.
+
         clearAllFilters();
         prepareReporteConsultar();
 
-        downloadFile(new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf")));
+        downloadFile(new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text12.pdf")));
 
         return "/administrador/modOrdenesDespacho/reporte";
     }
-
 
 
     /////////////////////////////////////////////
@@ -1298,7 +1300,6 @@ public class OrdenesDespachoController implements Serializable {
     ///////////////////////////////////////////
 
 
-
     public String prepareImpresionCliente() throws PrinterException, IOException, SQLException, ParseException, Exception {
         listaReporteImpresion = new ArrayList<>();
         reporteActual = new OrdenesDespachoController();
@@ -1321,8 +1322,7 @@ public class OrdenesDespachoController implements Serializable {
 
                 //PARTE NUEVA
                 //Se realiza ordenamiento de lista
-                //listaReporteImpresion.sort(ascending(getComparator(ITEM_SORT, DESC_EXT1_SORT)));
-                Collections.sort(listaReporteImpresion,new OrdenesComparator());
+                listaReporteImpresion.sort(new OrdenesComparator());
 
 
                 if (!listaReporteImpresion.isEmpty()) {
@@ -1405,10 +1405,28 @@ public class OrdenesDespachoController implements Serializable {
             HttpSession session = (HttpSession) externalContext.getSession(true);
             String url = "http" + "://" + "192.168.160.154" + ":" + "8080" + "/intranet" + "/faces/administrador/modOrdenesDespacho/formato.xhtml;jsessionid=" + session.getId() + "?pdf=true";
             OutputStream out = new FileOutputStream(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf"));
+
             ITextRenderer renderer = new ITextRenderer();
+
+
+            //ahora tengo que realizar, para que asi se solucione la union
             renderer.setDocument(url);
             renderer.layout();
             renderer.createPDF(out);
+
+            //Union de PDF'S
+            //PARTE NUEVA UNIR PDF'S
+            InputStream in = new FileInputStream(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf"));
+            InputStream in2 = new FileInputStream(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text12.pdf"));
+            PDFMergerUtility ut = new PDFMergerUtility();
+            ut.addSource(in);
+            ut.addSource(in2);
+            ut.setDestinationFileName(new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text12.pdf")).toString());
+            ut.mergeDocuments();
+            //FIN PARTE NUEVA UNIR PDFS
+            //Fin Union de PDF'S
+
+            // Cierra el archivo.
             out.close();
 
         } catch (DocumentException | IOException e) {
