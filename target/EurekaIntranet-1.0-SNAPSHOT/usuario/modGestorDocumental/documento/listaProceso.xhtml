@@ -109,7 +109,7 @@
                             </p:outputPanel>
 
 
-                            <p:outputPanel id="loginTablePanel" rendered="#{!loginController.authenticated || !documentoController.procesoActual.toString().equals(documentoController.comparaCC)}">
+                            <p:outputPanel id="loginTablePanel" rendered="#{!loginController.authenticated}">
                                 <div class="alert alert-warning">
                                     <strong>¡Error de autenticación!</strong> Debes iniciar sesión para poder ver los documentos del proceso.
                                     <h:form>
