@@ -5,6 +5,7 @@
       <map>
         <entry key="file://$PROJECT_DIR$/src/main/webapp/administrador/modGestorItems/planeacion/lista.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/administrador/modGestorItems/planeacion" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/administrador/modOrdenesDespacho/reporte.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/administrador/modOrdenesDespacho" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/usuario/modGestorDocumental/documento/listaProceso.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/usuario/modGestorDocumental/documento" />
       </map>
     </option>
   </component>

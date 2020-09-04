@@ -61,8 +61,10 @@
                                 </p:outputPanel>
                             </h:form>
                         </p:tab>
+
+
                         <p:tab title="Documentos de #{documentoController.procesoActual.toString()}">
-                            <p:outputPanel id="documentosTablePanel" rendered="#{loginController.authenticated}">
+                            <p:outputPanel id="documentosTablePanel" rendered="#{loginController.authenticated || documentoController.procesoActual.toString().equals(documentoController.comparaCC)}">
                                 <h:form id="documentosFormList">
                                      <p:dataTable value="#{documentoController.listaDocumentosProcesoDoc}" var="documento"
                                                   rows="50" paginator="true"  id="documentosTable" class="table-font table table-striped table-bordered dt-responsive nowrap"
@@ -105,7 +107,9 @@
                                      </p:dataTable>
                                 </h:form>
                             </p:outputPanel>
-                            <p:outputPanel id="loginTablePanel" rendered="#{!loginController.authenticated}">
+
+
+                            <p:outputPanel id="loginTablePanel" rendered="#{!loginController.authenticated || !documentoController.procesoActual.toString().equals(documentoController.comparaCC)}">
                                 <div class="alert alert-warning">
                                     <strong>¡Error de autenticación!</strong> Debes iniciar sesión para poder ver los documentos del proceso.
                                     <h:form>
@@ -146,8 +150,10 @@
                                     </h:form>
                                 </div>
                             </p:outputPanel>
+
                         </p:tab>
                     </p:tabView>
+
                 </div>
             </section>
         </ui:define>

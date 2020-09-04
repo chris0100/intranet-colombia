@@ -90,7 +90,17 @@ public class DocumentoController implements Serializable {
     byte[] dataPdf;
     String namePdf;
     String newFileNamePdf;
-    
+    String comparaCC = "CC - CONTROL CALIDAD";
+
+
+    public String getComparaCC() {
+        return comparaCC;
+    }
+
+    public void setComparaCC(String comparaCC) {
+        this.comparaCC = comparaCC;
+    }
+
     public DocumentoController() {
     }
 
