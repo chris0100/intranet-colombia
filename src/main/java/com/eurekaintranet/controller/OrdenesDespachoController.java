@@ -962,6 +962,8 @@ public class OrdenesDespachoController implements Serializable {
                         if (!reporteActual.getF_cliente_desp_razon_soc().equals("CORPORACION EKAZIPPER DEL ECUADOR S A")) {
                             listaReporte.add(reporteActual);
                         }
+                        System.out.println("aqui va el reporte");
+                        System.out.println(getReporteActual().toString());
                     }
                 } catch (SQLException e) {
                     System.out.println("error " + e);
@@ -1168,8 +1170,6 @@ public class OrdenesDespachoController implements Serializable {
     }
 
 
-
-
     //GENERAR IMPRESIÓN
     public String prepareImpresionCompleta() throws PrinterException, IOException, SQLException, ParseException, Exception {
         listaReporteImpresion = new ArrayList<>();
@@ -1217,7 +1217,7 @@ public class OrdenesDespachoController implements Serializable {
         clearAllFilters();
         prepareReporteConsultar();
 
-
+        //Descarga el archivo PDF
         downloadFile(new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text12.pdf")));
 
         //Limpiar archivo PDF Completo
@@ -1276,7 +1276,7 @@ public class OrdenesDespachoController implements Serializable {
         //File file = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/plano/text1.pdf"));
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 
-        response.setHeader("Content-Disposition", "attachment;filename=OrdenDespachos-"+new Date()+".pdf");
+        response.setHeader("Content-Disposition", "attachment;filename=OrdenDespachos-" + new Date() + ".pdf");
         response.setContentLength((int) file.length());
         ServletOutputStream out = null;
         try {
@@ -1447,7 +1447,7 @@ public class OrdenesDespachoController implements Serializable {
     }
 
 
-    public void limpiarPlantillaCompleta(){
+    public void limpiarPlantillaCompleta() {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ExternalContext externalContext = facesContext.getExternalContext();

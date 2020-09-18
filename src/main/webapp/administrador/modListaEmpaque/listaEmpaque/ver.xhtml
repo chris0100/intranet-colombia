@@ -286,7 +286,9 @@
                                             <p:ajax event="rowToggle" listener="#{listaEmpaqueController.llenarListaCajaItems(item)}" update="tablaFuncion"/>
                                             <p:column exportable="false" width="40">  
                                                 <p:rowToggler/>  
-                                            </p:column>  
+                                            </p:column>
+
+
                                             <p:rowExpansion>
                                                 <p:dataTable value="#{listaEmpaqueController.listaEmpaqueHasCaja}" var="item2">
                                                     <f:facet name="header">
@@ -358,6 +360,7 @@
                                                     </p:column>
                                                </p:dataTable>
                                             </p:rowExpansion>
+
                                             <p:column headerText="No. Caja">
                                                 <h:outputText value="#{item.numeroCaja}" style="font-weight: bold"/>
                                             </p:column>

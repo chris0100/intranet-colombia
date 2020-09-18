@@ -1,94 +1,159 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:jsf="http://xmlns.jcp.org/jsf"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
-    <ui:composition template="/template/templateUsuario.xhtml">
-        <ui:define name="title">Eureka | Intranet</ui:define>        
-        <ui:define name="body">
-            <p:growl id="growl" showDetail="true" life="2000"/>
-            <section class="container container-paginas">
-                <h:form>
-                    <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Gestión Ambiental
-                </h:form>
-                <header class="header-paginas">
-                    <h2> <span class="fa fa-recycle "></span> <span class="titulo-paginas">Gestión Ambiental</span></h2>
-                </header>
-                <h4>Programa de Gestión de Residuos EKA</h4>
-                <p class="text-justify">
-                    Aquí podrás encontrar toda la información
-                    relacionada con nuestro programa de gestión
-                    de residuos, documentos, evaluaciones, presentaciones 
-                    para capacitar, vídeos educativos, entre otros. Haz uso de esta 
-                    herramienta para compartir conocimiento y consultar tus dudas acerca 
-                    de cómo gestionar las basuras que producimos.
-                </p>
+<ui:composition template="/template/templateUsuario.xhtml">
+    <ui:define name="title">Eureka | Intranet</ui:define>
+    <ui:define name="body">
+        <p:growl id="growl" showDetail="true" life="2000"/>
+        <section class="container container-paginas">
+            <h:form>
+                <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > SSTA
+            </h:form>
+            <header class="header-paginas">
+                <h2><span class="titulo-paginas">Salud, Seguridad en el Trabajo y Medio Ambiente</span></h2>
+            </header>
+
+            <p class="text-justify">
+                Aquí podrás encontrar toda la información relacionada con nuestro Sistema de gestión de seguridad, salud y medio ambiente, documentos, evaluaciones, presentaciones para capacitar, vídeos educativos, entre otros. Haz uso de esta herramienta para compartir conocimiento y consultar tus dudas.</p>
+            <br/>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <img width="90%" jsf:library="images"
+                         jsf:name="/modBiblioteca/gestionAmbiental/ssta.jpg" alt="img"/>
+                </div>
+
+                <div class="col-md-8">
+                    <br/>
+                    <br/>
+                    <p class="text-justify">
+                        En este espacio encontraras las diferentes capacitaciones que damos en EKA CORPORACIÓN, las principales son:
+                    </p>
+                    <p>
+                        - Capacitación de ingreso SSTA
+                    </p>
+                    <p>
+                        - Capacitacion de contratistas
+                    </p> <br/>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-10">
+                    <p class="text-justify">
+                        Siempre estarán disponibles para descargar lo cual te facilitará los conceptos claves en este proceso y entender como cuidarnos a nosotros mismos y a nuestro medio ambiente.
+                        <br/><br/>
+                        No olvides que si tienes dudas puedes comunicarte a <strong>SSTA Ext. 143 oficina de salud, seguridad en el trabajo y medio ambiente.</strong>
+                        <br/><br/>
+                        Aqui tambien encontraras cartillas de aprendizaje de SSTA
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="header-paginas mx-auto">
+                    <h4><span class="titulo-paginas">Folletos</span></h4>
+                </div>
+            </div>
+
+
                 <div class="row">
-                    <div class="col-md-8">                         
-                        <p class="text-justify">
-                         Si deseas conocer acerca de nuestro
-                         programa de gestión de residuos en EKA
-                         Corporación o si quieres capacitar o compartir
-                         tu conocimiento con otro colaborador, aquí podrás
-                         descargar la presentación que te facilitará los conceptos 
-                         claves en este proceso. No olvides que si tienes dudas puedes
-                         comunicarte al correo gestionambiental@ekazipper.com y con gusto 
-                         podrán ser resueltas.
-                        </p>
-                    </div>
+
                     <div class="col-md-4">
                         <h:form>
-                            <a class="btn-ver" href="http://eureka/resources/documentos/gestionAmbiental/Companeros-de-aprendizaje-tema-residuos.pdf" target="_blanck">
-                                <span class="fa fa-file-powerpoint-o"></span> Descargar presentación
+                            <a class="btn-primary btn"
+                               href="http://eureka/resources/documentos/gestionAmbiental/FOLLETO-RESUMEN-PROTOCOLO-PARA-EL-PERSONAL.pdf"
+                               target="_blanck">
+                                <span class="fa fa-file-powerpoint-o"></span> <small class="font-weight-bold">Descargar Folletos</small>
                             </a>
                         </h:form>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-7">
-                        <img width="100%" jsf:library="images" jsf:name="/modBiblioteca/gestionAmbiental/Separa_Presentation.jpg" alt="img"/> 
+
+
+                    <div class="col-md-4">
+                        <h:form>
+                            <a class="btn-primary btn"
+                               href="http://eureka/resources/documentos/gestionAmbiental/INDUCCIÓN-REINDUCCIÓN-EKA.pdf"
+                               target="_blanck">
+                                <span class="fa fa-file-powerpoint-o"></span> <small class="font-weight-bold">Capacitación de Ingreso SSTA</small>
+                            </a>
+                        </h:form>
                     </div>
-                    <div class="col-md-5">
-                        <p class="text-justify">
-                            Es importante que nuestros colaboradores
-                            siempre estén en constante actualización,
-                            por eso hemos creado un material sencillo 
-                            de portar y entregar a quienes aún no tienen 
-                            acceso a este medio; por eso podrás descargar 
-                            aquí el plegable informativo sobre gestión de 
-                            residuos en EKA con los temas más importantes
-                            condensados de manera práctica y agradable de 
-                            leer.
-                        </p>
-                        <a class="btn-ver" href="http://eureka/resources/documentos/gestionAmbiental/Plegable_GestionDeResiduos.pdf" target="_blanck">
-                            <span class="fa fa-map"></span> Descargar plegable
-                        </a>
-                        <p class="text-justify">
-                            Aquí puedes descargar la evaluación que se
-                            aplicará a todos aquellos colaboradores
-                            que sean capacitados.
-                        </p>
-                        <a class="btn-ver" href="http://eureka/resources/documentos/gestionAmbiental/Evaluacion-companeros-de-aprendizaje_1.pdf" target="_blanck">
-                            <span class="fa fa-check"></span> Descargar evaluación
-                        </a>
-                        <p class="text-justify">
-                            Si vas a iniciar proceso de capacitación y no
-                            tienes un medio electrónico para mostrar 
-                            información importante sobre gestión ambiental 
-                            en EKA, aquí podrás descargar las memo fichas de
-                            trabajo que te facilitará el proceso.
-                           </p>
-                        <a class="btn-ver" href="http://eureka/resources/documentos/gestionAmbiental/Memofichas-companeros-de-aprendizaje-1.pdf" target="_blanck">
-                            <span class="fa fa-cubes"></span> Descargar Fichas
-                        </a>
+
+
+                    <div class="col-md-4">
+                        <h:form>
+                            <a class="btn-primary btn"
+                               href="http://eureka/resources/documentos/gestionAmbiental/INDUCCION-ALTURAS-CONTRATISTAS.pdf"
+                               target="_blanck">
+                                <span class="fa fa-file-powerpoint-o"></span> <small class="font-weight-bold">Capacitación de Alturas Contratistas</small>
+                            </a>
+                        </h:form>
                     </div>
+
                 </div>
-                    
-            </section>
-        </ui:define>
-    </ui:composition>    
+
+
+            <div class="row mb-2 mt-3">
+                <div class="header-paginas mx-auto">
+                    <h4><span class="titulo-paginas">¿Que es SG-SST?</span></h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="mx-auto">
+                    <img width="90%" jsf:library="images"
+                         jsf:name="/modBiblioteca/gestionAmbiental/sst1.jpg" alt="img"/>
+                </div>
+
+                <div class="mx-auto">
+                    <img width="90%" jsf:library="images"
+                         jsf:name="/modBiblioteca/gestionAmbiental/sst2.jpg" alt="img"/>
+                </div>
+            </div>
+
+
+
+
+            <div class="row mb-2 mt-3">
+                <div class="header-paginas mx-auto">
+                    <h4><span class="titulo-paginas">¿Que es COPASST?</span></h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="mx-auto">
+                    <img width="90%" jsf:library="images"
+                         jsf:name="/modBiblioteca/gestionAmbiental/copasst.jpg" alt="img"/>
+                </div>
+            </div>
+
+
+
+
+            <div class="row mb-2 mt-3">
+                <div class="header-paginas mx-auto">
+                    <h4><span class="titulo-paginas">¿Que es CCL?</span></h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="mx-auto">
+                    <img width="90%" jsf:library="images"
+                         jsf:name="/modBiblioteca/gestionAmbiental/CCL.jpg" alt="img"/>
+                </div>
+            </div>
+
+        </section>
+    </ui:define>
+</ui:composition>
 </html>
 
 

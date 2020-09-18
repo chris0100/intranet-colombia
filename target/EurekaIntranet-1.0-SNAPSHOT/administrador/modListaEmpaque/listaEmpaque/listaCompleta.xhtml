@@ -139,6 +139,7 @@
                                 <f:setPropertyActionListener value="#{item}" target="#{listaEmpaqueController.listaEmpaqueActual}"/>
                             </p:commandButton>
                             <p:tooltip id="descripcion-ver" for="boton-ver" value="Ver lista de empaque" trackMouse="true"/>
+
                             <p:commandButton id="boton-actualizar" ajax="false" icon="ui-icon-pencil" action="#{listaEmpaqueController.prepareEditListaEmpaque}" 
                                              rendered="#{loginController.gestorLpAdmin || loginController.gestorLpCedi}">
                                  <f:setPropertyActionListener value="#{item}" target="#{listaEmpaqueController.listaEmpaqueActual}"/>

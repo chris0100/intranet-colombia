@@ -194,6 +194,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="panel panel-primary form-group"  style="border-radius: 0; margin-bottom: 5em">
                     <div class="panel-heading"  style="border-radius: 0"><h4 class="letra-panelDescriEdu"><i class="fa fa-cubes" aria-hidden="true"> </i> Cajas que componen la lista de empaque</h4></div>
                     <div class="panel-body">
@@ -320,7 +321,9 @@
                                                 <f:facet name="header">Usuario creación</f:facet>
                                                 <h:outputText value="#{item.responsable}"/>
                                             </p:column>
+
                                             <p:column width="50">
+
                                                 <p:commandButton icon="ui-icon-pencil" 
                                                                 action="#{listaEmpaqueController.prepareEditCaja}"
                                                                 process="@this"
@@ -328,7 +331,9 @@
                                                     <f:setPropertyActionListener value="#{item}" target="#{listaEmpaqueController.cajaActual}"/>
                                                     <f:setPropertyActionListener value="#{loginController.userLogueado}" target="#{listaEmpaqueController.usuarioActual}"/>
                                                 </p:commandButton>
+
                                             </p:column>
+
                                        </p:dataTable>
                                     </h:panelGroup>
                                 </h:form>
