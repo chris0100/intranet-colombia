@@ -978,6 +978,7 @@ public class OrdenesDespachoController implements Serializable {
         evaluarImpresionCliente();
     }
 
+    
     //Obtener reporte Unoee
     public void recargarConsultarItemsPedidosUnoee31Dic()
             throws SQLException, ParseException {

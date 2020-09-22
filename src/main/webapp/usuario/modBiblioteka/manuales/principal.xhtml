@@ -15,7 +15,10 @@
                 <header class="header-paginas">
                     <h2><span class="titulo-paginas">Manuales</span></h2>
                 </header>
+
+
                 <section id="clients">
+
                     <h:form>
                         <div class="row no-gutters clearfix">
                             <div class="col-lg-2 col-md-2 col-xs-6">
@@ -102,8 +105,20 @@
                                     </a>   
                                 </div>
                             </div>
+
+                            <div class="col-lg-2 col-md-2 col-xs-6">
+                                <div class="itemZoom">
+                                    <p:commandLink onclick="PF('dlg4').show();">
+                                        <img class="img-responsive" width="100%" src="#{request.contextPath}/resources/images/modBiblioteca/manuales/manual-ICL.png"/>
+                                    </p:commandLink>
+                                </div>
+                            </div>
+
                         </div>
                     </h:form>
+
+
+
                     <h:form>
                         <p:dialog widgetVar="dlg2" modal="true" width="500" styleClass="dialogo-prime">
                             <div class="col-md-12">
@@ -123,6 +138,8 @@
                             </div>
                         </p:dialog>
                     </h:form>
+
+
                     <h:form>
                         <p:dialog widgetVar="dlg3" modal="true" width="500" styleClass="dialogo-prime">
                             <div class="col-md-12">
@@ -137,6 +154,24 @@
                             </div>
                         </p:dialog>
                     </h:form>
+
+
+                    <h:form>
+                        <p:dialog widgetVar="dlg4" modal="true" width="500" styleClass="dialogo-prime">
+                            <div class="col-md-12">
+                                <a target="_blanck" class="btn-ver" href="http://eureka/resources/documentos/manuales/TOPDYE_ESP.pdf">
+                                    <span class="fa fa-book "></span> manual_top_dye_español.pdf
+                                </a>
+                            </div>
+                            <div class="col-md-12">
+                                <a target="_blanck" class="btn-ver" href="http://eureka/resources/documentos/manuales/TOPDYE_ENG.pdf">
+                                    <span class="fa fa-book "></span> manual_top_dye_ingles.pdf
+                                </a>
+                            </div>
+                        </p:dialog>
+                    </h:form>
+
+
                 </section>
             </section>
         </ui:define>
