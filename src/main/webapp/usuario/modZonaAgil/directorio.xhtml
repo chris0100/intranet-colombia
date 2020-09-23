@@ -3,7 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
       xmlns:p="http://primefaces.org/ui">
+
     <ui:composition template="/template/templateUsuario.xhtml">
         <ui:define name="title">Eureka | Intranet</ui:define>        
         <ui:define name="body">
@@ -12,15 +14,67 @@
                 <h:form>
                     <h:commandLink class="navegacion-paginas" value="Index" action="/index"/> > Directorio
                 </h:form>
+
+
                 <header class="header-paginas">
                     <h2><span class="titulo-paginas">Directorio</span></h2>
                 </header>
+
+
+                <!--AREA PARA BOTONES-->
+                <div class="row text-center">
+
+                    <div class="col-md-6 text-center">
+                        <h:form>
+                            <a class="btn-primary btn"
+                               href="http://eureka/resources/documentos/directorioTelefonico.xlsx"
+                               target="_blanck">
+                                <span class="fa fa-file-excel-o"></span><span> - </span><small class="font-weight-bold">Descargar en Excel</small>
+                            </a>
+                        </h:form>
+                    </div>
+
+
+                    <div class="col-md-6 text-center">
+                        <h:form>
+                            <a class="btn-primary btn"
+                               href="http://eureka/resources/documentos/directorioTelefonico.pdf"
+                               target="_blanck">
+                                <span class="fa fa-file-pdf-o"></span><span> - </span><small class="font-weight-bold">Descargar en PDF</small>
+                            </a>
+                        </h:form>
+                    </div>
+
+                </div>
+
+
+
+                <!--IMAGEN DEL DIRECTORIO ACTUALIZADO-->
                 <div class="container-directorio">
+                    <div class="row">
+                        <div class="mx-auto">
+                            <img width="100%" jsf:library="images"
+                                 jsf:name="directorio.jpg" alt="img"/>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+<!--                <div class="container-directorio">
                     <iframe width="730"
                         height="1250"
                         src="http://192.168.160.153:8080/Reports_EKACORP/Pages/Report.aspx?ItemPath=%2fEka_Reportes%2flistaUsuariosDirectorioActivo">
                     </iframe>
-                    <!--
+                    &lt;!&ndash;
                     <p:dataTable value="#{directorioController.listaDirectorio}" var="item"
                                 rows="50" paginator="true"  id="documentosTable" class="table-font table table-striped table-bordered dt-responsive nowrap"
                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -39,8 +93,8 @@
                            <h:outputText value="#{item.telefono}"/>
                       </p:column>
                    </p:dataTable>
-                    -->
-                </div>
+                    &ndash;&gt;
+                </div>-->
             </section>
         </ui:define>
     </ui:composition>    
